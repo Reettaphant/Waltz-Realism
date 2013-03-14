@@ -1,0 +1,1043 @@
+/* java script will add and remove class names of things and css will change colour*/
+
+
+body{
+	
+ background: #FFFDF0; 	
+}
+
+
+#simulationOutput{
+	position: absolute; 
+	bottom: 500px; 
+	border: black;
+	height: 500px;
+}
+
+h1 {
+	margin: 10px;
+    font-weight: 500;
+    font-family: 'Titillium Web', sans-serif;
+    position: relative;  
+    font-size: 36px;
+    padding: 7px;
+    border: 3px double rgba(100 , 100 , 100, 0.5);
+	color: #282828;
+	text-align: center; 
+	background: #C2C3CB;
+	}
+
+.hidden {display: none;}
+
+.visible{display: block;}
+
+form{
+	background: #EEE8CD; 
+	color: #2F4F4F;
+ 	margin: auto; 
+ 	position: relative; 
+	font-family: font-family: "Book Antiqua", Palatino, serif;
+	font-size: 14px;
+	line-height: 20px;
+	font-weight: bold;	
+	border-radius: 10px;
+	padding:10px;
+	border: 3px solid #778899;
+	
+}
+
+
+#endButton{
+	width:100px;
+	position:absolute;
+	right:20px;
+	bottom:20px;
+	background: #D8BFD8;
+	color: #2F4F4F;;
+	font-family: Tahoma, Geneva, sans-serif;
+	height:30px;
+	border-radius: 15px;
+	border: 2px solid #778899;
+	} 	
+
+#continueSimulation{
+	width: 450px; 
+	height: 230px; 	
+}
+
+
+input.errorButton{
+	position: absolute;
+	width: 110px;
+	height: 30px;
+	background: #E9967A; 
+	border: 2px solid #CD2626; 
+	border-radius: 20px; 
+	color: #CD2626; 
+	font-size: 13px; 
+	font-weight: bold; 
+	right: 20px;
+	bottom: 20px;
+		
+}
+.error{
+    background: #EEE8CD; 
+	color: #CD3333;	
+	height: 250px;
+	width: 250px;
+ 	margin: auto; 
+ 	position: relative; 
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 14px;
+	line-height: 20px;
+	font-weight: bold;	
+	border-radius: 10px;
+	padding:10px;
+	border: 3px solid #CD3333;	
+	
+}
+.answer{
+	width: 350px; 
+	height: 350px; 
+	text-align: center; 
+	position: absolute; 
+	left: 450px;
+	padding: 10px; 
+	background: #D1EEEE;
+	border-radius: 15px; 
+	border: 3px solid #7D9EC0;
+}
+
+
+.backButton{
+	position: absolute; 
+	bottom: 20px; 
+	right: 110px;
+	width: 150px; 
+	height: 30px;
+	background: #B2DFEE;
+	color: #68838B;
+	border: 2px solid ; 
+	font-size: 12px; 
+	font-weight: bold; 
+	border-radius: 15px; 	
+}
+.questionButton{
+	margin: 5px; 
+	float: left; 
+	width: 50px; 
+	height: 50px; 
+	background: #FA957A; 
+	border: 3px solid #BB1A1A; 
+	border-radius: 20px; 
+	color: #BB1A1A; 
+	font-size: 30px; 
+	font-weight: bold; 	
+}	
+
+.clickedButton{
+	margin: 5px; 
+	float: left; 
+	width: 50px; 
+	height: 50px; 
+	background: #E8705B; 
+	border: 3px solid #AB1A22; 
+	border-radius: 20px; 
+	color: #AB1A22; 
+	font-size: 30px; 
+	font-weight: bold; 	
+	position: relative;
+	top: 1px;
+}	
+.radioButton{
+	width: 25px; 
+	float: none; 
+}
+
+.radioDesc, input.radioButton {
+	font-size:14px; 
+    vertical-align:middle;
+    margin: 2px; 
+}
+
+
+select{
+	color: #2F4F4F;
+	border: 2px solid #607B8B;
+	height: 25px;
+	width: 50px; 
+	border-radius: 7px;
+	
+}
+input{
+	border: 2px solid #607B8B;
+	height: 20px;
+	width: 40px; 
+	border-radius: 7px;
+}
+
+#stateNumbers{
+	height: 300px;
+	width: 400px;
+}	
+
+#statePowers{
+	width: 500px; 
+	 
+}
+
+.form1{
+	height: 185px; 	
+}
+
+.form2{
+	heigth: 275px; 	
+}
+
+.form3{
+	height: 370px; 
+}
+
+.form4{
+	height: 465px; 
+}
+
+.form5{
+	height: 560px; 	
+}
+
+.form6{
+	height: 655px; 	
+}
+
+.form7{
+	height: 745px; 	
+}
+
+.form8{
+	height: 840px; 	
+}
+
+.form9{
+	height: 935px; 
+}
+
+.form10{
+	height: 1030px; 	
+}
+#buttonForStates{
+	padding-bottom: 1px;
+	width:100px;
+	position:absolute;
+	right:20px;
+	bottom:20px;
+	background: #D8BFD8;
+	color: #2F4F4F;;
+	font-family: Tahoma, Geneva, sans-serif;
+	height:30px;
+	border-radius: 15px;
+	border: 2px solid #778899;
+	}
+#buttonForStates.changingButton:hover{
+	border: 2px solid #104E8B;	
+}
+
+#powerButton.changingButton:hover{
+	border: 2px solid #2F4F4F;
+	background: green;	
+}
+.changingButton:hover{
+	border: 2px solid #8B3A62;
+}
+#powerButton{
+	width:100px;
+	position:absolute;
+	right:20px;
+	bottom:5px;
+	background: #D8BFD8;
+	color: #2F4F4F;;
+	font-family: Tahoma, Geneva, sans-serif;
+	height:30px;
+	border-radius: 15px;
+	border: 2px solid #778899;
+	}
+	
+
+#numberOfStates{
+	display: block;	
+}
+
+#numberOfTurns{
+	display: block;	
+}
+
+#buttonForStates{
+	display: block; 	
+}
+
+.powerDesc{
+	border: solid black 1px; 
+	background: #EEDFCC;
+	font-weight: bold; 
+	font-size: 13px; 
+	color: #282828;
+	font-family: "Book Antiqua", Palatino, serif; 
+	padding: 1px
+}
+
+.powerLabel{
+	float: left; 	
+	padding: 5px; 
+}
+
+.statePowers{
+	float: left; 	
+	margin: 14px; 
+}
+ .stateTerritory{
+	float: left; 
+	margin: 14px; 	 
+ }
+.territoryLabel{
+	float: left; 
+	padding: 5px; 	
+}
+
+.intellectLabel{
+	float: left; 
+	padding: 5px; 	
+}
+.stateIntellect{
+	margin: 14px; 
+	
+}
+#stateFrame{
+	   background: #F4F4F4; 
+	   position: relative;
+	   width: 1195px;
+	   height: 491px;
+	   border: solid #B8B8B8 4px;
+	   float: left;
+	   top: 0px; 
+	   border-radius: 15px; 
+	   right: -70px; 
+	   }
+
+
+.story{
+	padding: 3px;
+	width: 400px; 
+	height: 500px; 
+	margin: 3px;
+	padding-bottom: 10px;
+	position: absolute;
+	top: 0;
+	left: 820px;
+	width: 350px; 
+	height: 495px;
+	font-weight: bold; 
+	font-size: 15px; 
+	color: #282828;
+	font-family: "Book Antiqua", Palatino, serif; 
+	
+}
+ .substory{
+	color: black;
+	font-weight: normal; 
+	font-size: 14px; 
+	font-family: "Book Antiqua", Palatino, serif; 
+}
+
+#exitButton{
+	border-radius: 50%; 
+	border: solid 2px #7171C6; 
+	color: #7171C6; 
+	background; #D1EEEE; 
+	float: left; 
+	padding: 5px; 
+	width: 60px;
+	height: 60px; 
+	margin: 6px;
+}
+
+.backForth{
+	border-top: solid 2px #CD6090; 
+	border-bottom: solid 2px #CD6090; 
+	background: #FFAEB9; 
+	color: #8B3A62;
+	float: left; 
+	font-size: 9px; 
+	font-weight: bold; 
+	padding: 2px; 
+	width: 110px;
+	height: 35px;
+	border-radius: 0px;
+	margin-top: 14px; 
+}
+
+#backwardsButton.backForth{
+	border-right: solid 2px #CD6090;
+	border-left: none;
+}
+
+#forwardsButton.backForth{
+	border-left: solid 2px #CD6090;
+	border-right: none;
+}
+
+#backArrow {
+	margin-top: 5px; 
+	width: 0; 
+	height: 0; 
+	border-top: 28px solid transparent;
+	border-bottom: 28px solid transparent; 	
+	border-right: 28px solid #CD6090; 
+	float: left; 
+}
+
+#forwardArrow {
+	margin-top: 5px; 
+	width: 0; 
+	height: 0; 
+	border-top: 28px solid transparent;
+	border-bottom: 28px solid transparent;
+	border-left: 28px solid #CD6090;
+	float: left; 
+}
+
+.storyButton{
+	position: absolute; 
+	left: 60px; 
+	top: 0px;
+	border: solid 2px #CD6090; 
+	background: #FFAEB9; 
+	color: #8B3A62;
+	float: left; 
+	padding: 5px; 
+	width: 57px;
+	height: 33px; 
+	margin: 5px; 
+}
+
+#backErrorButton.storyButton{
+	top: 60px; 	
+	left: 0px; 
+}
+
+#forwardErrorButton.storyButton{
+	top: 60px; 	
+	left: 0px; 
+}
+.storyButton:hover{
+	border: 2px solid #8B3A62;
+}
+
+.backForth:hover{
+	border: 2px solid #8B3A62;
+}
+
+.exitButton:hover{
+	border: solid 2px #00008B; 
+}
+form.storyForm{
+	border: none; 	
+	background: none; 
+}
+	
+.stateGroup{
+	position: relative;
+	border: none red;
+	width: 399px;
+	height: 245px;
+	float: left;
+}
+
+#stateGroupTwo{
+	border-right: 2px solid rgba(100, 100, 100, 0.3);	
+}
+
+#stateGroupFour{
+	border-right: 2px solid rgba(100, 100, 100, 0.3);	
+}
+
+.state { 
+	position: absolute;
+	text-align: center; 
+	border-radius: 50%;
+    float: left;
+}
+.attacker {
+
+	border: 3px solid #CD2626;
+	
+}
+
+.defender {
+	
+	border: 3px solid #8B008B;
+}
+
+.winner {
+	
+	border: 3px solid #698B22;
+}
+
+.loser{
+
+border: 3px solid black;	
+}
+
+
+
+.sphere1{
+background: #9AC0CD;	
+}
+
+.sphere2{
+background: #F08080; 	
+}
+
+.alliance100{
+background: #EE7600;	
+
+}
+
+.alliance001{
+background: #FFC125;
+
+}
+
+.alliance0{
+	background: lightgrey;
+}
+
+.alliance1{
+	background: #B9D3EE; 
+}
+
+.alliance2{
+	background: #9BCD9B;
+}
+
+.alliance3{
+	background: #E9967A;
+}
+
+.alliance4{
+	background: #CD6889; 
+	
+}
+.alliance5{
+	background: #EEDC82; 
+}
+
+.alliance6{
+	background: #FAEBD7; 
+}
+
+.alliance7{
+	background: #CD8C95;	
+}
+.bipolar1{
+	color: blue; 	
+}
+
+.bipolar2{
+	color: #CD0000;	
+}
+.description1{
+	color: #483D8B; 
+	font-weight: normal; 
+	font-weight: normal; 
+	font-size: 14px; 
+	font-family: "Book Antiqua", Palatino, serif; 
+}
+
+.description2{
+	color: #006400;
+	font-weight: normal; 
+	font-weight: normal; 
+	font-size: 14px; 
+	font-family: "Book Antiqua", Palatino, serif; 
+}
+
+.description3{
+	color: #8B0000;
+	font-weight: normal; 
+	font-weight: normal; 
+	font-size: 14px; 
+	font-family: "Book Antiqua", Palatino, serif; 
+}
+
+.description4{
+	color: #8B008B; 
+	font-weight: normal; 
+	font-weight: normal; 
+	font-size: 14px; 
+	font-family: "Book Antiqua", Palatino, serif; 
+}
+.description5{
+	color: #8B814C; 
+	font-weight: normal; 
+	font-weight: normal; 
+	font-size: 14px; 
+	font-family: "Book Antiqua", Palatino, serif; 
+}
+
+.description6{
+	color: #CDC0B0; 
+	font-weight: normal; 
+	font-weight: normal; 
+	font-size: 14px; 
+	font-family: "Book Antiqua", Palatino, serif; 
+}
+
+.description7{
+	color: #8B5F65; 
+	font-weight: normal; 
+	font-weight: normal; 
+	font-size: 14px; 
+	font-family: "Book Antiqua", Palatino, serif; 
+}
+
+
+.allinace100{
+	background:#FF7F00;
+}
+#state1{
+	bottom: 1em; 
+	right: 1em;	
+	
+}
+
+#state2{
+	bottom: 0.5em; 
+	left: 0.5em;	
+	
+}
+
+#state3{
+	top: 1.5em; 
+	right: 1em;
+	
+}
+
+#state4{
+	top: 0.5em; 
+	left: 1.5em;
+}
+
+#state5{
+	top: 0; 
+	right: 1.5em; 
+}
+
+#state6{
+	bottom: 0; 
+	right: 1.5em; 
+}
+
+#state7{
+    top: 0.5em; 
+    left: 0; 
+}	
+
+#state8{
+	bottom: 0; 
+	left: 3em; 
+}
+
+#state9{
+	top: 0;
+	left: 0;
+}
+
+#state10{
+	top: 0;
+	right: 0;
+}
+
+#state11{
+	bottom: 0; 
+	right: 0;
+}
+
+#state12{
+	bottom: 0; 
+	left: 0; 
+}
+
+#state13{
+	bottom: 0; 
+	left: 0; 
+}
+
+#state14{
+    top: 0; 
+    left: 0; 	
+}
+
+#state15{
+   top: 0; 
+   right: 0; 	
+}
+
+#state16{
+   bottom: 0; 
+   right: 0; 	
+}
+
+
+.power1{
+	width: 2.5em; 
+	height: 2.5em; 
+	margin: 2.7em;
+	
+}
+
+.power2{
+	width: 2.5em;
+	height: 2.5em;
+	margin: 2.7em;
+}
+
+.power3{
+	width: 2.75em;
+	height: 2.75em; 
+	margin: 2.5em;
+}
+
+.power4{
+	width: 2.75em;
+	height: 2.75em; 
+	margin: 2.5em;
+}
+
+.power5{
+	width: 3em;
+	height: 3em; 
+	margin: 2em;
+}
+
+.power6{
+	width: 3em;
+	height: 3em; 
+	margin: 2em;
+}
+
+.power7{
+	width: 3.5em;
+	height: 3.5em; 
+	margin: 1.5em;
+}
+
+.power8{
+	width: 3.5em;
+	height: 3.5em; 
+	margin: 1.5em;
+	
+	
+}
+.power9{
+	width: 4em;
+	height: 4em; 
+	margin: 1.5em;
+	
+}
+
+.power10{
+	width: 4em;
+	height: 4em; 
+	margin: 1.5em;
+	
+}
+
+.power11{
+	width: 4.5em;
+	height: 4.5em; 
+	margin: 1.5em;
+}
+
+.power12{
+	width: 4.5em;
+	height: 4.5em; 
+	margin: 1.5em;
+}
+
+.power13{
+	width: 4.5em;
+	height: 4.5em; 
+	margin: 1.5em;;
+}
+
+.power14{
+	width: 4.75em;
+	height: 4.75em; 
+	margin: 1.5em;
+}
+
+.power15{
+	width: 4.75em;
+	height: 4.75em; 
+	margin: 1.5em;
+}
+
+.power16{
+	width: 4.75em;
+	height: 4.75em; 
+	margin: 1.25em;
+}
+
+.power17{
+	width: 4.75em;
+	height: 4.75em; 
+	margin: 1.25em;
+}
+
+.power18{
+	width: 5.5em;
+	height: 5.5em; 
+	margin: 1.25em;
+}
+
+.power19{
+	width: 5.5em;
+	height: 5.5em; 
+	margin: 1.25em;
+}
+
+.power20{
+	width: 5.5em;
+	height: 5.5em; 
+	margin: 1em;
+}
+
+.power21{
+	width: 5.5em;
+	height: 5.5em; 
+	margin: 1em;
+}
+
+.power22{
+	width: 5.5em;
+	height: 5.5em; 
+	margin: 1em;
+}
+
+.power23{
+	width: 5.5em;
+	height: 5.5em; 
+	margin: 1em;
+}
+
+.power24{
+	width: 5.5em;
+	height: 5.5em; 
+	margin: 1em;
+}
+
+.power25{
+	width: 5.5em;
+	height: 5.5em; 
+	margin: 1em;
+}
+
+.power26{
+	width: 6em;
+	height: 6em; 
+	margin: 0.75em;
+}
+
+.power26{
+	width: 6em;
+	height: 6em; 
+	margin: 0.75em;
+}
+
+.power27{
+	width: 6em;
+	height: 6em; 
+	margin: 0.75em;
+}
+
+.power28{
+	width: 6em;
+	height: 6em; 
+	margin: 0.75em;
+}
+
+.power29{
+	width: 6em;
+	height: 6em; 
+	margin: 0.75em;
+}
+
+.power30{
+	width: 6em;
+	height: 6em; 
+	margin: 0.75em;
+}
+
+.power31{
+	width: 6.5em;
+	height: 6.5em; 
+	margin: 0.3em;
+}
+
+.power32{
+	width: 6.5em;
+	height: 6.5em; 
+	margin: 0.3em;
+}
+
+.power33{
+	width: 6.5em;
+	height: 6.5em; 
+	margin: 0.3em;
+}
+
+.power34{
+	width: 6.5em;
+	height: 6.5em; 
+	margin: 0.3em;
+}
+
+.power35{
+	width: 6.5em;
+	height: 6.5em; 
+	margin: 0.2em;
+}
+
+.power36{
+	width: 6.5em;
+	height: 6.5em; 
+	margin: 0.2em;
+}
+.power37{
+	width: 6.5em;
+	height: 6.5em; 
+	margin: 0.2em;
+}
+.power38{
+	width: 6.5em;
+	height: 6.5em; 
+	margin: 0.2em;
+}
+.power39{
+	width: 6.5em;
+	height: 6.5em; 
+	margin: 0.2em;
+}
+.power40{
+	width: 6.5em;
+	height: 6.5em; 
+	margin: 0.2em;
+}
+.power41{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+.power42{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+.power43{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+.power44{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+.power45{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+.power46{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+.power47{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+.power48{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+.power49{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+.power50{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+
+.power51{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+
+.power52{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+
+.power53{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+
+.power54{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+
+.power55{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+
+.power56{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+.power57{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+.power58{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+.power59{
+	width: 7em;
+	height: 7em; 
+	margin: 0.05em;
+}
+.power60{
+	width: 7.5em;
+	height: 8em; 
+	margin: 0.02em;
+}
+
+
