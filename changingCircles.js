@@ -1,5 +1,4 @@
-/*
-still need to change alliances: if no syst war, alliances only change when someone changes. also, should list the total powers of the alliances*/
+
 
 $(document).ready(function(){
 

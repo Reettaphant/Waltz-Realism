@@ -1,10 +1,4 @@
 
-
-/*
-make some parts of code a bit slower - make list of what needs to: 
-turn remaining peaceful
- */
-
  
  function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorld, lastEvent){
 	 
