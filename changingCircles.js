@@ -1,5 +1,6 @@
 
-/*hello*/
+/*hello
+erase alliace 2 joins the defending!*/
 $(document).ready(function(){
 
 	var num = 0;
@@ -1059,6 +1060,7 @@ function startTheSimulation(){
 			}
 			
   			else{	
+	  			alert ('events.[j].endPol is ' + events[j].endPolarity); 
 	 			if (events[j].polarity == events[j].endPolarity || events[j].endPolarity == undefined){ /*maybe this in need of a change?*/
 	 				thinkWar();  	
  				}
@@ -1088,9 +1090,12 @@ function startTheSimulation(){
 		}
 		function toNewTurn(){
 			var clickedBackOnce = false;
+			var clickedForwardsOnce = false; 
+			alert('in to new turn, clicked backwards set to ' + clickedBackOnce); 
 			$('#backwardsOnceButton').click(function(){
 				if (clickedBackOnce == false){
 					clickedBackOnce = true; 
+					alert('now going backwards'); 
 			       	j = j-1; 
 			       	events[j+1].flags.skipScaling = true; 
 			       	if (j>=0 && events.length > 1){
@@ -1105,9 +1110,17 @@ function startTheSimulation(){
 				}
 				
 		     }); 
-		        $('#forwardsOnceButton').click(function(){
-			       alert('clicked forward'); 
-		       });
+			$('#forwardsOnceButton').click(function(){
+				if (clickedForwardsOnce == false){
+					alert('now going forwards'); 
+					clickedForwardsOnce = true; 
+			    	var newOutput = getWorldEvents(2, [], true, world, events[j]); 
+			    	numberOfTurns += 1; 
+					events.push(newOutput[0]); 
+					world = newOutput[1]; 
+					transitionToNewTurn();
+				}
+		     });
 			function displayOptions(){
 				var option = document.getElementById('options'); 
 		        $(option).removeClass('hidden'); 

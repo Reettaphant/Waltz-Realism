@@ -690,9 +690,11 @@
 					addContent('now assessing whether bipolar decline because age was big enough'); 
 					if(this.world.polarity[age-4]== 'bipolar' && this.world.polarity[age-3]== 'bipolar' &&  this.world.polarity[age-2]== 'bipolar' &&  this.world.polarity[age-1]== 'bipolar'){
 						addContent('polarities bipolar, now assessing decline'); 
+						var decCounter = 0; 
 						for (var k =0; k<2; k++){
 							var prob = Math.random()
-							if (prob < 0.4){ 
+							if (prob < 0.4){
+								decCounter += 1;  
 								changed = true; 
 								this.world.states[k].addPower(Math.round(-1*this.world.states[k].power * (5/6))); 
 								this.changedStates.push([this.world.states[k].power, parseInt(this.world.states[k].label)]); 
@@ -709,6 +711,12 @@
 					}
 				}
 				if (changed == true){
+					if (decCounter == 1){
+						changedPolarities = 'unipolar'; 	
+					}
+					else{
+						changedPolarities = 'bipolar'; 	
+					}
 					this.world.worldHistory.push('systemic change'); 	
 				}
 				else{
@@ -1213,6 +1221,7 @@
   
     
      for (var h=0; h<numberOfTurns; h++){
+	    changedPolarity = false; 
 	 	if (continuationOfOld == true && h==0){
 			h++; 	   
 	    }
@@ -1322,6 +1331,7 @@
 	 	if (h != 0){
 		 	events[h-1].endPolarity = turn.polarity;    
 	    }
+	  
      	world.assessAlliances(); 
      	turn.alliances = world.animCoalitions.slice();  
      	world.perfectBalance(); 
@@ -1378,8 +1388,18 @@
      	turn.hegemon = world.hegemon; 
  
      	if (h==(numberOfTurns - 1)){
-	     	world.setPolarity(); 
-	     	turn.endPolarity = world.polarity[world.polarity.length-1]; 
+	     	alert('now time to assess end polarity'); 
+	     	if (world.worldHistory[world.worldHistory.length-1] != 'systemic change' && world.worldHistory[world.worldHistory.length-1] != 'systemic war'){
+	     		alert('no systemic changes'); 
+		     	turn.endPolarity = world.polarity[world.polarity.length-1]; 
+     		}
+     		else{
+	     		alert('was a systemic change, need to assess new polarity'); 
+	     		world.setPolarity(); 
+	     		turn.endPolarity = world.polarity[world.polarity.length-1];
+	     		world.polarity.splice(world.polarity.length-1, 1); 
+     		}
+	     	alert('end polarity was set to ' + turn.endPolarity); 
      	}
      	
     	events.push(turn); 
