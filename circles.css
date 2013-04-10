@@ -26,7 +26,9 @@ h1 {
 	text-align: center; 
 	background: #C2C3CB;
 	}
-
+h2{
+  font-size: 18px;	
+}
 .hidden {display: none;}
 
 .visible{display: block;}
@@ -65,7 +67,15 @@ form{
 	height: 230px; 	
 }
 
+#initialExtraOptions{
+	padding-top: 10px;
+	margin-left: 8px; 	
+}
 
+#firstQu{
+	padding-top: 10px;
+	margin-left: 8px; 	
+}
 input.errorButton{
 	position: absolute;
 	width: 110px;
@@ -176,8 +186,10 @@ input{
 	border-radius: 7px;
 }
 
+
+
 #stateNumbers{
-	height: 300px;
+	height: 375px;
 	width: 400px;
 }	
 
@@ -375,6 +387,22 @@ input{
 	margin-top: 14px; 
 }
 
+.backForthOnce{
+	border-top: solid 2px blue; 
+	border-bottom: solid 2px blue; 
+	background: blue; 
+	color: black;
+	float: left; 
+	font-size: 9px; 
+	font-weight: bold; 
+	padding: 2px; 
+	width: 170px;
+	height: 45px;
+	border-radius: 0px;
+	margin-top: 14px; 
+}
+
+
 #backwardsButton.backForth{
 	border-right: solid 2px #CD6090;
 	border-left: none;
@@ -395,7 +423,27 @@ input{
 	float: left; 
 }
 
+#backOnceArrow {
+	margin-top: 5px; 
+	width: 0; 
+	height: 0; 
+	border-top: 28px solid transparent;
+	border-bottom: 28px solid transparent; 	
+	border-right: 28px solid #CD6090; 
+	float: left; 
+}
+
 #forwardArrow {
+	margin-top: 5px; 
+	width: 0; 
+	height: 0; 
+	border-top: 28px solid transparent;
+	border-bottom: 28px solid transparent;
+	border-left: 28px solid #CD6090;
+	float: left; 
+}
+
+#forwardOnceArrow {
 	margin-top: 5px; 
 	width: 0; 
 	height: 0; 

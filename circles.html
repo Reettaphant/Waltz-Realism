@@ -18,8 +18,11 @@
  
  
   
-  <form name='numberOfStates' id = "stateNumbers" class = 'visible'>
+  <form name='numberOfStates' id = "stateNumbers" class = 'visible firstFormBigger'>
    <h2 id='StateNu'> What kind of a simulation would you like to run? </h2>
+   <input type="radio" name="initialQuery"  value="oneAtATime" id = 'input2' class="radioButton initial"> <span class='radioDesc'> Show me each turn one at a time<br> </span>
+  <input type="radio" name="initialQuery" value="manyAtATime" id = 'input1' class="radioButton initial"> <span class = 'radioDesc'> Show me many turns at once <br></span>
+  <div id = firstQu>
   <span>I would like to start the simulation with</span>
   <select name = "numberOfStates" id=numberOfStates>
   	<option value="1">...</option>
@@ -30,10 +33,14 @@
   	<option value="9">9</option>
   	<option value="10">10</option>
   </select>
-  <span>states, and I would like to run the simulation for </span>
+  <span>states </span>
+  </div>
+   <div id = 'initialExtraOptions' class = 'hidden'>
+  <span> I would like to run the simulation for </span>
   <input type = "text" name = "numberOfTurns" id=numberOfTurns>
   <span>turns. <br> </span>
-  
+  </div>
+  <h2> How do you want to set the state parameters? </h2>
   <input type="radio" name="initialiseStates" value="manual" class="radioButton"> <span class='radioDesc'> I want to set the parameters for states<br> </span>
 <input type="radio" name="initialiseStates" value="automatic" class="radioButton"> <span class = 'radioDesc'> Choose the parameters for me <br></span>
   <input type ="button" name= "button" id = 'buttonForStates' class = 'changingButton' value='Submit'>
@@ -146,8 +153,15 @@
   in the simulation.</p>
    <input type ="button" id = 'secondErrorButton' class = 'errorButton changingButton'  value='Back'>
   </div>
- <div id = 'stateFrame' class = 'hidden'>
-   
+  
+  <div class = 'visible'>
+  <div id = 'backOnceArrow'> </div>
+ <input type ="button" id = 'backwardsButton' class = 'backForthOnce' value = 'See the Previous Turn'>
+  <input type ="button" id = 'forwardsButton' class = 'backForthOnce' value = 'See the Next Turn'>
+  <div id = 'forwardOnceArrow'> </div>
+  </div>
+  
+  <div id = 'stateFrame' class = 'hidden'>
  <div id = 'stateGroupOne' class='stateGroup'>
  <div id = 'state1' class = 'state hidden alliance0'> <p id = state1Label class = 'stateLabel visible'> 1 <span class = 'powerDesc hidden'> </span> </p> </div>   
  <div id = 'state5' class = 'state hidden alliance0'> <p id = state5Label class = 'stateLabel visible'> 5 <span class = 'powerDesc hidden'> </span> </p> </div> 

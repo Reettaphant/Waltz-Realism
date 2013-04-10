@@ -1,5 +1,5 @@
 
-
+/*hello*/
 $(document).ready(function(){
 
 	var num = 0;
@@ -7,6 +7,9 @@ $(document).ready(function(){
 	var initialStates; 
 	var manual; 
 	var automatic = undefined;
+	var showMany = undefined; 
+	var goBack = false; 
+	var goForth = false; 
 	
 	$(function(){
 		$("#powerButton").click(startTheSimulation);
@@ -82,6 +85,20 @@ $(document).ready(function(){
   		}
 $(function(){
 	
+	$('#input1').change(function(){
+		var more = document.getElementById('initialExtraOptions'); 
+		$(more).removeClass('hidden'); 
+		$(more).addClass('visible'); 
+		showMany = true;
+	});
+	
+	$('#input2').change(function(){
+		var more = document.getElementById('initialExtraOptions'); 
+		$(more).removeClass('visible'); 
+		$(more).addClass('hidden'); 
+		showMany = false;
+	});
+	
 	$("#buttonForStates").click(function(){
 		$("#firstErrorButton").click(function(){
 			var error = document.getElementById('firstFormError'); 
@@ -107,9 +124,15 @@ $(function(){
 			$(error).addClass('hidden');
 		});
 		
-		num = ($("#numberOfStates").val());
-		numOfTurns = Math.round(($("#numberOfTurns").val()));
 		
+		num = ($("#numberOfStates").val());
+		
+		if (showMany != undefined){
+			numOfTurns = Math.round(($("#numberOfTurns").val()));
+		}
+		else{
+			numOfTurns = 1; 	
+		}
 		($('#stateNumbers')).removeClass('visible'); 
 			($('#stateNumbers')).addClass('hidden'); 
 		
@@ -119,7 +142,7 @@ $(function(){
 			$(error).addClass('visible'); 		
 		}
 
-		else if (isNaN(num) || isNaN(numOfTurns) || numOfTurns < 1){
+		else if ((isNaN(num) || isNaN(numOfTurns) || numOfTurns < 1) && showMany == true){
 			
 			var error = document.getElementById('firstFormError'); 
 			$(error).removeClass('hidden'); 
@@ -1198,7 +1221,14 @@ function startTheSimulation(){
 				answeringPeace(); 
 			}
 			if (j == events.length-1){	
+				if (showMany == true){
 		        displayOptions(); 
+	       	 	}
+	       	 	else{
+		       	 	alert('need to make more things'); 
+		       	 	/*next: also make event listeners for the new buttons made*/	
+	       	 	}
+	        
 	        }
 			else{
 	   			transitionToNewTurn();
@@ -1906,8 +1936,12 @@ function startTheSimulation(){
     		}
    		}
     }
-
-     var output = getWorldEvents(numOfTurns, initialStates, false);
+	if (showMany == true){
+     	var output = getWorldEvents(numOfTurns, initialStates, false);
+ 	}
+ 	else{
+	 	var output = getWorldEvents(1, initialStates, false);
+ 	}
      var events =[]; 
      for (var k=0; k<output.length-1; k++){
 	  	events.push(output[k]);    
