@@ -1087,7 +1087,27 @@ function startTheSimulation(){
 	    	});     
 		}
 		function toNewTurn(){
-			
+			var clickedBackOnce = false;
+			$('#backwardsOnceButton').click(function(){
+				if (clickedBackOnce == false){
+					clickedBackOnce = true; 
+			       	j = j-1; 
+			       	events[j+1].flags.skipScaling = true; 
+			       	if (j>=0 && events.length > 1){
+						if (events[j].polarity != 'bipolar' && events[j+1].polarity == 'bipolar'){
+							events[j+1].flags.sorted = false;
+						}
+					}
+					for (var k=0; k<16; k++){
+						initialiseStateBeforeTurn(j+1, k);
+					}
+					transitionToNewTurn(); 
+				}
+				
+		     }); 
+		        $('#forwardsOnceButton').click(function(){
+			       alert('clicked forward'); 
+		       });
 			function displayOptions(){
 				var option = document.getElementById('options'); 
 		        $(option).removeClass('hidden'); 
@@ -1138,7 +1158,9 @@ function startTheSimulation(){
 		        	var backwardsQuery = document.getElementById('backwardsQuery'); 
 		        	$(backwardsQuery).removeClass('hidden'); 
 		        	$(backwardsQuery).addClass('visible');
-		       	});  
+		       	});
+		       
+		       
 		       $("#forwardsButton").click(function(){
 			       $("#forwardsQueryButton").click(function(){
 				    if (parseInt($("#forwardTurns").val()) > 50){
@@ -1224,11 +1246,7 @@ function startTheSimulation(){
 				if (showMany == true){
 		        displayOptions(); 
 	       	 	}
-	       	 	else{
-		       	 	alert('need to make more things'); 
-		       	 	/*next: also make event listeners for the new buttons made*/	
-	       	 	}
-	        
+	  
 	        }
 			else{
 	   			transitionToNewTurn();
