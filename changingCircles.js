@@ -1,6 +1,9 @@
 
 /*hello
-erase alliace 2 joins the defending!*/
+erase alliace 2 joins the defending!
+why sometimes says moving to bipolar and then no transition to bipolar? on what basis does the animation decide that balancing power
+was succesful and there was no war this time?
+it is because events[j].war == 0 */
 $(document).ready(function(){
 
 	var num = 0;
@@ -1093,8 +1096,10 @@ function startTheSimulation(){
 			var clickedForwardsOnce = false; 
 			alert('in to new turn, clicked backwards set to ' + clickedBackOnce); 
 			$('#backwardsOnceButton').click(function(){
+				alert('now clicking backwards button with clicked back once ' + clickedBackOnce)
 				if (clickedBackOnce == false){
-					clickedBackOnce = true; 
+					clickedBackOnce = true;
+					alert('clicked back once set to true, it is:  ' + clickedBackOnce);  
 					alert('now going backwards'); 
 			       	j = j-1; 
 			       	events[j+1].flags.skipScaling = true; 

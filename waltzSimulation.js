@@ -475,6 +475,7 @@
                            			if (Math.random() < 0.50 + (2*powerDifference)/(defencePower+attackPower)){
 	                           			isWar = true; 
 	                           			wars=[[currentCoalition], [testCoal], false]; 
+	                           			alert('found a limited war'); 
 	                           			currentCoalition.atWar = true; 
 	                           			testCoal.atWar=true; 
 	                           			for (var k=0; k<coalitionCounter.length; k++){
@@ -514,6 +515,7 @@
 						var escProb = Math.random(); 
 						if (escProb<0.25){
 							addContent('escalated into systemic because other states joined'); 
+							alert('war is now escalating'); 
 							wars[2]=true; 
 							worldWar = true; 
 							while (notInWar.length != 0){
@@ -739,6 +741,7 @@
 	}, 
     calculateWinner: function(){
 	    if(this.wars == 0){
+		    alert('no wars, no action taken'); 
 		 	;    
 	    }
 		else{
@@ -917,6 +920,7 @@
 		}
 		
 		function bipolarChange(){
+			alert('now in bipolar change'); 
 			if((Math.floor(totalPower/numOfStates)) > 0){
 				totalPower = strongest.power + secondStrongest.power; 
 				var smallerPower = 0; 
@@ -1029,6 +1033,7 @@
 	}
 		
 		function unipolarChange(){
+			alert('now in unipolar change!'); 
 			totalPower = strongest.power; 
 			for (var k=0; k<numOfStates; k++){
 				if (states[k] != strongest){
@@ -1050,6 +1055,7 @@
 		}
 		
 		if (this.outcomes == 0){
+			alert('outcomes was 0, there will be no changes'); 
 			; 	
 		}
 		else{
@@ -1087,7 +1093,7 @@
 					}		
 				}
 			}
-		else{
+			else{
 				var winningStates = []; 
 				if(didAttackerWin == true){
 					for (var i=0; i<attackers.length; i++){
@@ -1358,12 +1364,12 @@
 		    	turn.statesAfterUpdate[stNumber][1] = allianceNumber;  	
 	    	}	
      	}
-     	
+     	alert('hello!');
      	var testWar = new War(world);  
      	addContent('after creation changed states length in testwar ' + testWar.changedStates.length); 
      	testWar.calculateWar();
      	turn.war = testWar.limitedWar;
- 		
+ 		alert('turn.war is now ' + turn.war); 
      	turn.escalation = testWar.escalation;
      	if (testWar.world.worldWar == true){
 	     	addContent('now escaltion flag was true and there will be a systemic war'); 
@@ -1389,7 +1395,7 @@
  
      	if (h==(numberOfTurns - 1)){
 	     	alert('now time to assess end polarity'); 
-	     	if (world.worldHistory[world.worldHistory.length-1] != 'systemic change' && world.worldHistory[world.worldHistory.length-1] != 'systemic war'){
+	     	if ((world.worldHistory[world.worldHistory.length-1] != 'systemic change' && world.worldHistory[world.worldHistory.length-1] != 'systemic war') || turn.war == 0){
 	     		alert('no systemic changes'); 
 		     	turn.endPolarity = world.polarity[world.polarity.length-1]; 
      		}
