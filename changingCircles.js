@@ -3,7 +3,12 @@
 erase alliace 2 joins the defending!
 why sometimes says moving to bipolar and then no transition to bipolar? on what basis does the animation decide that balancing power
 was succesful and there was no war this time?
-it is because events[j].war == 0 */
+it is because events[j].war == 0
+Now: animation needs to work if a systemic change without a world war 
+now make escalation rarer
+also no radonmness in already explored stuff
+bipolar war decreased too much
+why did power increase by -1 in unipolar update*/
 $(document).ready(function(){
 
 	var num = 0;
@@ -1270,6 +1275,36 @@ function startTheSimulation(){
 	   			transitionToNewTurn();
 	   		}
  	}
+ 	
+ 	function limitedFix(){
+	 	alert('in limited fix');
+	 	hideStories(); 
+	 	var story = document.getElementById('limitedChange'); 
+	 	$(story).removeClass('hidden'); 
+	 	$(story).addClass('visible'); 
+	 	for (var k=0; k<16; k++){
+		 	var found = false; 
+	 		for (var m=0; m<events[j].changedStates.length; m++){
+		 		if (events[j].changedStates.length == 2){
+			 		if (events[j].changedStates[0][1] == k+1){
+				 		var found = true; 	
+			 		}
+		 		}
+		 	if (found == false){
+			 	if (events[j].statesAfterUpdate[k].length == 2){
+					var state = states[(k%4)*4 + Math.floor(k/4)];
+					$(state).removeClass();
+					$(state).addClass('state');
+					$(state).addClass('alliance0')
+					$(state).addClass('visible');
+					$(state).addClass('power' + events[j].statesAfterUpdate[k][0]);  
+				}
+				
+		 	}
+ 		}
+	}
+	setTimeout(toNewTurn, 2000); 	
+ 	}
 		function outcomes(){     
 			function addStories(state, stateNumber, power){
 				extra = '';
@@ -1359,7 +1394,10 @@ function startTheSimulation(){
        		    $(state).addClass('state'); 
        		    addPower(state, power); 
        		    addStories(state, stateNumber, power);      
-	       		if (events[j].flags.worldWar == true){
+	       		if (events[j].flags.worldWar == true || events[j].flags.limitedChange == true){
+		       		if (events[j].flags.limitedChange == true){
+			       		alert('limited change was true'); 
+		       		}
 		       		$(state).addClass('alliance0');
           		}
 	          	else{
@@ -1376,7 +1414,12 @@ function startTheSimulation(){
 	          	}
 	          	else{
 	       			i=0; 	
-	       			setTimeout(toNewTurn, 2000);
+	       			if (events[j].flags.limitedChange == true){
+		       			setTimeout(limitedFix, 2000); 	
+	       			}
+	       			else{
+	       				setTimeout(toNewTurn, 2000);
+       				}
        			}
    			}
 		}

@@ -73,7 +73,7 @@
 	 	this.perfectBalancing = false;
 	 	this.scaled = false; 
 	 	this.worldWar = false; 
-	 	this.bipolarChange = false; 
+	 	this.hello = false; 
 	 	this.unipolarChange = false; 
 	 	
      }
@@ -163,9 +163,11 @@
 		
 		setPolarity: function(){
 			function assessPolarity(){
+				alert('assessing polarity'); 
 				addContent('assessing polarity'); 
 				if (strongest.power >= totalPower * 0.5 && (strongest.power - secondStrongest.power >= 0.3 * totalPower) ){
 						hegemon = strongest.label;
+						alert('returning unipolar'); 
 						return 'unipolar';
 				}
 				
@@ -175,13 +177,16 @@
 					var powerTwoStrongest = strongest.power + secondStrongest.power;
 					if(powerTwoStrongest > 0.8*totalPower){
 						if (strongest.power - secondStrongest.power <= largestDifference && secondStrongest.power - thirdStrongest.power > secondThirdDifference){
+							alert('returning bipolar'); 
 							return 'bipolar'; 
 						}
 						else{
+							alert ('returning multipolar'); 
 							return 'multipolar';	
 						}
 					}
 					else{
+						alert('returning multipolar'); 
 						return 'multipolar';	
 					}
 				}
@@ -191,6 +196,7 @@
 				this.polarity.push('world government');
 			}
 			else{
+				alert('in set polarity'); 
 				this.states.sort(stateSort); 
 				var totalPower = this.getTotalPower();
 				powerMinusStrongest = totalPower - this.states[0].power; 
@@ -203,24 +209,13 @@
 					this.polarity.push('bipolar');	
 				}
 				else{
-					if (this.worldHistory.length	!= 0){
-						var hist = this.worldHistory[this.worldHistory.length-1];
-						if (hist != 'systemic war' && hist != 'systemic change'){
-							this.polarity.push(this.polarity[this.polarity.length-1]);	
-						}
-						else{
-							polarity = assessPolarity(); 
-							this.hegemon = hegemon; 
-							this.polarity.push(polarity);
-						}
-					}
-					else{
-						polarity = assessPolarity(); 
-						this.hegemon = hegemon;
-						this.polarity.push(polarity);
-					}		
+					var hist = this.worldHistory[this.worldHistory.length-1];
+					alert('now going to call assess polarity'); 
+					polarity = assessPolarity(); 
+					this.hegemon = hegemon; 
+					this.polarity.push(polarity);
+					}	
 				}
-			}
 		}, 
 		
 		assessAlliances: function(){
@@ -513,7 +508,7 @@
 					}
 					else{
 						var escProb = Math.random(); 
-						if (escProb<0.25){
+						if (escProb<0){ /*changed from 0.25 for debugging*/
 							addContent('escalated into systemic because other states joined'); 
 							alert('war is now escalating'); 
 							wars[2]=true; 
@@ -1201,7 +1196,7 @@
 		  this.alliances = [];
 		  this.escalation = [];
 		  this.changedStates = [[0]];
-		  this.flags = {'skipScaling' : false, 'didAttackerWin' : false, 'perfectBalancing' : false, 'powersUpdated' : false, 'decliningHegemon' : false, 'scaledDown' : false, 'firstHegemon' : false, 'worldWar' : false, 'sorted' : false}
+		  this.flags = {'limitedChange' : false, 'skipScaling' : false, 'didAttackerWin' : false, 'perfectBalancing' : false, 'powersUpdated' : false, 'decliningHegemon' : false, 'scaledDown' : false, 'firstHegemon' : false, 'worldWar' : false, 'sorted' : false}
 		  this.endPolarity = ''
 		  this.spheres = []
 		  this.hegemon = 0; 
@@ -1245,8 +1240,13 @@
 		    world.scaled = false; 
 		 	turn.flags.scaledDown = true;    
 	    }
-     	
-     	world.setPolarity(); 
+     	if (h==0){
+     		world.setPolarity(); 
+ 		}
+ 		else{
+	 		alert('h is now ' + h); 
+	 		world.polarity.push(events[h-1].endPolarity); 	
+ 		}
 	 	world.update(); 
 	 	if (world.updatedPower == true){
 		 	world.updatedPower = false; 
@@ -1393,19 +1393,24 @@
      	}
      	turn.hegemon = world.hegemon; 
  
-     	if (h==(numberOfTurns - 1)){
-	     	alert('now time to assess end polarity'); 
-	     	if ((world.worldHistory[world.worldHistory.length-1] != 'systemic change' && world.worldHistory[world.worldHistory.length-1] != 'systemic war') || turn.war == 0){
-	     		alert('no systemic changes'); 
-		     	turn.endPolarity = world.polarity[world.polarity.length-1]; 
-     		}
-     		else{
-	     		alert('was a systemic change, need to assess new polarity'); 
-	     		world.setPolarity(); 
-	     		turn.endPolarity = world.polarity[world.polarity.length-1];
-	     		world.polarity.splice(world.polarity.length-1, 1); 
-     		}
-	     	alert('end polarity was set to ' + turn.endPolarity); 
+     	
+	    if (turn.polarity != 'bipolar' || world.worldHistory[h] == 'systemic change'){
+     		world.setPolarity(); 
+     		turn.endPolarity = world.polarity[world.polarity.length-1];
+	    	world.polarity.splice(world.polarity.length-1, 1); 
+ 		}
+	 	else{	
+	    	turn.endPolarity = world.polarity[world.polarity.length-1];
+    	}
+	    alert('end polarity was set to ' + turn.endPolarity); 
+     	if (turn.endPolarity != turn.polarity && world.worldHistory[h] != 'systemic change' && world.worldHistory[h] != 'systemic war'){
+	   		turn.flags.limitedChange = true; 
+	   		world.worldHistory.splice(world.worldHistory.length-1, 1); 
+	   		world.worldHistory.push('systemic war'); 
+	    	alert('limited change set to true in simulation'); 
+	    	if (turn.endPolarity == 'bipolar'){
+		    	turn.flags.sorted = false; 
+    		}
      	}
      	
     	events.push(turn); 
