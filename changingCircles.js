@@ -1,14 +1,16 @@
 
 /*hello
 erase alliace 2 joins the defending!
-why sometimes says moving to bipolar and then no transition to bipolar? on what basis does the animation decide that balancing power
-was succesful and there was no war this time?
-it is because events[j].war == 0
-Now: animation needs to work if a systemic change without a world war 
-now make escalation rarer
 also no radonmness in already explored stuff
-bipolar war decreased too much
-why did power increase by -1 in unipolar update*/
+why did power increase by -1 in unipolar update
+need to have two back buttons, one to see previous again, one to see one even before that
+evaluations for unipolar too easy and bipolar too stringent?
+error handling for the buttons, when can you no longer go backwards
+limited transition to bipolar still not working - it does not have any spheres!!
+remember that wars not escalating at the moment for debugging purposes
+need a question mark button for limited
+now bipolar change too easy */
+
 $(document).ready(function(){
 
 	var num = 0;
@@ -17,6 +19,7 @@ $(document).ready(function(){
 	var manual; 
 	var automatic = undefined;
 	var showMany = undefined; 
+	var onlyOnce = undefined; 
 	var goBack = false; 
 	var goForth = false; 
 	
@@ -99,6 +102,7 @@ $(function(){
 		$(more).removeClass('hidden'); 
 		$(more).addClass('visible'); 
 		showMany = true;
+		onlyOnce = false; 
 	});
 	
 	$('#input2').change(function(){
@@ -106,6 +110,7 @@ $(function(){
 		$(more).removeClass('visible'); 
 		$(more).addClass('hidden'); 
 		showMany = false;
+		onlyOnce = true; 
 	});
 	
 	$("#buttonForStates").click(function(){
@@ -995,7 +1000,7 @@ function startTheSimulation(){
 			}	
 			else{
 	      		if (events[j].flags.sorted == false){
-		    		changed = true; 
+		      		changed = true; 
 			    	events[j].flags.sorted = true;
 			    	hideStories(); 
 			    	var newStory = document.getElementById('bipolarAlliances');    
@@ -1059,7 +1064,6 @@ function startTheSimulation(){
 		     			}
 		     			else{
 			     			i=0; 
-			     			changed = false;
 			     			setTimeout(thinkWar, 2000); 
 		     			
 	      				}
@@ -1068,7 +1072,6 @@ function startTheSimulation(){
 			}
 			
   			else{	
-	  			alert ('events.[j].endPol is ' + events[j].endPolarity); 
 	 			if (events[j].polarity == events[j].endPolarity || events[j].endPolarity == undefined){ /*maybe this in need of a change?*/
 	 				thinkWar();  	
  				}
@@ -1097,16 +1100,12 @@ function startTheSimulation(){
 	    	});     
 		}
 		function toNewTurn(){
-			var clickedBackOnce = false;
-			var clickedForwardsOnce = false; 
-			alert('in to new turn, clicked backwards set to ' + clickedBackOnce); 
+			
+			
 			$('#backwardsOnceButton').click(function(){
-				alert('now clicking backwards button with clicked back once ' + clickedBackOnce)
-				if (clickedBackOnce == false){
-					clickedBackOnce = true;
-					alert('clicked back once set to true, it is:  ' + clickedBackOnce);  
-					alert('now going backwards'); 
-			       	j = j-1; 
+				if (visitedOnce == false){
+					visitedOnce = true; 
+			       	j = j-2; 
 			       	events[j+1].flags.skipScaling = true; 
 			       	if (j>=0 && events.length > 1){
 						if (events[j].polarity != 'bipolar' && events[j+1].polarity == 'bipolar'){
@@ -1118,17 +1117,24 @@ function startTheSimulation(){
 					}
 					transitionToNewTurn(); 
 				}
+				else{
+					;
+				}
 				
 		     }); 
 			$('#forwardsOnceButton').click(function(){
-				if (clickedForwardsOnce == false){
-					alert('now going forwards'); 
-					clickedForwardsOnce = true; 
-			    	var newOutput = getWorldEvents(2, [], true, world, events[j]); 
-			    	numberOfTurns += 1; 
-					events.push(newOutput[0]); 
-					world = newOutput[1]; 
-					transitionToNewTurn();
+				if (visitedForwardOnce == false){
+					visitedForwardOnce = true; 
+					if (j < events[j].length-1){
+						transitionToNewTurn()	
+					}
+					else{
+			    		var newOutput = getWorldEvents(2, [], true, world, events[j]); 
+			    		numberOfTurns += 1; 
+						events.push(newOutput[0]); 
+						world = newOutput[1]; 
+						transitionToNewTurn();
+					}
 				}
 		     });
 			function displayOptions(){
@@ -1233,6 +1239,7 @@ function startTheSimulation(){
 				
 			}
 			function transitionToNewTurn(){
+			
 				if (events[j+1].polarity == 'multipolar'){
 			   		var story = document.getElementById('newTurnMulti');
 					$(story).removeClass('hidden');
@@ -1265,7 +1272,7 @@ function startTheSimulation(){
 			if (peaceClick == true){
 				answeringPeace(); 
 			}
-			if (j == events.length-1){	
+			if (j == events.length-1 || onlyOnce == true){	/*here chooses if continue simulation or if should stop showing the simulation*/
 				if (showMany == true){
 		        displayOptions(); 
 	       	 	}
@@ -1277,7 +1284,6 @@ function startTheSimulation(){
  	}
  	
  	function limitedFix(){
-	 	alert('in limited fix');
 	 	hideStories(); 
 	 	var story = document.getElementById('limitedChange'); 
 	 	$(story).removeClass('hidden'); 
@@ -1396,7 +1402,6 @@ function startTheSimulation(){
        		    addStories(state, stateNumber, power);      
 	       		if (events[j].flags.worldWar == true || events[j].flags.limitedChange == true){
 		       		if (events[j].flags.limitedChange == true){
-			       		alert('limited change was true'); 
 		       		}
 		       		$(state).addClass('alliance0');
           		}
@@ -1552,7 +1557,11 @@ function startTheSimulation(){
           
 		
 	          
- 		function thinkWar(){     
+ 		function thinkWar(){
+	 		if (changed == true){
+		 		changed = false;
+		 		events[j].flags.sorted = false; /*this is changed back to false in case this turn is playd again */
+	 		}     
 	    	hideStories(); 
 	        var newStory = document.getElementById('thinkingOfWar');    
 			$(newStory).removeClass('hidden');
@@ -1711,6 +1720,8 @@ function startTheSimulation(){
         }
 		function updatePower(){ 
 			
+			visitedOnce = false;  /*this is to control the button for going back one turn*/
+			visitedForwardOnce = false; 
 			$("#powerQuestion").click(function(){
 					powerClick = true; 
 					var unClicked = document.getElementById('powerQuestion'); 
@@ -2040,7 +2051,10 @@ function startTheSimulation(){
 	   	var sphere2text = '';
        	var changed = false; 
        	var visited = false; 
-      
+      	var visitedOnce; 
+      	var visitedForwardOnce; 
+      	
+      	
 		if (events[0].polarity == 'multipolar'){
 			var story = document.getElementById('newTurnMulti');
 			$(story).removeClass('hidden');
