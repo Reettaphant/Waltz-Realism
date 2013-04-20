@@ -163,12 +163,7 @@
 		
 		setPolarity: function(){
 			function assessPolarity(){
-				alert('assessing polarity'); 
 				addContent('assessing polarity'); 
-				if (h==1){
-					alert('returnign bipolar'); 
-					return 'bipolar';
-				}	
 				if (strongest.power >= totalPower * 0.55 && (strongest.power - secondStrongest.power >= 0.3 * totalPower) ){
 						hegemon = strongest.label;
 						alert('returning unipolar'); 
@@ -179,7 +174,7 @@
 					var largestDifference = Math.floor(totalPower/5); 
 					var secondThirdDifference = Math.floor(totalPower/8); 
 					var powerTwoStrongest = strongest.power + secondStrongest.power;
-					if(powerTwoStrongest > 0.75*totalPower){/*changed from 0.75 for debugging*/
+					if(powerTwoStrongest > 0.78*totalPower){
 						if (strongest.power - secondStrongest.power <= largestDifference && secondStrongest.power - thirdStrongest.power > secondThirdDifference){
 							alert('returning bipolar'); 
 							return 'bipolar'; 
@@ -512,7 +507,7 @@
 					}
 					else{
 						var escProb = Math.random(); 
-						if (escProb<0){ /*changed from 0.25 for debugging*/
+						if (escProb<0.25){ 
 							addContent('escalated into systemic because other states joined'); 
 							alert('war is now escalating'); 
 							wars[2]=true; 
