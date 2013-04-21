@@ -387,6 +387,44 @@ input{
 	margin-top: 14px; 
 }
 
+
+#backOnceArrow{
+	margin-top: 0px; 
+	width: 0; 
+	height: 0; 
+	border-top: 45px solid transparent;
+	border-bottom: 45px solid transparent; 	
+	border-right: 45px solid #CD6090; 
+	float: left; 
+	margin-left: 290px; 
+}
+#backwardsOnceButton{
+	margin-right: 15px; 
+}
+
+#againOnce{
+	margin-right: 15px; 
+}
+
+#exitOnce{
+	margin-right: 15px; 
+}
+
+#forwardsOnceButton{
+	
+}
+
+#forwardOnceArrow{
+	margin-top: 0px; 
+	width: 0; 
+	height: 0; 
+	border-top:45px solid transparent;
+	border-bottom: 45px solid transparent;
+	border-left: 45px solid #CD6090;
+	float: left; 
+	margin-right: 50px;
+	 
+}
 .backForthOnce{
 	border-top: solid 2px blue; 
 	border-bottom: solid 2px blue; 
@@ -399,7 +437,7 @@ input{
 	width: 170px;
 	height: 45px;
 	border-radius: 0px;
-	margin-top: 14px; 
+	margin-top: 3px; 
 }
 
 
@@ -423,15 +461,7 @@ input{
 	float: left; 
 }
 
-#backOnceArrow {
-	margin-top: 5px; 
-	width: 0; 
-	height: 0; 
-	border-top: 28px solid transparent;
-	border-bottom: 28px solid transparent; 	
-	border-right: 28px solid #CD6090; 
-	float: left; 
-}
+
 
 #forwardArrow {
 	margin-top: 5px; 
@@ -443,15 +473,7 @@ input{
 	float: left; 
 }
 
-#forwardOnceArrow {
-	margin-top: 5px; 
-	width: 0; 
-	height: 0; 
-	border-top: 28px solid transparent;
-	border-bottom: 28px solid transparent;
-	border-left: 28px solid #CD6090;
-	float: left; 
-}
+
 
 .storyButton{
 	position: absolute; 

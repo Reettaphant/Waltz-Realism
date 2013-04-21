@@ -1,15 +1,11 @@
 
-/*hello
-erase alliace 2 joins the defending!
-also no radonmness in already explored stuff
-why did power increase by -1 in unipolar update
-need to have two back buttons, one to see previous again, one to see one even before that
-evaluations for unipolar too easy and bipolar too stringent?
+/*
+
 error handling for the buttons, when can you no longer go backwards
-limited transition to bipolar still not working - it does not have any spheres!!
-remember that wars not escalating at the moment for debugging purposes
 need a question mark button for limited
-now bipolar change too easy */
+make the way in which end options given in many terms better
+style and hide new buttons
+*/
 
 $(document).ready(function(){
 
@@ -1101,11 +1097,10 @@ function startTheSimulation(){
 		}
 		function toNewTurn(){
 			
-			
-			$('#backwardsOnceButton').click(function(){
+			function goBack(turns){
 				if (visitedOnce == false){
 					visitedOnce = true; 
-			       	j = j-2; 
+			       	j = j-turns; 
 			       	events[j+1].flags.skipScaling = true; 
 			       	if (j>=0 && events.length > 1){
 						if (events[j].polarity != 'bipolar' && events[j+1].polarity == 'bipolar'){
@@ -1120,6 +1115,14 @@ function startTheSimulation(){
 				else{
 					;
 				}
+			};
+			 
+			$('#againOnce').click(function(){
+				goBack(1)
+			}); 
+			
+			$('#backwardsOnceButton').click(function(){
+				goBack(2); 
 				
 		     }); 
 			$('#forwardsOnceButton').click(function(){
@@ -1137,6 +1140,20 @@ function startTheSimulation(){
 					}
 				}
 		     });
+		     
+		     $('#exitOnce').click(function(){
+				if (visitedOnce == false){
+					visitedOnce = true;
+					var story = document.getElementById('theEnd'); 
+		        	$(story).removeClass('hidden'); 
+		        	$(story).addClass('visible');
+		        
+				}
+				else{
+					
+				}
+				
+		     }); 
 			function displayOptions(){
 				var option = document.getElementById('options'); 
 		        $(option).removeClass('hidden'); 
