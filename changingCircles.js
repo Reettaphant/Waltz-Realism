@@ -1,7 +1,6 @@
 
 /*
 
-error handling for the buttons, when can you no longer go backwards
 need a question mark button for limited
 make the way in which end options given in many terms 
 */
