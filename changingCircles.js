@@ -1,9 +1,5 @@
 
-/*
 
-need a question mark button for limited
-make the way in which end options given in many terms 
-*/
 
 $(document).ready(function(){
 
