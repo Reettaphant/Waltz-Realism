@@ -26,8 +26,15 @@ h1 {
 	text-align: center; 
 	background: #C2C3CB;
 	}
+	
 h2{
-  font-size: 18px;	
+	font-size: 18px; 	
+	margin: 7px;
+	border-bottom: 2px solid #528B8B;
+	margin-bottom: 0px; 
+}
+h3{
+  font-size: 16px;	
 }
 .hidden {display: none;}
 
@@ -189,7 +196,7 @@ input{
 
 
 #stateNumbers{
-	height: 375px;
+	height: 425px;
 	width: 400px;
 }	
 
@@ -323,6 +330,11 @@ input{
 	margin: 14px; 
 	
 }
+
+#backOnceError{
+	position: absolute; 
+	right: 500px; 	
+}
 #stateFrame{
 	   background: #F4F4F4; 
 	   position: relative;
@@ -389,25 +401,29 @@ input{
 
 
 #backOnceArrow{
-	margin-top: 0px; 
+	margin-top: -4px; 
 	width: 0; 
 	height: 0; 
-	border-top: 45px solid transparent;
-	border-bottom: 45px solid transparent; 	
-	border-right: 45px solid #CD6090; 
+	border-top: 30px solid transparent;
+	border-bottom: 30px solid transparent; 	
+	border-right: 30px solid #C2C3CB;; 
 	float: left; 
 	margin-left: 290px; 
+	margin-right: 20px; 
 }
 #backwardsOnceButton{
 	margin-right: 15px; 
+	
 }
 
 #againOnce{
 	margin-right: 15px; 
+	
 }
 
 #exitOnce{
 	margin-right: 15px; 
+	
 }
 
 #forwardsOnceButton{
@@ -415,20 +431,19 @@ input{
 }
 
 #forwardOnceArrow{
-	margin-top: 0px; 
+	margin-top: -4px; 
+	margin-left: 20px; 
 	width: 0; 
 	height: 0; 
-	border-top:45px solid transparent;
-	border-bottom: 45px solid transparent;
-	border-left: 45px solid #CD6090;
+	border-top: 30px solid transparent;
+	border-bottom: 30px solid transparent;
+	border-left: 30px solid #C2C3CB;
 	float: left; 
 	margin-right: 50px;
 	 
 }
 .backForthOnce{
-	border-top: solid 2px blue; 
-	border-bottom: solid 2px blue; 
-	background: blue; 
+	border: solid 2px #5D478B; 
 	color: black;
 	float: left; 
 	font-size: 9px; 
@@ -436,8 +451,18 @@ input{
 	padding: 2px; 
 	width: 170px;
 	height: 45px;
-	border-radius: 0px;
+	border-radius: 12px;
 	margin-top: 3px; 
+}
+.backForthOnce.passive{
+	background: #C2C3CB;	
+}
+
+.backForthOnce.active{
+	background: #EEAEEE; 
+}
+.backForthOnce.active:hover{
+	background: #CD96CD;
 }
 
 

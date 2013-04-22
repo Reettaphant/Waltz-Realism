@@ -3,8 +3,7 @@
 
 error handling for the buttons, when can you no longer go backwards
 need a question mark button for limited
-make the way in which end options given in many terms better
-style and hide new buttons
+make the way in which end options given in many terms 
 */
 
 $(document).ready(function(){
@@ -350,7 +349,11 @@ function startTheSimulation(){
 	var frame = document.getElementById('stateFrame'); 
 	var storyFrame = document.getElementById('storyFrame'); 
 	
-	
+	if (onlyOnce == true){
+		var buttons = document.getElementById('onceButtons'); 
+		$(buttons).addClass('visible'); 
+		$(buttons).removeClass('hidden'); 	
+	}
 	initialStates = []; 
 	var parameterError = false; 
 	if (manual == true){	
@@ -1096,26 +1099,32 @@ function startTheSimulation(){
 	    	});     
 		}
 		function toNewTurn(){
-			
 			function goBack(turns){
 				if (visitedOnce == false){
-					visitedOnce = true; 
+					visitedOnce = true;
 			       	j = j-turns; 
-			       	events[j+1].flags.skipScaling = true; 
-			       	if (j>=0 && events.length > 1){
-						if (events[j].polarity != 'bipolar' && events[j+1].polarity == 'bipolar'){
-							events[j+1].flags.sorted = false;
+			       	if (j <= -2){
+				       	j = j+ turns;
+				       	visitedOnce = false; 
+				    	toNewTurn();  	
+			       	}
+			       	else{
+			       		events[j+1].flags.skipScaling = true; 
+			       		if (j>=0 && events.length > 1){
+							if (events[j].polarity != 'bipolar' && events[j+1].polarity == 'bipolar'){
+								events[j+1].flags.sorted = false;
+							}
 						}
+						for (var k=0; k<16; k++){
+							initialiseStateBeforeTurn(j+1, k);
+						}
+						transitionToNewTurn(); 
 					}
-					for (var k=0; k<16; k++){
-						initialiseStateBeforeTurn(j+1, k);
+				}
+					else{
+						;
 					}
-					transitionToNewTurn(); 
-				}
-				else{
-					;
-				}
-			};
+				};
 			 
 			$('#againOnce').click(function(){
 				goBack(1)
@@ -1128,7 +1137,7 @@ function startTheSimulation(){
 			$('#forwardsOnceButton').click(function(){
 				if (visitedForwardOnce == false){
 					visitedForwardOnce = true; 
-					if (j < events[j].length-1){
+					if (j < events.length-1){
 						transitionToNewTurn()	
 					}
 					else{
@@ -1147,6 +1156,11 @@ function startTheSimulation(){
 					var story = document.getElementById('theEnd'); 
 		        	$(story).removeClass('hidden'); 
 		        	$(story).addClass('visible');
+		        	var children = document.getElementById('onceButtons').childNodes;
+			     	for (var k= 0; k< children.length - 2; k++){
+				     	$(children[k]).removeClass('active'); 
+				     	$(children[k]).addClass('passive'); 
+			     	}
 		        
 				}
 				else{
@@ -1243,20 +1257,24 @@ function startTheSimulation(){
 		       }); 
 		       
 		       $("#exitButton").click(function(){
-			    var option = document.getElementById('options'); 
-		        $(option).removeClass('visible'); 
-		        $(option).addClass('hidden');
-		        var story = document.getElementById('theEnd'); 
-		        $(story).removeClass('hidden'); 
-		        $(story).addClass('visible');
+			    	var option = document.getElementById('options'); 
+		        	$(option).removeClass('visible'); 
+		        	$(option).addClass('hidden');
+		        	var story = document.getElementById('theEnd'); 
+		        	$(story).removeClass('hidden'); 
+		        	$(story).addClass('visible');
 		        
-			   	      
-		       });
+			   		      
+		       	});
 		       
 				
 			}
 			function transitionToNewTurn(){
-			
+				var children = document.getElementById('onceButtons').childNodes;
+			     for (var k= 0; k< children.length - 2; k++){
+				     $(children[k]).removeClass('active'); 
+				     $(children[k]).addClass('passive'); 
+			     }			
 				if (events[j+1].polarity == 'multipolar'){
 			   		var story = document.getElementById('newTurnMulti');
 					$(story).removeClass('hidden');
@@ -1291,8 +1309,17 @@ function startTheSimulation(){
 			}
 			if (j == events.length-1 || onlyOnce == true){	/*here chooses if continue simulation or if should stop showing the simulation*/
 				if (showMany == true){
-		        displayOptions(); 
-	       	 	}
+		        	displayOptions(); 
+	        	}
+		        else{
+			     	var children = document.getElementById('onceButtons').childNodes;
+			     	for (var k= 0; k< children.length - 2; k++){
+				     	$(children[k]).removeClass('passive'); 
+				     	$(children[k]).addClass('active'); 
+				     		
+			     	}   
+		        }
+	       	 
 	  
 	        }
 			else{
