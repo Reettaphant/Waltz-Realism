@@ -1758,18 +1758,19 @@ function startTheSimulation(){
 	    	});        
         }
 		function updatePower(){ 
-			
+			var visitedPowerStory = false; 
 			visitedOnce = false;  /*this is to control the button for going back one turn*/
 			visitedForwardOnce = false; 
-			$("#powerQuestion").click(function(){
-					powerClick = true; 
-					var unClicked = document.getElementById('powerQuestion'); 
-					var clicked = document.getElementById('clickedPower'); 
-					$(unClicked).removeClass('visible'); 
-					$(unClicked).addClass('hidden');
-					$(clicked).removeClass('hidden'); 
-					$(clicked).addClass('visible'); 
-					
+			var powerClick = false;
+			$("#powerContinue").click(function(){
+					if (powerClick == false){
+						powerClick = true; 
+						visitedPowerStory = true; 
+						var story =  document.getElementById('updateExplanation');    
+						$(story).removeClass('visible'); 
+						$(story).addClass('hidden'); 
+						updatePower();
+					} 
 				}); 
 				
 			$("#noPowerQuestion").click(function(){
@@ -1801,127 +1802,133 @@ function startTheSimulation(){
 	 			}
  			}
 		    else{
-		   		if (i==0){
+		   		if (visitedPowerStories = false){
 			    	hideStories(); 
-			       	var newStory = document.getElementById('updatePowers');    
-			       	$(newStory).removeClass('hidden');
-	   			   	$(newStory).addClass('visible');
+			       	var expStory = document.getElementById('updateExplanation');    
 	   			   	removeContent('powerDetails');
+	   			   	$(expStory).removeClass('hidden'); 
+	   			   	$(expStory).addClass('visible'); 
 	            }
-	            
-		    	if (events[j].statesAfterUpdate[i] == 0){
-					if (i<15){
-						if (powerClick == true){
-							setTimeout(powerQuestion, 3000); 	
-						}
-						else{
-							i++; 
-			        		updatePower();  
-		        		}
-	        		}	 
-		         	else{
-			     		i=0; 
-			     		if (powerClick == true){
-				     		setTimeout(powerQuestion, 3000); 	
-			     		}   
-			       		else if (events[j].polarity == 'multipolar'){    
-			       			setTimeout(updateAlliances, 3000);
-		       			}
-		         		else if (events[j].polarity == 'bipolar'){
-			     			setTimeout(bipolarAlliances, 3000); 
-		         		}
-		         		else if (events[j].polarity == 'unipolar'){
-			     			setTimeout(unipolarAlliances, 3000); 
-		         		}
-		         	}    
-		    	}
-		    	else{ 
-		    		var info = events[j].statesAfterUpdate[i]; 
-		   	   		var power=info[0];
-	   		    	state = states[((i%4)*4 + Math.floor(i/4))]; 
-	   		    	$(state).removeClass(); 
-       				$(state).addClass('visible');
-       				$(state).addClass('state'); 
-       				if (j == 0){
-	       				$(state).addClass('alliance0'); 
-       				}
-       				if (events[j-1].polarity == 'unipolar' && events[j].polarity == 'unipolar'){
-	       				var stateNum = i+1; 
-						if (stateNum == events[j].hegemon){
-							$(state).addClass('alliance100'); 	
-						}	
-						else{
-							$(state).addClass('alliance001'); ; 	
-						}	
-       				}
-       				else if (events[j-1].polarity != 'multipolar'){
-	       					$(state).addClass('alliance0'); 
-       				}
-       				else{
-       					$(state).addClass('alliance' + events[j-1].statesAfterUpdate[i][1]); 
-   					}
-   					
-       				addPower(state, power);
-       				var extra = "";
-       				var diff; 
-       				var oldPower = events[j].statesAfterScaling[i][0];	
-       				var hegemon = 0;
-       				var hegeDecline = '';
-       				var decline = false;
-       				if (events[j].flags.decliningHegemon == true){
-	       				hegemon = events[j].hegemon; 
-       				}
-       				if ((i+1) == hegemon){
-	       				decline = true; 
-       				}
-	   			
-   				
-       				if (power != oldPower){
-	       				if (decline == true){
-		       				diff = oldPower-power; 
-	       					extra = ' Power decreased by '; 
-	       					extra += diff; 
-	       					extra += '. The state is an old hegemonic power whose powers continue to decline. '
-	       				}
-	       				else{
-	       					diff = power-oldPower; 
-	       					extra = ' Power increased by '; 
-	       					extra += diff; 
-       					}
-   					}
-       				var num = i+1; 
-       				addContent('powerDetails', 'State ' + num + ' has power ' + power + '.' + extra + hegeDecline);
-       				if(i < 15){
-	       				if (powerClick == true){
-		       				setTimeout(powerQuestion, 1000); 	
-	       				}
-	       				else{
-	       					i++; 
-	       					setTimeout(updatePower, 1000);
-       					}
-   					}		
-       				else{
-	       				i=0;  
-	       				if (powerClick == true){
-		       				setTimeout(powerQuestion, 3000); 	
-	       				}
-	       				else{
-	       					if (events[j].polarity == 'multipolar'){    
-			        			setTimeout(updateAlliances, 3000);
-		       					}	
+	            else{
+		            if (i==0){
+			        	var newStory = document.getElementById('updatePowers');   
+			        	$(newStory).removeClass('hidden');
+	   			   		$(newStory).addClass('visible');    
+		            }
+		    		if (events[j].statesAfterUpdate[i] == 0){
+						if (i<15){
+							if (powerClick == true){
+								setTimeout(powerQuestion, 3000); 	
+							}
+							else{
+								i++; 
+			        			updatePower();  
+		        			}
+	        			}	 
+		         		else{
+			     			i=0; 
+			     			if (powerClick == true){
+				     			setTimeout(powerQuestion, 3000); 	
+			     			}   
+			       			else if (events[j].polarity == 'multipolar'){    
+			       				setTimeout(updateAlliances, 3000);
+		       				}
 		         			else if (events[j].polarity == 'bipolar'){
 			     				setTimeout(bipolarAlliances, 3000); 
 		         			}
 		         			else if (events[j].polarity == 'unipolar'){
 			     				setTimeout(unipolarAlliances, 3000); 
-		         			}	
-	         			}
-			   		}
-	   			}
-   			}
-		}
-		
-	function scalingQuestion(){
+		         			}
+		         		}		    
+		    		}
+		    		else{ 
+		    			var info = events[j].statesAfterUpdate[i]; 
+		   	   			var power=info[0];
+	   		    		state = states[((i%4)*4 + Math.floor(i/4))]; 
+	   		    		$(state).removeClass(); 
+       					$(state).addClass('visible');
+       					$(state).addClass('state'); 
+       					if (j == 0){
+	       					$(state).addClass('alliance0'); 
+       					}
+       					if (events[j-1].polarity == 'unipolar' && events[j].polarity == 'unipolar'){
+	       					var stateNum = i+1; 
+							if (stateNum == events[j].hegemon){
+								$(state).addClass('alliance100'); 	
+							}	
+							else{
+								$(state).addClass('alliance001'); ; 	
+							}	
+       					}
+       					else if (events[j-1].polarity != 'multipolar'){
+	       						$(state).addClass('alliance0'); 
+       					}
+       					else{
+       						$(state).addClass('alliance' + events[j-1].statesAfterUpdate[i][1]); 
+   						}
+   					
+       					addPower(state, power);
+       					var extra = "";
+       					var diff; 
+       					var oldPower = events[j].statesAfterScaling[i][0];	
+       					var hegemon = 0;
+       					var hegeDecline = '';
+       					var decline = false;
+       					if (events[j].flags.decliningHegemon == true){
+	       					hegemon = events[j].hegemon; 
+       					}
+       					if ((i+1) == hegemon){
+	       					decline = true; 
+       					}
+	   			
+   				
+       					if (power != oldPower){
+	       					if (decline == true){
+		       					diff = oldPower-power; 
+	       						extra = ' Power decreased by '; 
+	       						extra += diff; 
+	       						extra += '. The state is an old hegemonic power whose powers continue to decline. '
+	       					}
+	       					else{
+	       						diff = power-oldPower; 
+	       						extra = ' Power increased by '; 
+	       						extra += diff; 
+       						}
+   						}
+       					var num = i+1; 
+       					addContent('powerDetails', 'State ' + num + ' has power ' + power + '.' + extra + hegeDecline);
+       					if(i < 15){
+	       					if (powerClick == true){
+		       					setTimeout(powerQuestion, 1000); 	
+	       					}
+	       					else{
+	       						i++; 
+	       						setTimeout(updatePower, 1000);
+       						}
+   						}		
+       					else{
+	       					i=0;  
+	       					if (powerClick == true){
+		       					setTimeout(powerQuestion, 3000); 	
+	       					}
+	       					else{
+	       						if (events[j].polarity == 'multipolar'){    
+			        				setTimeout(updateAlliances, 3000);
+		       						}	
+		         				else if (events[j].polarity == 'bipolar'){
+			     					setTimeout(bipolarAlliances, 3000); 
+		         				}
+		         				else if (events[j].polarity == 'unipolar'){
+			     					setTimeout(unipolarAlliances, 3000); 
+		         				}	
+	         				}
+			   			}
+	   				}
+   				}
+			}	
+		}		
+	
+		function scalingQuestion(){
 		var story = document.getElementById('scalingAnswer'); 
 	    	$(story).removeClass('hidden'); 
 	    	$(story).addClass('visible'); 
