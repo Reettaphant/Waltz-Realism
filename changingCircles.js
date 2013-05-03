@@ -1,5 +1,6 @@
 
-
+/*need to make sure that power update quizzes are working correctly, some variables might be set to false in the wrong place
+are we always going ot end in think war? if not, set all variables to fasle as well*/
 
 $(document).ready(function(){
 
@@ -1597,6 +1598,8 @@ function startTheSimulation(){
 		
 	          
  		function thinkWar(){
+	 		var visitedAlliance = false;
+			var clickedContinue = false;
 	 		if (changed == true){
 		 		changed = false;
 		 		events[j].flags.sorted = false; /*this is changed back to false in case this turn is playd again */
@@ -1653,8 +1656,22 @@ function startTheSimulation(){
 	       					
        				}
    				}
-			}  
+			} 
+			
+			$("#allianceContinue").click(function(){
+				    alert('in click!'); 
+					visitedAlliance = true;
+					var expl = document.getElementById('alllianceExplanation');
+					$(expl).removeClass('visible'); 
+				    $(expl).addClass('hidden'); 
+					if (clickedContinue == false){
+						clickedContinue = true; 
+						updateAlliances(); 	
+					}     
+			    });  
 		    function compareAlliances(){
+			    	
+				
 			    if (j==0){
 		   		    return true;	
 	   			}
@@ -1676,28 +1693,34 @@ function startTheSimulation(){
 		    }   
 	        else if (i==0){      
 			    	hideStories(); 
-			    	var newStory = document.getElementById('assessAlliances');    
-			    	$(newStory).removeClass('hidden');
-	   				$(newStory).addClass('visible');
-	       			for (k=1; k<=6; k++){
-       		   			removeContent('desc' + k);
-   		   			}
-	   				var changed = compareAlliances(1); 
-		   			if (changed == false){
-			   			hideStories(); 
-			   			var str = document.getElementById('allianceDetails'); 
-		   			    $(str).removeClass('hidden'); 
-		   			    $(str).addClass('visible'); 
-		   			    setTimeout(thinkWar, 3000); 
-	   			    }
-	   		 		else{
-		   				var m = 0; 
-		   				var n = 0;
-		   				setTimeout(evaluateAlliances, 3000); 
-	   				}	    		
-      	 		}
-  	 		}
-       
+			    	if (visitedAlliance == false){
+				    	var expl = document.getElementById('allianceExplanation');
+				    	$(expl).removeClass('hidden'); 
+				    	$(expl).addClass('visible'); 
+			    	}
+			    	else{
+			    		var newStory = document.getElementById('assessAlliances');    
+			    		$(newStory).removeClass('hidden');
+	   					$(newStory).addClass('visible');
+	       				for (k=1; k<=6; k++){
+       		   				removeContent('desc' + k);
+   		   				}
+	   					var changed = compareAlliances(1); 
+		   				if (changed == false){
+			   				hideStories(); 
+			   				var str = document.getElementById('allianceDetails'); 
+		   			    	$(str).removeClass('hidden'); 
+		   			    	$(str).addClass('visible'); 
+		   			    	setTimeout(thinkWar, 3000); 
+	   			    	}
+	   		 			else{
+		   					var m = 0; 
+		   					var n = 0;
+		   					setTimeout(evaluateAlliances, 3000); 
+	   					}	    		
+      	 			}
+  	 			}
+			}      
         function powerQuestion(){
 	        var story = document.getElementById('powerAnswer'); 
 	    	$(story).removeClass('hidden'); 
@@ -2099,6 +2122,12 @@ function startTheSimulation(){
        	var visited = false; 
       	var visitedOnce; 
       	var visitedForwardOnce; 
+      	/*for pause stories */
+      	var visitedAlliance = false;
+		var clickedContinue = false;
+		var visitedWar = false;
+		var clickedWar = false; 
+		  
       	
       	
 		if (events[0].polarity == 'multipolar'){
