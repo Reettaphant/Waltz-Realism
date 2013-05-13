@@ -680,7 +680,7 @@
 						addContent('polarities bipolar, now assessing decline'); 
 						var decCounter = 0; 
 						for (var k =0; k<2; k++){
-							var prob = Math.random()
+							var prob = Math.random();
 							if (prob < 0.4){
 								decCounter += 1;  
 								changed = true; 
@@ -703,7 +703,7 @@
 						changedPolarities = 'unipolar'; 	
 					}
 					else{
-						changedPolarities = 'bipolar'; 	
+						changedPolarities = 'multipolar'; 	
 					}
 					this.world.worldHistory.push('systemic change'); 	
 				}
@@ -1390,8 +1390,7 @@
      	}
      	turn.hegemon = world.hegemon; 
  
-     	
-	    if (turn.polarity != 'bipolar' || world.worldHistory[h] == 'systemic change'){
+	    if (turn.polarity != 'bipolar' || world.worldHistory[world.worldHistory.length-1] == 'systemic change'){
      		world.setPolarity(); 
      		turn.endPolarity = world.polarity[world.polarity.length-1];
 	    	world.polarity.splice(world.polarity.length-1, 1); 
