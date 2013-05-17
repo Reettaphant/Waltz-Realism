@@ -1747,7 +1747,7 @@ function startTheSimulation(){
 			} 
 			
 			$("#allianceContinue").click(function(){
-					var expl = document.getElementById('allianceExplanation');
+					var expl = document.getElementById('allianceQuestions');
 					$(expl).removeClass('visible'); 
 				    $(expl).addClass('hidden'); 
 					if (visitedAlliance == false){
@@ -1780,7 +1780,7 @@ function startTheSimulation(){
 	        else if (i==0){      
 			    	hideStories(); 
 			    	if (visitedAlliance == false){
-				    	var expl = document.getElementById('allianceExplanation');
+				    	var expl = document.getElementById('allianceQuestions');
 				    	$(expl).removeClass('hidden'); 
 				    	$(expl).addClass('visible'); 
 			    	}

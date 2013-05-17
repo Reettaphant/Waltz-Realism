@@ -689,7 +689,6 @@
 						for (var k =0; k<2; k++){
 							var prob = Math.random();
 							if (prob < 0.4){
-								alert('there will be bipolar change'); 
 								decCounter += 1;  
 								changed = true; 
 								this.world.states[k].addPower(Math.round(-1*this.world.states[k].power * (5/6))); 
