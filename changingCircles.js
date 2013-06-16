@@ -1745,11 +1745,32 @@ function startTheSimulation(){
        				}
    				}
 			} 
-			
+			$('#allianceSubmit1').click(function(){
+				alert('click'); 
+				var correct = document.getElementById('allianceCorrect1'); 
+				var wrong = document.getElementById('allianceWrong1'); 
+				$(correct).removeClass('visible'); 
+				$(correct).addClass('hidden'); 	
+				$(wrong).removeClass('visible'); 
+				$(wrong).addClass('hidden');
+				alert($('#allianceFirst1:checked').val()); 
+				if ($('#allianceFirst1:checked').val() == 'first'){
+					$(correct).removeClass('hidden'); 
+					$(correct).addClass('visible'); 	
+				}
+				else{
+					$(wrong).removeClass('hidden'); 
+					$(wrong).addClass('visible');	
+				}
+			}); 
 			$("#allianceContinue").click(function(){
 					var expl = document.getElementById('allianceQuestions');
 					$(expl).removeClass('visible'); 
 				    $(expl).addClass('hidden'); 
+				    $('#allianceWrong1').removeClass('visible'); 
+				    $('#allianceWrong1').addClass('hidden'); 
+				    $('#allianceCorrect1').removeClass('visible'); 
+				    $('#allianceCorrect1').addClass('hidden'); 
 					if (visitedAlliance == false){
 						visitedAlliance = true; 
 						updateAlliances(); 	

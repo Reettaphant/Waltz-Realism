@@ -287,10 +287,22 @@
  <p> States are now going to assess their alliances, and form new alliances. </p>
   <p>Before the simulation proceeds, take a moment to think about how
  these alliances might develop. </p> 
- <p> What kinds of alliances might be formed in the world?
-  <p> Which factors affect the way in which alliances are formed? </p> 
+
+ <div> 
+ <p> Which factors affect the way in which alliances are formed? </p> 
+  <form class = 'questions visible' id = 'allianceFirst'>
+ <input type = 'radio'  name = 'allianceFactor' id='allianceFirst1' value = 'first'> Power is the main factor that determines how alliances are formed.<br>
+  <input type = 'radio'  name = 'allianceFactor' id='allianceFirst2' value = 'second'> Many different factors can influence this, such as ...
+   <input type ="button" id = 'allianceSubmit1' class = 'visible submitButton'  value='Submit'>
+   <p id = 'allianceCorrect1' class = 'correct hidden'> Correct! </p>
+   <p id = 'allianceWrong1' class = 'wrong hidden'> Incorrect </p>
+  </form>
+  </div>
  <p> Are alliances always perfectly balanced? Why or why not? </p>
+ <form class = 'questions visible' id = 'allianceSecond'>
+
  <input type ="button" id = 'allianceContinue' class = 'visible continueButton'  value='Continue'>
+ </form>
  </div>
  
 <div class = 'story hidden' id = 'limitQuestions'>
@@ -300,7 +312,7 @@
  	 <input type ="button" id = 'limitContinue' class = 'visible continueButton'  value='Continue'>
  </div>
  <div class = 'story hidden' id = 'thinkingWarQuestions'>
- 	<p> States are thinking of wehter or not there will be a war.</p>
+ 	<p> States are thinking of going to war </p>
  	<p> Before the simulation continues take a moment of think about what might happen </p>
  	<p> Are wars a likely occurence in a multipolar world? </p>
  	<p> Under what conditions is war likely to occur? </p>
@@ -308,7 +320,7 @@
  </div>
  
  <div class = 'story hidden' id = 'thinkingBipolarQuestions'>
- 	<p> States are thinking of whehter or not there will be a war.</p>
+ 	<p> States are thinking of going to war</p>
  	<p> Before the simulation continues take a moment of think about what might happen </p>
  	<p> Are wars likely to occur? </p>
  	<p> What kinds of wars could occur in a bipolar world? </p>
@@ -369,6 +381,9 @@
  	<p> What kind of power shifts could take place in a unipolar world </p>
  	<p> Can you think of an example of these shifts recent world history? </p>
  	<input type ="button" id = 'unipolarPowerContinue' class = 'visible continueButton'  value='Continue'>
+ </div>
+ <div class = 'story hidden' id = 'ajaxError'>
+ <p> Something went wrong are were are unable to retrieve quizzes from the database. Updating your browser might help.
  </div>
  <div class = 'story hidden' id = 'updatePowers'>
  </div>

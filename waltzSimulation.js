@@ -462,7 +462,6 @@
 									var prob = (0.25 + (2*powerDifference)/(defencePower+attackPower));
                            			if (Math.random() < 0.50 + (2*powerDifference)/(defencePower+attackPower)){
 	                           			isWar = true; 
-	                           			alert('isWar set to true'); 
 	                           			wars=[[currentCoalition], [testCoal], false]; 
 	                           			currentCoalition.atWar = true; 
 	                           			testCoal.atWar=true; 
@@ -497,8 +496,7 @@
 					if (found == false){
 						wars[2]=true;
 						worldWar = true; 
-						addContent('escalated into systemic becasue everyone was fighting'); 
-						alert('returnign systemic war because all alliances at war'); 
+						addContent('escalated into systemic becasue everyone was fighting');
 						return 'systemic war' 	
 					}
 					else{
@@ -545,18 +543,15 @@
 							return 'systemic war'
 						}
 					}
-					alert('assessign is war'); 
+					 
 					if (isWar == true){
-						alert('is war was true');
 						return 'limited war'; 
 					}
 					else{
-						alert('returning peaceful history'); 
 						return 'peaceful'; 	
 					}
 			}
 			else{	
-					alert('returnign peaceful history'); 
 					return 'peaceful'; 	
 			}
 		}
@@ -712,7 +707,7 @@
 					else{
 						changedPolarities = 'multipolar'; 	
 					}
-					alert('pushed systemic change'); 
+					
 					this.world.worldHistory.push('systemic change'); 	
 				}
 				else{
@@ -1404,7 +1399,6 @@
 	    	turn.endPolarity = world.polarity[world.polarity.length-1];
 		}
      	if (turn.endPolarity != turn.polarity && world.worldHistory[world.worldHistory.length-1] != 'systemic change' && world.worldHistory[world.worldHistory.length-1] != 'systemic war'){
-	     	alert('limited change set to true'); 
 	   		turn.flags.limitedChange = true; 
 	   		world.worldHistory.splice(world.worldHistory.length-1, 1); 
 	   		world.worldHistory.push('systemic war'); 
