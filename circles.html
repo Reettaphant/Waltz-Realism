@@ -194,6 +194,8 @@
    </div>
  
  <div class = 'story hidden' id = 'scaled'>
+ <input type ="button" id = 'scalingQuestion' class = 'visible questionButton'  value='?'>
+  <input type ="button" id = 'clickedScaling' class = 'hidden clickedButton'  value='?'>
  <p> The powers of the states are scaled down as this turn begins. </p>
   </div>
 
@@ -215,13 +217,24 @@
  <p> New turn is beginning in the world, this world is unipolar </p>
  <div class = 'substory' id = 'turnDetailsUni'> </div>
  </div>
- 
+ <div class = 'story hidden' id = 'updateExplanation'>
+ <input type ="button" id = 'powerContinue' class = 'visible continueButton'  value='Continue'>
+ </div>
  <div class = 'story hidden' id = 'updatePowers'>
+  <input type ="button" id = 'powerQuestion' class = 'visible questionButton'  value='?'>
+   <input type ="button" id = 'clickedPower' class = 'hidden clickedButton'  value='?'>
  <p> The powers of states are now updating </p>
  <div id= 'powerDetails' class = 'substory'> </div>
  </div>
- 
-
+ <div class = 'story hidden' id = 'allianceExplanation'>
+ <p> States are now going to assess their alliances, and form new alliances. </p>
+  <p>Before the simulation proceeds, take a moment to think about how
+ these alliances might develop. </p> 
+ <p> What kinds of alliances might be formed in the world?
+  <p> Which factors affect the way in which alliances are formed? </p> 
+ <p> Are alliances always perfectly balanced? Why or why not? </p>
+ <input type ="button" id = 'allianceContinue' class = 'visible continueButton'  value='Continue'>
+ </div>
  <div class = 'story hidden' id = 'bipolarAlliances'>
  <p> The world is being divided up into two spheres of influence </p>
  <div id= 'bipolarDetails1' class = 'hidden substory bipolar1'> </div>
@@ -230,6 +243,8 @@
  
   
  <div class = 'story hidden' id = 'bipolarSystemicChange'>
+ <input type ="button" id = 'disintegrationQuestion' class = 'visible questionButton'  value='?'>
+  <input type ="button" id = 'clickedDisintegration' class = 'hidden clickedButton'  value='?'>
  <p> The bipolar system is disintegrating </p>
  <div id= 'bipolarSystemDetails' class = 'substory'> </div>
  </div>
@@ -253,8 +268,10 @@
  </div>
  
  <div class = 'story hidden' id = 'decliningUnipolar'>
+ <input type ="button" id = 'declineQuestion' class = 'visible questionButton'  value='?'>
+  <input type ="button" id = 'clickedDecline' class = 'hidden clickedButton'  value='?'>
  <p> The hegemon's powers are declining! </p>
- <div id= 'unipolarDecline' class = 'substory'> </div>
+ <div id= 'unipolarDecline' class = 'substory hidden'> </div>
  </div>
  <div class = 'story hidden' id = 'bipolarWar'>
   <div id= 'bipolarWarDetails' class = 'substory'> </div>
@@ -264,10 +281,9 @@
  <p> The bipolar world remains peaceful </p> </div>
  
  <div class = 'story hidden' id = 'noUpdates'>
+ <input type ="button" id = 'noPowerQuestion' class = 'visible questionButton'  value='?'>
+  <input type ="button" id = 'clickedNoPower' class = 'hidden clickedButton'  value='?'>
  <p> State powers were not updated this turn </p>
- </div>
- <div class = 'story hidden' id = 'thinking'>
- <p> State are thinking if they will go to war </p>
  </div>
  
   <div id= 'allianceDetails' class = ' story hidden'> <p> Alliances were not updated this turn </p> </div>
@@ -283,129 +299,28 @@
  
  </div>
  
- <div class = 'story hidden' id = 'allianceQuestions'>
- <p> States are now going to assess their alliances, and form new alliances. </p>
-  <p>Before the simulation proceeds, take a moment to think about how
- these alliances might develop. </p> 
-
- <div> 
- <p> Which factors affect the way in which alliances are formed? </p> 
-  <form class = 'questions visible' id = 'allianceFirst'>
- <input type = 'radio'  name = 'allianceFactor' id='allianceFirst1' value = 'first'> Power is the main factor that determines how alliances are formed.<br>
-  <input type = 'radio'  name = 'allianceFactor' id='allianceFirst2' value = 'second'> Many different factors can influence this, such as ...
-   <input type ="button" id = 'allianceSubmit1' class = 'visible submitButton'  value='Submit'>
-   <p id = 'allianceCorrect1' class = 'correct hidden'> Correct! </p>
-   <p id = 'allianceWrong1' class = 'wrong hidden'> Incorrect </p>
-  </form>
-  </div>
- <p> Are alliances always perfectly balanced? Why or why not? </p>
- <form class = 'questions visible' id = 'allianceSecond'>
-
- <input type ="button" id = 'allianceContinue' class = 'visible continueButton'  value='Continue'>
- </form>
- </div>
- 
-<div class = 'story hidden' id = 'limitQuestions'>
- 	<p> The polarity of the world is now changing without a systemic war.</p>
- 	<p> Is this something that Waltz's theory predicts could happen?</p>
- 	<p> How would you explain this happening? </p>
- 	 <input type ="button" id = 'limitContinue' class = 'visible continueButton'  value='Continue'>
- </div>
- <div class = 'story hidden' id = 'thinkingWarQuestions'>
- 	<p> States are thinking of going to war </p>
+ <div class = 'story hidden' id = 'thinkingOfWar'>
+ 	<p> States are thinking of whehter or not there will be a war</p>
  	<p> Before the simulation continues take a moment of think about what might happen </p>
  	<p> Are wars a likely occurence in a multipolar world? </p>
  	<p> Under what conditions is war likely to occur? </p>
- 	 <input type ="button" id = 'warContinue' class = 'visible continueButton'  value='Continue'>
  </div>
  
- <div class = 'story hidden' id = 'thinkingBipolarQuestions'>
- 	<p> States are thinking of going to war</p>
- 	<p> Before the simulation continues take a moment of think about what might happen </p>
- 	<p> Are wars likely to occur? </p>
- 	<p> What kinds of wars could occur in a bipolar world? </p>
- 	 <input type ="button" id = 'bipolarWarContinue' class = 'visible continueButton'  value='Continue'>
- </div>
- 
- <div class = 'story hidden' id = 'escalationQuestions'>
- 	<p> The war is now going to escalate into a systemic war.</p>
- 	<p> This means that more countries are joining the war, and the war will have more drastic effect on the power distribution in the world </p>
- 	<p> What are the possible effects of a systemic war? </p>
- 	<p> Can you identify any systemic wars in recent world history? </p>
- 	 <input type ="button" id = 'escalationContinue' class = 'visible continueButton'  value='Continue'>
- </div>
- <div class = 'story hidden' id = 'firstBipolarQuestions'>
- 	<p> Alliances are now going to be formed in the bipolar world as the world is divided into spheres of influence.</p>
- 	<p> What kind of alliances do you think will be formed in the bipolar world? </p>
- 	 <input type ="button" id = 'firstBipolarContinue' class = 'visible continueButton'  value='Continue'>
- </div>
- 
- <div class = 'story hidden' id = 'disintegrationQuestions'>
- 	<p> The bipolar system is now distingrating</p>
- 	<p> Can Waltz's theory predict why the powers of one or both of the bipolar powers would suddenly collapse? </p>
- 	<p> What are the possible effects of this disintegration to the power distribution in the world? </p>
- 	<p> Can you think of an example of when this happened in recent world history? </p>
- 	 <input type ="button" id = 'disintegrationContinue' class = 'visible continueButton'  value='Continue'>
- </div>
- 
- <div class = 'story hidden' id = 'unipolarTransformQuestions'>
- 	<p> The world is now unipolar.</p>
- 	<p> Which state is the hegemon in this world? </p>
- 	<p> What kinds of alliances can be formed in a unipolar world? </p>
- 	<p> Are wars frequent in a unipolar world? </p>
- 	 <input type ="button" id = 'unipolarTransformContinue' class = 'visible continueButton'  value='Continue'>
- </div>
- <div class = 'story hidden' id = 'unipolarQuestions'>
- 	<p> The hegemon's powers are in decline. </p>
- 	<p> What factors can influence the decline of the hegemon? </p>
- 	<p> What consequences can this decline have for the power distribution of the system </p>
- 	 <input type ="button" id = 'unipolarContinue' class = 'visible continueButton'  value='Continue'>
- </div>
- <div class = 'story hidden' id = 'scalingQuestions'>
- 	<p> The powers of the states are being scaled down as the new turn begins so that the can be better represented on screen. </p>
- 	<p> Why can this be done without alterning the power distribution in the world? </p>
- 	 <input type ="button" id = 'scalingContinue' class = 'visible continueButton'  value='Continue'>
- </div>
- <div class = 'story hidden' id = 'powerQuestions'>
- 	<p> New turn is beginning and state powers are updating. </p>
- 	<input type ="button" id = 'powerContinue' class = 'visible continueButton'  value='Continue'>
- </div>
- 
-  <div class = 'story hidden' id = 'noPowerQuestions'>
- 	<p> Powers are only updated after a peaceful round in a uni- or multipolar world, and thus are not updated in this round. </p>
- 	<p> Do you think that this is an accurate representation of how the world works? </p>
- 	<input type ="button" id = 'noPowerContinue' class = 'visible continueButton'  value='Continue'>
- </div>
- 
- <div class = 'story hidden' id = 'unipolarPowerQuestions'>
- 	<p> What kind of power shifts could take place in a unipolar world </p>
- 	<p> Can you think of an example of these shifts recent world history? </p>
- 	<input type ="button" id = 'unipolarPowerContinue' class = 'visible continueButton'  value='Continue'>
- </div>
- <div class = 'story hidden' id = 'ajaxError'>
- <p> Something went wrong are were are unable to retrieve quizzes from the database. Updating your browser might help.
- </div>
- <div class = 'story hidden' id = 'updatePowers'>
- </div>
  <div class = 'story hidden' id = 'peaceful'>
- 	<p> Balancing power was succesful and there was no war this time </p>
- </div>
- 
- <div id= 'peaceDetails' class = 'substory hidden'>
- 	<p> Because the alliances were so evenly balanced, there was no motivation for states to go to war.</p>
- 	<p> Take a moment to think why this might be so. </p>
- 	<p> Hint: in defensive realism, the defending power is always advantaged over the offending power </p>
- 	<input type ="button" id = 'peaceContinue' class = 'visible continueButton'  value='Continue'>
+ <input type ="button" id = 'peaceQuestion' class = 'hidden questionButton'  value='?'>
+  <input type ="button" id = 'clickedPeace' class = 'hidden clickedButton'  value='?'>
+ <p> Balancing power was succesful and there was no war this time </p>
+ <div id= 'peaceDetails' class = 'substory'> </div>
  </div>
  
  <div class = 'story hidden' id = 'limitedWar'>
- 	<p> A limited war is occuring in the world </p>
- 	<div id= 'warDetails1' class = 'hidden description1'> </div>
- 	<div id= 'warDetails2' class = 'hidden description2'> </div>
- 	<div id= 'warDetails3' class = 'hidden description3'> </div>
- 	<div id= 'warDetails4' class = 'hidden description4'> </div>
- 	<div id= 'warDetails5' class = 'hidden description5'> </div>
- 	<div id= 'warDetails6' class = 'hidden description6'> </div>  
+ <p> A limited war is occuring in the world </p>
+ <div id= 'warDetails1' class = 'hidden description1'> </div>
+ <div id= 'warDetails2' class = 'hidden description2'> </div>
+ <div id= 'warDetails3' class = 'hidden description3'> </div>
+ <div id= 'warDetails4' class = 'hidden description4'> </div>
+ <div id= 'warDetails5' class = 'hidden description5'> </div>
+ <div id= 'warDetails6' class = 'hidden description6'> </div>  
  </div>
  
 <div class = 'story hidden' id = 'systemicWar'>
@@ -474,7 +389,52 @@
   
  
   
+ <div class = 'answer hidden' id = 'powerAnswer'>
+ <p> At the beginnign of each turn in a multipolar world, the computer checks if powers of states
+ are going to update. Each state has a probability of their powers growing that is influenced by 
+ the intellectual and the territorial advantages of that state </p>
+   <input type ="button" id = 'backToUpdate' class = 'visible backButton changingButton'  value='Back to simulation'>
+ </div>
  
+ 
+  <div class = 'answer hidden' id = 'noPowerAnswer'>
+ <p> Sometimes states powers are not updated. In a multipolar world, states may update their powers after a peaceful 
+ turn. How much the powers are updated is chosen at random, and sometimes no powers are updated. In a bipolar world powers are never updated. This is 
+ not because shifts in the state powers would not occur, but it is because these shifts do not affect the way in which 
+ these worlds function.  </p>
+   <input type ="button" id = 'backNoUpdate' class = 'visible backButton changingButton'  value='Back to simulation'>
+   </div>
+ <div class = 'answer hidden' id = 'scalingAnswer'>
+ <p> When the average power of the states gets too large, the powers of the states are scaled down so that the 
+ states can be better represented on screen. In defensive realism, only the relative powers of states, how weak or strong 
+ states are in relation to each other, not their absolute powers, is important. This is why scaling down state powers 
+ will not affect the way that the simulation is run  </p>
+   <input type ="button" id = 'backToScaling' class = 'visible backButton changingButton'  value='Back to simulation'>
+  </div>
+  
+  <div class = 'answer hidden' id = 'perfectBalanceAnswer'>
+ <p> The assumptions made in this simulation is that an alliance will only attack another alliance if that alliance's attack power 
+ is greater than the defending power of another alliance. The simulation also makes an assumption, often made by defensive realists, that 
+ the attacking alliance is always slightly disadvantaged. Taking this into account, the simulation equates an alliance's defensive powers 
+ the power of that alliance, but the attacking power of the same alliance is only 90% of their attacking power. Thus, if the powers of all 
+ alliances are the same, or very close to being the same, no alliance will consider it in their interests to attack another alliance.  </p>
+   <input type ="button" id = 'backToPeace' class = 'visible backButton changingButton'  value='Back to simulation'>
+  </div>
+  
+  <div class = 'answer hidden' id = 'disintegrationAnswer'>
+ <p> According to Waltz's defensive realism, bipolar systems are supposed to be durable. This bipolar system has, however, disintegrated 
+ for no apparent reason. A similar situation was seen at the end of the cold war, when Waltz's realism failed to predict the collapse of the USSR. 
+ Waltz does not think that this is a weakness in his theory. He argues that the purpose of the theory is to identify patterns, but not predict particular outcomes.
+ Waltz thus argues that his job is not to explain the disintegration of particular bipolar systems, and the reason for the collapse of the bipolar order 
+ in this simulation shall remain a mystery.  </p>
+   <input type ="button" id = 'backDisintegration' class = 'visible backButton changingButton'  value='Back to simulation'>
+  </div>
+  
+   <div class = 'answer hidden' id = 'declineAnswer'>
+ <p> Unipolar systems are durable, but they do not last forever. In this simulation, due to the unipolar power overstreching itself, after the first 
+ three unipolar turns, the hegemon's powers will start to decline.   </p>
+   <input type ="button" id = 'backDecline' class = 'visible backButton changingButton'  value='Back to simulation'>
+  </div>
   
  <div id =simulationOutput class = 'hidden'>
  </div>
