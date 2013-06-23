@@ -1,6 +1,11 @@
 
 /*need to make sure that power update quizzes are working correctly, some variables might be set to false in the wrong place
+<<<<<<< HEAD
 are we always going ot end in think war? if not, set all variables to fasle as well*/
+=======
+are we always going ot end in think war? if not, set all variables to fasle as wellt
+remember to add escaping when generating quizzes before allowing anyone else to generate quizzes*/
+>>>>>>> whoops
 
 $(document).ready(function(){
 
@@ -173,8 +178,62 @@ $(function(){
   
 	});
 });
+/*various functions to deal with Ajax requests*/
 
 
+function generateQuiz(content, loc){
+	
+	function addQuiz(){
+		toAppend = content['question'];
+		var toAppend += '<form class = "quiz">';
+		while(content['answers'].length ! = 0){
+			var num = Math.floor(Math.random() * content['answers'].length);
+			answer = content['answers'][num]; 
+	    	toAppend += '<input type = "radio" name = answer value = answer[0]> answer[0] </input>';
+			answer.splice(content['answers']);
+		}
+		var toAppend += '<input type = "button" class = quizButton value = "submit">';
+		var toAppend += '</form>';
+		addContent(div, toAppend);
+	}
+	
+	$(".quizButton").click(function(){
+		/*need to write a function that then posts chosen result back to server*/
+		var quizAnswers = content['answers']; 
+		var answers = document.getElementById('onceButtons').childNodes[1].elements[answer];
+		for (var i=0; i<answers.length; i++){
+			if (answers[i].checked){
+				for (i=0; i<quizAnswers.length; i++){
+					if (answers[i].value==quizAnswers[i][0]){
+						$.post('/submissions/', {answer: answers[i]}); 
+						if (quizAnswers[i][1]==false){
+							addContent(loc, 'Sorry, your answer was incorrect, please try again');
+						}
+						else{
+							removeContent(loc); 
+							addContent(loc, 'Your answer was correct!); 
+								
+						}	
+					}
+				}
+			}	
+		}
+		
+	}
+		
+	addQuiz(); 
+}
+function ajaxGetsQuiz(url, ajaxDiv){
+	$.get(url, function(){
+		alert('done'); 	
+	}); 
+	.done(generateQuiz(data, loc)); 
+}	
+
+function ajaxSendsResult(quiz_id, choice){
+	/*implement this*/
+	
+}
 
 function startTheSimulation(){
 
@@ -1795,16 +1854,6 @@ function startTheSimulation(){
 						updatePower();
 					} 
 				}); 
-				
-			$("#noPowerQuestion").click(function(){
-					var unClicked = document.getElementById('noPowerQuestion'); 
-					var clicked = document.getElementById('clickedNoPower'); 
-					$(unClicked).removeClass('visible'); 
-					$(unClicked).addClass('hidden');
-					$(clicked).removeClass('hidden'); 
-					$(clicked).addClass('visible'); 
-					noPowerClick = true; 
-				}); 	
 			
 			if (events[j].flags.powersUpdated == false){
 				i=0; 
@@ -1827,11 +1876,8 @@ function startTheSimulation(){
 		    else{
 		   		if (visitedPowerStories = false){
 			    	hideStories(); 
-			       	var expStory = document.getElementById('updateExplanation');    
-	   			   	removeContent('powerDetails');
-	   			   	$(expStory).removeClass('hidden'); 
-	   			   	$(expStory).addClass('visible'); 
-	            }
+			    	var url = 'quiz/nopower'
+			    	ajaxGetsQuiz(url);
 	            else{
 		            if (i==0){
 			        	var newStory = document.getElementById('updatePowers');   
