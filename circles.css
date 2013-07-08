@@ -16,12 +16,12 @@ body{
 
 h1 {
 	margin: 10px;
-    font-weight: 500;
-    font-family: 'Titillium Web', sans-serif;
-    position: relative;  
-    font-size: 36px;
-    padding: 7px;
-    border: 3px double rgba(100 , 100 , 100, 0.5);
+    	font-weight: 500;
+    	font-family: 'Titillium Web', sans-serif;
+   	position: relative;  
+    	font-size: 36px;
+    	padding: 7px;
+    	border: 3px double rgba(100 , 100 , 100, 0.5);
 	color: #282828;
 	text-align: center; 
 	background: #C2C3CB;
@@ -34,7 +34,7 @@ h2{
 	margin-bottom: 0px; 
 }
 h3{
-  font-size: 16px;	
+  	font-size: 16px;	
 }
 .hidden {display: none;}
 
@@ -193,8 +193,73 @@ input{
 	border-radius: 7px;
 }
 
+.continueButton{
+	margin: 3px;
+	color: purple; 
+	height: 30px; 
+	width: 60px; 
+	padding: 2px;
+}
+form.quiz{
+	margin-top: 5px;
+	position: relative; 
+	border-radius: 5px; 
+	font-size: 11px;  
+	width: 340px; 
+	background: #F4F4F4; 
+}
 
+form.quiz.extraLarge{
+	height: 330px;
+	position: absolute; 
+}
 
+form.quiz.large{
+	height: 280px;
+}
+
+form.quiz.medium{
+	height: 230px; 
+}
+
+form.quiz.small{
+	height: 200px; 
+}
+form.quiz.extraSmall{
+	height: 110; 
+}
+.quizButton{
+	position: absolute;
+	padding: 2px;
+    	height: 25px; 	
+	width: 50px; 
+	bottom: 7px; 
+	right: 7px; 
+	margin: 1px; 
+}
+.correctMsg{
+	color: green;
+	font-size: 12px; 
+	padding: 2px; 
+	border: solid green; 
+	width: 175px; 
+	margin: 1px;
+}
+
+.errorMsg{
+	color: red; 
+	font-size: 12px;
+	padding: 2px; 
+	border: solid red;
+	width: 185px;
+}
+.noMsg{
+	color: black; 
+	font-size: 12px;
+	padding: 2px; 
+	border: solid black;
+	width: 175px;
+}
 #stateNumbers{
 	height: 425px;
 	width: 400px;

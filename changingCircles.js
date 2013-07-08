@@ -1,12 +1,14 @@
 
 /*need to make sure that power update quizzes are working correctly, some variables might be set to false in the wrong place
-<<<<<<< HEAD
-are we always going ot end in think war? if not, set all variables to fasle as well*/
-=======
+are we always going ot end in think war? if not, set all variables to fasle as well
 are we always going ot end in think war? if not, set all variables to fasle as wellt
-remember to add escaping when generating quizzes before allowing anyone else to generate quizzes*/
->>>>>>> whoops
-
+remember to add escaping when generating quizzes before allowing anyone else to generate quizzes
+to do: 
+backwards forwards not working
+states from numbers to letters
+size of board
+no more setting of parameters manually, but can say if want multi, bi or unipolar world
+*/
 $(document).ready(function(){
 
 	var num = 0;
@@ -18,7 +20,10 @@ $(document).ready(function(){
 	var onlyOnce = undefined; 
 	var goBack = false; 
 	var goForth = false; 
-	
+	var completedQuizzes = {}	
+	var lastSeenFromGroup={}
+
+
 	$(function(){
 		$("#powerButton").click(startTheSimulation);
   	});
@@ -180,62 +185,194 @@ $(function(){
 });
 /*various functions to deal with Ajax requests*/
 
+function removeContent(div) {
 
-function generateQuiz(content, loc){
-	
-	function addQuiz(){
-		toAppend = content['question'];
-		var toAppend += '<form class = "quiz">';
-		while(content['answers'].length ! = 0){
-			var num = Math.floor(Math.random() * content['answers'].length);
-			answer = content['answers'][num]; 
-	    	toAppend += '<input type = "radio" name = answer value = answer[0]> answer[0] </input>';
-			answer.splice(content['answers']);
-		}
-		var toAppend += '<input type = "button" class = quizButton value = "submit">';
-		var toAppend += '</form>';
-		addContent(div, toAppend);
-	}
-	
-	$(".quizButton").click(function(){
-		/*need to write a function that then posts chosen result back to server*/
-		var quizAnswers = content['answers']; 
-		var answers = document.getElementById('onceButtons').childNodes[1].elements[answer];
-		for (var i=0; i<answers.length; i++){
-			if (answers[i].checked){
-				for (i=0; i<quizAnswers.length; i++){
-					if (answers[i].value==quizAnswers[i][0]){
-						$.post('/submissions/', {answer: answers[i]}); 
-						if (quizAnswers[i][1]==false){
-							addContent(loc, 'Sorry, your answer was incorrect, please try again');
-						}
-						else{
-							removeContent(loc); 
-							addContent(loc, 'Your answer was correct!); 
-								
-						}	
-					}
-				}
-			}	
-		}
-		
-	}
-		
-	addQuiz(); 
-}
-function ajaxGetsQuiz(url, ajaxDiv){
-	$.get(url, function(){
-		alert('done'); 	
-	}); 
-	.done(generateQuiz(data, loc)); 
+	document.getElementById(div).innerHTML = "<br>";
 }	
 
-function ajaxSendsResult(quiz_id, choice){
-	/*implement this*/
-	
+function addContent(div, content){  
+	document.getElementById(div).innerHTML += content;
+	document.getElementById(div).innerHTML += '<br>';
 }
 
+
 function startTheSimulation(){
+	
+	function ajaxGetsQuiz(group_name, pause, contDiv, continueFunction){
+		alert(pause);
+		var control = false; 
+		/*here first, get values from dicts. if keys are not there, just set 
+		i * them to empty, remember to update how values are updated below */
+		if (group_name in lastSeenFromGroup){
+			var lastSeen = lastSeenFromGroup[group_name]; 
+		}
+		else{
+			var lastSeen = 'empty'
+		}
+		if (group_name in completedQuizzes){
+			var completed = completedQuizzes[group_name];
+
+		}
+		else{
+			var completed = 'empty'
+		}
+		var url = '/quiz/';
+		url+=group_name;
+		url +='/';
+		url += completed; 
+		url += '/'; 
+		url += lastSeen;
+		url += '/send'; 
+		$.get(url, 
+			function(data){
+		/*keeping track of what was the last quiz seen in a quiz group, keeping track of which quizzes no more
+		remember to remove all content before continuing onwards
+			var completedQuizzes=[]
+			var lastSeenFromGroup={}
+		/*need to add two new messages, one in case has already seen, another if has already seen all the quizzes, making forms of different size
+		 * now: send finsihed quizzes and last seen quizzes only as relevant 
+		 * to that group, send by usign the url
+		 * according to length*/		 
+				alert('j in beginnign of get data' + j); 
+				var groupName = url.split("/")[2]; 
+				lastSeenFromGroup[groupName]= data['quiz_name'];
+				var answers = data['answers']
+				if (answers.length == 5){
+					var toAppend = '<form class = "quiz extraLarge">';
+				}
+				
+				if (answers.length == 4){
+					var toAppend = '<form class = "quiz large">';
+				}
+				if (answers.length == 3){
+					var toAppend = '<form class = "quiz medium">';
+				}
+				if (answers.length == 2){
+					var toAppend = '<form class = "quiz small">';
+				}
+				if (answers.length == 0){
+					var toAppend = '<form class = "quiz extraSmall">';
+				}
+				toAppend += data['question'];
+				toAppend += '<br>'
+				var m=0
+				var mapping = [];
+				var orgi = answers.slice(); 
+				while(answers.length != 0){
+					var num = Math.floor(Math.random() * answers.length);
+					add=0;
+					for (k=0; k<orgi.length; k++){
+						if (orgi[k] == answers[num]){
+							mapping.push(k); 
+						}
+					}
+					answer = answers.splice(num, 1); 
+					toAppend += '<input type = "radio" name = "'
+					toAppend += url
+					toAppend += '" value = "'
+					toAppend += answer[0][1];
+					if (answer[0][1] == true){
+						var corr = m;
+					}
+					toAppend += '">';
+					toAppend += answer[0][0]
+					toAppend += '</input> <br>'
+					answers.splice(num, answer);
+					m++; 
+				}
+				toAppend += '<br>'
+				toAppend += '<input type = "button" class = "quizButton" value = "submit">';
+				toAppend += '<div class = "hidden errorMsg"> Sorry, your answer was incorrect </div> <div class = "hidden correctMsg"> Your answer was correct! </div> <div class = "hidden noMsg"> You did not choose an answer </div>';
+				toAppend += '</form>';
+				addContent(pause, toAppend);
+				$(".quizButton").click(function(){
+									
+					$('.continueButton').click(function(){
+						/*checkbox: not part of the form but appears with the continue button? */
+						/*why not reacting to click?*/
+						if (control == false){
+							control = true;
+							var cont = document.getElementById(contDiv);
+							var check = document.getElementsByClassName('noSee')[0];
+							if (check.checked){
+								alert('pushing new quiz to completed'); 
+								if (group_name in completedQuizzes){
+									var addToList = data['quiz_name']+'0';
+									completedQuizzes[group_name]+=addToList;
+									
+								}
+								else{
+									completedQuizzes[group_name] = data['quiz_name'];
+								}
+							}
+							continueFunction(); 	
+							$(cont).removeClass('visible'); 
+							$(cont).addClass('hidden'); 
+							}
+					   			
+							removeContent(pause); 
+					});  
+					var q= document.getElementsByClassName('quiz')[0]; 
+					var children = q.childNodes; 
+					var radios = []
+					for (var k=2; k<21; k+=3){
+						if (children.length > k + 1){
+							radios.push(children[k]); 
+						}
+					}
+					var found = false; 
+					for (var k=0; k<radios.length-1; k++){
+						if (radios[k].checked){
+							found = true; 
+							if (k == corr){
+								msgW = document.getElementsByClassName('errorMsg')[0]; 
+								$(msgW).removeClass('visible'); 
+								$(msgW).addClass('hidden'); 
+								msgC = document.getElementsByClassName('correctMsg')[0]; 
+								$(msgC).removeClass('hidden'); 
+								$(msgC).addClass('visible'); 
+								msgW = document.getElementsByClassName('noMsg')[0]; 
+								$(msgW).removeClass('visible'); 
+								$(msgW).addClass('hidden'); 
+								var cont = document.getElementById(contDiv); 
+								$(cont).addClass('visible'); 
+								$(cont).removeClass('hidden');
+							        $('.noSee').prop('checked', false); 
+							}
+							else{
+								msgW = document.getElementsByClassName('errorMsg')[0]; 
+								$(msgW).removeClass('hidden'); 
+								$(msgW).addClass('visible'); 
+								msgC = document.getElementsByClassName('correctMsg')[0]; 
+								$(msgC).removeClass('visible'); 
+								$(msgC).addClass('hidden'); 
+								msgW = document.getElementsByClassName('noMsg')[0]; 
+								$(msgW).removeClass('visible'); 
+								$(msgW).addClass('hidden'); 
+							}
+							break; 
+						}
+						if (found == false){
+							msgW = document.getElementsByClassName('noMsg')[0]; 
+							$(msgW).removeClass('hidden'); 
+							$(msgW).addClass('visible'); 
+						}
+					}
+					if (found == true){
+						var orgiNumber = mapping[k];
+						alert(orgiNumber); 
+						var url2 = '/quiz/'+ data['quiz_name'] + '/submit/';
+						alert(url2); 
+						$.get(url2, {chosen: orgiNumber})
+							.done(function(){
+								alert('success'); 
+							});
+					}
+				});							
+
+		}); 
+	}	
+
 
 	var state1 = document.getElementById('state1'); 
 	$(state1).hover(function(){
@@ -457,21 +594,20 @@ function startTheSimulation(){
 			var intellect = stateIntellectForms[i]; 
 			var intellectLabel = stateIntellectLabels[i]; 
 			$(power).removeClass('visible');
-	    	$(power).addClass('hidden');  
-	    	$(powerLabel).removeClass('visible');
-	    	$(powerLabel).addClass('hidden');
-	    	$(territory).removeClass('visible');
-	    	$(territory).addClass('hidden');
-	    	$(territoryLabel).removeClass('visible');
-	    	$(territoryLabel).addClass('hidden');  
-	    	$(intellect).removeClass('visible');
-	    	$(intellect).addClass('hidden');
-	    	$(intellectLabel).addClass('hidden');
-	    	$(intellectLabel).removeClass('visible');
+			$(power).addClass('hidden');  
+			$(powerLabel).removeClass('visible');
+			$(powerLabel).addClass('hidden');
+			$(territory).removeClass('visible');
+			$(territory).addClass('hidden');
+			$(territoryLabel).removeClass('visible');
+			$(territoryLabel).addClass('hidden');  
+			$(intellect).removeClass('visible');
+			$(intellect).addClass('hidden');
+			$(intellectLabel).addClass('hidden');
+			$(intellectLabel).removeClass('visible');
 		}	
 	
-		
-   }
+	}
 	else{
 		for (var k=0; k<num; k++){
 			var n = k+1; 	
@@ -482,8 +618,8 @@ function startTheSimulation(){
 			powersOfStates[k] = pwr;
 		}	   
 	      
-      }
-      if (parameterError == true){
+      	}
+      	if (parameterError == true){
 	      	var error = document.getElementById('secondFormError'); 
 	      	$("#secondErrorButton").click(function(){
 				($('#stateNumbers')).removeClass('hidden'); 
@@ -497,25 +633,26 @@ function startTheSimulation(){
 	  	$(error).removeClass('hidden'); 
 	  	$(error).addClass('visible');     
 	      
-      }
-      else{
-	    function addPower(state, power){
-	       	var powerDiv = state.getElementsByClassName('powerDesc')[0]; 
-	       	powerDiv.innerHTML = 'Power:  '+ power;
+      	}
+      	else{
+	    
+		function addPower(state, power){
+	       		var powerDiv = state.getElementsByClassName('powerDesc')[0]; 
+	       		powerDiv.innerHTML = 'Power:  '+ power;
 	   		if (power < 60){
-       			$(state).addClass('power' +power);
+       				$(state).addClass('power' +power);
    		    }
-   		    else{
+   		    	else{
 	   		    $(state).addClass('power60');
    		    }   
-        }  
-	    $(storyFrame).removeClass('hidden'); 
+        	}	  
+	    	$(storyFrame).removeClass('hidden'); 
 		$(storyFrame).addClass('visible'); 	
-      	$(frame).removeClass('hidden'); 
+      		$(frame).removeClass('hidden'); 
 		$(frame).addClass('visible'); 	
-      	var states = document.getElementsByClassName('state'); 
-    		for (i=0; i<num; i++){
-       			state=states[((i%4)*4 + Math.floor(i/4))];        
+      		var states = document.getElementsByClassName('state'); 
+    			for (i=0; i<num; i++){
+       				state=states[((i%4)*4 + Math.floor(i/4))];        
 	   			$(state).removeClass('hidden');
 	   			$(state).addClass('visible');  
 	  			addPower(state, powersOfStates[i]);     
@@ -523,144 +660,133 @@ function startTheSimulation(){
 	
 		function hideStories(){
 	   		var stories = document.getElementsByClassName('story');   
-	       	for (var i=0; i < stories.length; i++){
+	       		for (var i=0; i < stories.length; i++){
 		   		story = stories[i];  
 		   		$(story).removeClass('visible');
 	   			$(story).addClass('hidden'); 
 	       		}
-        }
+        	}
           
-       	
-          
-		function removeContent(div) {
-
-   			document.getElementById(div).innerHTML = "<br>";
-        }
         
-        function addContent(div, content){  
-	      document.getElementById(div).innerHTML += content;
-	      document.getElementById(div).innerHTML += '<br>';
-        }
-        
-        function initialiseStateBeforeTurn(turnNumber, stateNumber){
-	        var state = states[((stateNumber%4)*4 + Math.floor(stateNumber/4))];
-        	if (events[turnNumber].statesAfterUpdate[stateNumber].length == 2){
+        	function initialiseStateBeforeTurn(turnNumber, stateNumber){
+	        	var state = states[((stateNumber%4)*4 + Math.floor(stateNumber/4))];
+			if (events[turnNumber].statesAfterUpdate[stateNumber].length == 2){
 				var power = events[turnNumber].statesAfterScaling[stateNumber][0]; 
-	   	    	$(state).removeClass(); 
-					if (events[turnNumber].polarity == 'multipolar'){
-						if (turnNumber> 0){
-							if(events[turnNumber-1].polarity == 'multipolar'){
-								if (events[turnNumber-1].statesAfterUpdate[stateNumber].length == 2){
-									alliance = 'alliance' + events[turnNumber-1].statesAfterUpdate[stateNumber][1];
-								}
-								else{
-									alliance = 0; 	
-								}
+				$(state).removeClass(); 
+				if (events[turnNumber].polarity == 'multipolar'){
+					if (turnNumber> 0){
+						if(events[turnNumber-1].polarity == 'multipolar'){
+							if (events[turnNumber-1].statesAfterUpdate[stateNumber].length == 2){
+								alliance = 'alliance' + events[turnNumber-1].statesAfterUpdate[stateNumber][1];
 							}
 							else{
-								alliance = 'alliance0';	
+								alliance = 0; 	
 							}
-						}	
-						else{
-							alliance = 'alliance0';		
 						}
-					}
-					else if (events[turnNumber].polarity == 'bipolar'){
-						if (turnNumber> 0){
-							if (events[turnNumber-1].polarity == 'bipolar'){
-	   							var sphNum; 
-	   							var stateNum = stateNumber+1; 
-	   							for (var k=0; k<events[turnNumber].spheres[0].length; k++){
-		   							if(events[turnNumber].spheres[0][k] == stateNum){
-			   							sphNum = 1; 
-			   							break; 
-		   							}	
-	   							}
-	   							if(sphNum != 1){
-		   							sphNum = 2; 	
-	   							}
-	   						alliance = 'sphere' + sphNum; 
-   							}
-	   						else{
-		   						alliance = 'alliance0'; 	
-	   						}
-   						}
-	   					else{
-		   					alliance = 'alliance0'; 	
-	   					}	 	
-					}
+						else{
+							alliance = 'alliance0';	
+						}
+					}	
 					else{
-						if (turnNumber>0){
-							if (events[turnNumber-1].polarity == 'unipolar'){
-								var stateNum = stateNumber+1; 
-								if (stateNum == events[turnNumber].hegemon){
-									alliance = 'alliance100'; 	
+						alliance = 'alliance0';		
+					}
+				}
+				else if (events[turnNumber].polarity == 'bipolar'){
+					if (turnNumber> 0){
+						if (events[turnNumber-1].polarity == 'bipolar'){
+							var sphNum; 
+							var stateNum = stateNumber+1; 
+							for (var k=0; k<events[turnNumber].spheres[0].length; k++){
+								if(events[turnNumber].spheres[0][k] == stateNum){
+									sphNum = 1; 
+									break; 
 								}	
-								else{
-									alliance = 'alliance001'; 	
-								}
 							}
-							else{
-								alliance = 'alliance0'	
+							if(sphNum != 1){
+								sphNum = 2; 	
 							}
+						alliance = 'sphere' + sphNum; 
 						}
 						else{
 							alliance = 'alliance0'; 	
-						}	
+						}
 					}
+					else{
+						alliance = 'alliance0'; 	
+					}	 	
+				}
+				else{
+					if (turnNumber>0){
+						if (events[turnNumber-1].polarity == 'unipolar'){
+							var stateNum = stateNumber+1; 
+							if (stateNum == events[turnNumber].hegemon){
+								alliance = 'alliance100'; 	
+							}	
+							else{
+								alliance = 'alliance001'; 	
+							}
+						}
+						else{
+							alliance = 'alliance0'	
+						}
+					}
+					else{
+						alliance = 'alliance0'; 	
+					}	
+				}
        				$(state).addClass('visible');
-  					$(state).addClass('state'); 
+				$(state).addClass('state'); 
      				$(state).addClass(alliance); 
        				addPower(state, power);
-    		}
+			}
     		else{
 	    		$(state).removeClass(); 
-	   		    $(state).addClass('state'); 
-	   		    $(state).addClass('alliance0'); 
-	   		    $(state).addClass('hidden'); 
+		    	$(state).addClass('state'); 
+		    	$(state).addClass('alliance0'); 
+		    	$(state).addClass('hidden'); 
 	    		$(state).addClass('hidden');  	
     		}
-		}
+	}
     
         function unipolarAlliances(){
 	        var m = 0; 
 	        var n = 0; 
 	        var toDisintegrate = false; 
 	        $("#declineQuestion").click(function(){
-		        	var unClicked = document.getElementById('declineQuestion'); 
-					var clicked = document.getElementById('clickedDecline'); 
-					$(unClicked).removeClass('visible'); 
-					$(unClicked).addClass('hidden');
-					$(clicked).removeClass('hidden'); 
-					$(clicked).addClass('visible');
-					declineClick = true; 
-				});
+			var unClicked = document.getElementById('declineQuestion'); 
+			var clicked = document.getElementById('clickedDecline'); 
+			$(unClicked).removeClass('visible'); 
+			$(unClicked).addClass('hidden');
+			$(clicked).removeClass('hidden'); 
+			$(clicked).addClass('visible');
+			declineClick = true; 
+		});
 	       	
 	        function initialiseUnipolar(){
 		        if (m != events[j].hegemon-1 && events[j].statesAfterUpdate[m].length != 1){
 		        	state = states[(((m)%4)*4 + Math.floor((m)/4))]; 
-			   		$(state).removeClass('alliance0');
-			   		$(state).addClass('alliance001');
-		   		}
-		   		if (m < events[j].statesAfterUpdate.length-1){
-			   		m++; 
-			   		if (events[j].statesAfterUpdate[m].length == 1){
-				   		initialiseUnipolar(); 
-			   		}
-			   		else{
-				   		if (m != events[j].hegemon-1){
-				   			setTimeout(initialiseUnipolar, 600); 
-			   		}
-			   			else{
-				   			initialiseUnipolar(); 
-			   			}
-			   		}
-		   		}
-			   	else{
-				   	
-				   		setTimeout(unipolarAlliances, 600); 
-		   		}
-        	}
+				$(state).removeClass('alliance0');
+				$(state).addClass('alliance001');
+			}
+			if (m < events[j].statesAfterUpdate.length-1){
+				m++; 
+				if (events[j].statesAfterUpdate[m].length == 1){
+					initialiseUnipolar(); 
+				}
+				else{
+					if (m != events[j].hegemon-1){
+						setTimeout(initialiseUnipolar, 600); 
+				}
+					else{
+						initialiseUnipolar(); 
+					}
+				}
+			}
+			else{
+				
+				setTimeout(unipolarAlliances, 600); 
+			}
+		}
         	
         	function answeringDecline(){
 	        	/*toDisinterate true goes to disintegrate unipolar, else goes toNewTurn*/
@@ -669,22 +795,22 @@ function startTheSimulation(){
 	    		$(story).addClass('visible'); 
 	    		declineClick = false; 
 	    		$("#backDecline").click(function(){
-					$(story).removeClass('visible'); 
+				$(story).removeClass('visible'); 
 	    			$(story).addClass('hidden'); 
 	    			var unClicked = document.getElementById('declineQuestion'); 
-					var clicked = document.getElementById('clickedDecline'); 
-					$(unClicked).removeClass('hidden'); 
-					$(unClicked).addClass('visible');
-					$(clicked).removeClass('visible'); 
-					$(clicked).addClass('hidden'); 
-		    			if (toDisintegrate == true){
-			    			toDisintegrate = false; 
-	   						disintegrateUnipolar(); 
-		 				}
-		 			
-	 					else{
-		 					toNewTurn(); 
-	 				}
+				var clicked = document.getElementById('clickedDecline'); 
+				$(unClicked).removeClass('hidden'); 
+				$(unClicked).addClass('visible');
+				$(clicked).removeClass('visible'); 
+				$(clicked).addClass('hidden'); 
+				if (toDisintegrate == true){
+					toDisintegrate = false; 
+					disintegrateUnipolar(); 
+				}
+				
+				else{
+					toNewTurn(); 
+				}
 	    		});     
 	     	   
         	}
@@ -693,294 +819,290 @@ function startTheSimulation(){
 		 
 		        if (n != events[j].hegemon-1 && events[j].statesAfterUpdate[n].length != 1){
 		        	state = states[(((n)%4)*4 + Math.floor((n)/4))]; 
-			   		$(state).removeClass('alliance001');
-			   		$(state).addClass('alliance0');
-		   		}
-		   		if (n < events[j].statesAfterUpdate.length-1){
-			   		n++; 
-			   		if (events[j].statesAfterUpdate[n].length == 1){
-				   		disintegrateUnipolar(); 
-			   		}
-			   		else{
-				   		if (n != events[j].hegemon-1){
-				   			setTimeout(disintegrateUnipolar, 600); 
-			   		}
-			   			else{
-				   			disintegrateUnipolar(); 
-			   			}
-			   		}
-		   		}
-			   	else{
-				   	setTimeout(toNewTurn, 600); 
-			   	}
-	        
-	        }
-	         
-				
-			if (noPowerClick == true){
-				noPowerQuestion(); 	
-			}	
-			else{
-	        removeContent('unipolarDecline'); 
-	    	if (i==0){
-		    	hideStories(); 
-		    	if (events[j].flags.firstHegemon == true){
-			    	var story = document.getElementById('unipolarInitialisation'); 
-		       		$(story).removeClass('hidden'); 
-		       		$(story).addClass('visible');
-		       		removeContent('unipolarDetails0'); 
-		       		k=events[j].hegemon;
-		       		var state = states[(((k-1)%4)*4 + Math.floor((k-1)/4))]; 
-		       		$(state).removeClass('alliance0');
-		       		$(state).addClass('alliance100');  
-		       		addContent('unipolarDetails0', 'The new hegemon is state ' + k);
-		       		i++; 
-			       	setTimeout(initialiseUnipolar, 2000); 			
-		   			}	
-		    	else{
-		       		var story = document.getElementById('unipolarAlliances'); 
-		       		if (events[j].changedStates.length != 1){ 
-		       			i++; 
-		       			var story = document.getElementById('decliningUnipolar'); 
-		       			hideStories(); 
-		       			$(story).removeClass('hidden'); 
-		       			$(story).addClass('visible');
-		       			removeContent('unipolarDetails');
-		       			addContent('unipolarDetails', 'The hegemon\'s powers are declining!');
-		        		setTimeout(unipolarAlliances, 2000);
-	       			}
-	       			else{
-		       			var story = document.getElementById('peacefulUnipolar'); 
-		       			hideStories();
-		       			removeContent('unipolarDetails');
-		       			$(story).removeClass('hidden'); 
-		       			$(story).addClass('visible');
-		        		setTimeout(toNewTurn, 2000); 
-	       			}
-       			}
-   			}
-	        else{
-		        if (events[j].changedStates.length != 1){ 
-			       	var st = document.getElementById('unipolarDecline');
-			       	removeContent('unipolarDecline'); 
-			        $(st).addClass('visible'); 
-			        $(st).removeClass('hidden'); 
-			        st = document.getElementById('unipolarDetails');
-			        $(st).addClass('hidden'); 
-			        $(st).removeClass('visibe'); 
-	       			addContent('unipolarDecline', 'The new power of the hegemon is ' + events[j].changedStates[1][0]); 
-	       			if (events[j].endPolarity != 'unipolar'){
-		       			addContent('unipolarDecline', 'The world is no longer unipolar'); 	
-	       			}
-	       			var k = events[j].hegemon; 
-	       			var state = states[(((k-1)%4)*4 + Math.floor((k-1)/4))]; 
-	       			$(state).removeClass(); 
-	       			if (events[j].endPolarity != 'unipolar'){
-		       			$(state).addClass('alliance0');
-	       			}
-	       			else{
-	       				$(state).addClass('alliance100');
-       				}
-       				$(state).addClass('state'); 
-       				$(state).addClass('visible');
-       	   			addPower(state, events[j].changedStates[1][0]);
-	       			i=0
-	       			if (events[j].endPolarity != 'unipolar'){
-		       			if (declineClick == true){
-			       			toDisintegrate = true; 
-		       	   			answeringDecline(); 
-	       	   			}
-	       	   			else{
-	       	   				setTimeout(disintegrateUnipolar, 2000);  
-       	   				}	
-       				} 
-       				else{
-	       				var s = document.getElementById('unipolarDetails');
-	       				$(s).addClass('visible');
-	       				$(s).removeClass('hidden'); 
-	       				addContent('unipolarDetails', 'The world remains unipolar');
-	       				
-	       				if (declineClick == true){
-		       	   			answeringDecline(); 
-	       	   			}
-	       	   			else{
-	       	   				setTimeout(toNewTurn, 2000);	
-       	   				}	
-       				}
-       	   		}
-       	   		else{
-	       	   		var s = document.getElementById('unipolarDetails');
-	       			$(s).addClass('visible');
-	       			$(s).removeClass('hidden'); 
-	       	   		addContent('unipolarDetails0', 'The unipolar world is peaceful'); 
-	       	   		if (declineClick == true){
-		       	   		answeringDecline(); 
-	       	   		}
-	       	   		else{
-	       	   			setTimeout(toNewTurn, 2000);	
-       	   			}
-       	   		} 
-     		}
- 		}	
-       }
-        
-        function clearBipolar(){
-	    	function clearFirst(){
-		    	var stateNumber = events[j].spheres[0][k];  
-			   	var state = states[((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4)]; 
-				$(state).removeClass('shpere1');
+				$(state).removeClass('alliance001');
 				$(state).addClass('alliance0');
-				k++; 
-				if (k< events[j].spheres[0].length){
-					setTimeout(clearFirst, 700); 	
+			}
+			if (n < events[j].statesAfterUpdate.length-1){
+				n++; 
+				if (events[j].statesAfterUpdate[n].length == 1){
+					disintegrateUnipolar(); 
 				}
 				else{
-					k=0
-					setTimeout(clearSecond, 700); 	
+					if (n != events[j].hegemon-1){
+						setTimeout(disintegrateUnipolar, 600); 
+					}
+					else{
+						disintegrateUnipolar(); 
+					}
 				}
+			}
+			else{
+				setTimeout(toNewTurn, 600); 
+			}
+	
+	        }	
+		if (noPowerClick == true){
+			noPowerQuestion(); 	
+		}	
+		else{
+			removeContent('unipolarDecline'); 
+			if (i==0){
+				hideStories(); 
+				if (events[j].flags.firstHegemon == true){
+					var story = document.getElementById('unipolarInitialisation'); 
+					$(story).removeClass('hidden'); 
+					$(story).addClass('visible');
+					removeContent('unipolarDetails0'); 
+					k=events[j].hegemon;
+					var state = states[(((k-1)%4)*4 + Math.floor((k-1)/4))]; 
+					$(state).removeClass('alliance0');
+					$(state).addClass('alliance100');  
+					addContent('unipolarDetails0', 'The new hegemon is state ' + k);
+					i++; 
+					setTimeout(initialiseUnipolar, 2000); 			
+				}	
+				else{
+					var story = document.getElementById('unipolarAlliances'); 
+					if (events[j].changedStates.length != 1){ 
+						i++; 
+						var story = document.getElementById('decliningUnipolar'); 
+						hideStories(); 
+						$(story).removeClass('hidden'); 
+						$(story).addClass('visible');
+						removeContent('unipolarDetails');
+						addContent('unipolarDetails', 'The hegemon\'s powers are declining!');
+						setTimeout(unipolarAlliances, 2000);
+					}
+					else{
+						var story = document.getElementById('peacefulUnipolar'); 
+						hideStories();
+						removeContent('unipolarDetails');
+						$(story).removeClass('hidden'); 
+						$(story).addClass('visible');
+						setTimeout(toNewTurn, 2000); 
+					}
+				}
+   			}
+			else{
+				if (events[j].changedStates.length != 1){ 
+					var st = document.getElementById('unipolarDecline');
+					removeContent('unipolarDecline'); 
+					$(st).addClass('visible'); 
+					$(st).removeClass('hidden'); 
+					st = document.getElementById('unipolarDetails');
+					$(st).addClass('hidden'); 
+					$(st).removeClass('visibe'); 
+					addContent('unipolarDecline', 'The new power of the hegemon is ' + events[j].changedStates[1][0]); 
+					if (events[j].endPolarity != 'unipolar'){
+						addContent('unipolarDecline', 'The world is no longer unipolar'); 	
+					}
+					var k = events[j].hegemon; 
+					var state = states[(((k-1)%4)*4 + Math.floor((k-1)/4))]; 
+					$(state).removeClass(); 
+					if (events[j].endPolarity != 'unipolar'){
+						$(state).addClass('alliance0');
+					}
+					else{
+						$(state).addClass('alliance100');
+					}
+					$(state).addClass('state'); 
+					$(state).addClass('visible');
+					addPower(state, events[j].changedStates[1][0]);
+					i=0
+					if (events[j].endPolarity != 'unipolar'){
+						if (declineClick == true){
+							toDisintegrate = true; 
+							answeringDecline(); 
+						}
+						else{
+							setTimeout(disintegrateUnipolar, 2000);  
+						}	
+					} 
+					else{
+						var s = document.getElementById('unipolarDetails');
+						$(s).addClass('visible');
+						$(s).removeClass('hidden'); 
+						addContent('unipolarDetails', 'The world remains unipolar');
+						
+						if (declineClick == true){
+							answeringDecline(); 
+						}
+						else{
+							setTimeout(toNewTurn, 2000);	
+						}	
+					}
+				}
+				else{
+					var s = document.getElementById('unipolarDetails');
+					$(s).addClass('visible');
+					$(s).removeClass('hidden'); 
+					addContent('unipolarDetails0', 'The unipolar world is peaceful'); 
+					if (declineClick == true){
+						answeringDecline(); 
+					}
+					else{
+						setTimeout(toNewTurn, 2000);	
+					}
+				} 
+			}
+		}	
+       }
+		
+	function clearBipolar(){
+	    	function clearFirst(){
+		    	var stateNumber = events[j].spheres[0][k];  
+			var state = states[((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4)]; 
+			$(state).removeClass('shpere1');
+			$(state).addClass('alliance0');
+			k++; 
+			if (k< events[j].spheres[0].length){
+				setTimeout(clearFirst, 700); 	
+			}
+			else{
+				k=0
+				setTimeout(clearSecond, 700); 	
+			}
 	        }
 	        function clearSecond(){
 		    	var stateNumber = events[j].spheres[1][k]; 
-			   	var state = states[((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4)]; 
-				$(state).removeClass('shpere2');
-				$(state).addClass('alliance0');
-				k++; 
-				if (k< events[j].spheres[1].length){
-					setTimeout(clearSecond, 700); 	
-				}
-				else{
-					k=0
-					setTimeout(toNewTurn, 700); 	
-				}
+			var state = states[((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4)]; 
+			$(state).removeClass('shpere2');
+			$(state).addClass('alliance0');
+			k++; 
+			if (k< events[j].spheres[1].length){
+				setTimeout(clearSecond, 700); 	
+			}
+			else{
+				k=0
+				setTimeout(toNewTurn, 700); 	
+			}
 	        }
 	        var k = 0; 
-		    setTimeout(clearFirst, 700);    
-		}
+		setTimeout(clearFirst, 700);    
+	}
 		
-		function answeringDisintegration(){
-			var story = document.getElementById('disintegrationAnswer'); 
+	function answeringDisintegration(){
+		var story = document.getElementById('disintegrationAnswer'); 
 	    	$(story).removeClass('hidden'); 
 	    	$(story).addClass('visible'); 
 	    	disintegrationClick = false; 
 	    	$("#backDisintegration").click(function(){
 		    	var unClicked = document.getElementById('distintegrationQuestion'); 
-				var clicked = document.getElementById('clickedDistintegration'); 
-				$(unClicked).removeClass('hidden'); 
-				$(unClicked).addClass('visible');
-				$(clicked).removeClass('visible'); 
-				$(clicked).addClass('hidden'); 
-				$(story).removeClass('visible'); 
+			var clicked = document.getElementById('clickedDistintegration'); 
+			$(unClicked).removeClass('hidden'); 
+			$(unClicked).addClass('visible');
+			$(clicked).removeClass('visible'); 
+			$(clicked).addClass('hidden'); 
+			$(story).removeClass('visible'); 
 	    		$(story).addClass('hidden'); 
 		    	if (i < events[j].changedStates.length -1){
-						i++;
-						bipolarSystemChange(); 
-					}
-					else{
-						i=0; 
-						clearBipolar();	
-					}		
+				i++;
+				bipolarSystemChange(); 
+			}
+			else{
+				i=0; 
+				clearBipolar();	
+			}		
 	    	});
 			 		
+	}
+	function bipolarSystemChange(){		
+		$("#disintegrationQuestion").click(function(){
+				var unClicked = document.getElementById('disintegrationQuestion'); 
+				var clicked = document.getElementById('clickedDisintegration'); 
+				$(unClicked).removeClass('visible'); 
+				$(unClicked).addClass('hidden');
+				$(clicked).removeClass('hidden'); 
+				$(clicked).addClass('visible'); 
+				disintegrationClick = true; 
+		}); 
+		if (i==0){
+			hideStories(); 
+			story = document.getElementById('bipolarSystemicChange'); 
+			$(story).removeClass('hidden'); 
+			$(story).addClass('visible');
+			removeContent('bipolarSystemDetails');
+			i++; 
+			setTimeout(bipolarSystemChange, 2000); 
 		}
-		function bipolarSystemChange(){		
-			$("#disintegrationQuestion").click(function(){
-					var unClicked = document.getElementById('disintegrationQuestion'); 
-					var clicked = document.getElementById('clickedDisintegration'); 
-					$(unClicked).removeClass('visible'); 
-					$(unClicked).addClass('hidden');
-					$(clicked).removeClass('hidden'); 
-					$(clicked).addClass('visible'); 
-					disintegrationClick = true; 
-				}); 
-			if (i==0){
-				hideStories(); 
-				story = document.getElementById('bipolarSystemicChange'); 
-				$(story).removeClass('hidden'); 
-				$(story).addClass('visible');
-				removeContent('bipolarSystemDetails');
-				i++; 
-				setTimeout(bipolarSystemChange, 2000); 
-			}
-			else if (i!=0){
-				stateNumber = events[j].changedStates[i][1]; 	
-				power = events[j].changedStates[i][0];
-				state = states[((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4)]; 
-				if (events[j].statesAfterUpdate[stateNumber-1] != 0){
-					if (power != 0){
-						$(state).removeClass(); 
-						$(state).addClass('visible'); 
-						$(state).addClass('state');
-						var sphere1 = false; 
-						for (var k=0; k< events[j].spheres[0].length; k++){
-							if (stateNumber == events[j].spheres[0][k]){
-								sphere1 = true; 
-							}
+		else if (i!=0){
+			stateNumber = events[j].changedStates[i][1]; 	
+			power = events[j].changedStates[i][0];
+			state = states[((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4)]; 
+			if (events[j].statesAfterUpdate[stateNumber-1] != 0){
+				if (power != 0){
+					$(state).removeClass(); 
+					$(state).addClass('visible'); 
+					$(state).addClass('state');
+					var sphere1 = false; 
+					for (var k=0; k< events[j].spheres[0].length; k++){
+						if (stateNumber == events[j].spheres[0][k]){
+							sphere1 = true; 
 						}
-						if (sphere1 == true){
-							$(state).addClass('sphere1'); 
-						}
-						else{
-							$(state).addClass('sphere2');
-						}
-						addPower(state, power);
-						addContent('bipolarSystemDetails', 'State ' + stateNumber + ' lost power, power is now  ' + power);		
-						
+					}
+					if (sphere1 == true){
+						$(state).addClass('sphere1'); 
 					}
 					else{
-				    	$(state).removeClass('visible');
-				    	$(state).addClass('hidden');  	
-				    	addContent('bipolarSystemDetails', 'State ' + stateNumber + ' has disappeared from the world.');
-				 	}
-				}
-				else{
-					$(state).removeClass();
-					$(state).addClass('state'); 
-					$(state).addClass('alliance0'); 
-					$(state).addClass('visible');
+						$(state).addClass('sphere2');
+					}
 					addPower(state, power);
-					addContent('bipolarSystemDetails', 'A new state ' + stateNumber +' with power ' + power +' was created from disintegration of the bipolar power ');
-				}
-				
-				if (disintegrationClick == true){
-					setTimeout(answeringDisintegration, 3000); 	
+					addContent('bipolarSystemDetails', 'State ' + stateNumber + ' lost power, power is now  ' + power);		
+					
 				}
 				else{
-			 		if (i < events[j].changedStates.length -1){
-						i++;
-						setTimeout(bipolarSystemChange, 3000);
-					}
-					else{
-						i=0; 
-						setTimeout(clearBipolar, 3000);	
-					}	
+					$(state).removeClass('visible');
+					$(state).addClass('hidden');  	
+					addContent('bipolarSystemDetails', 'State ' + stateNumber + ' has disappeared from the world.');
 				}
-			
 			}
-		
+			else{
+				$(state).removeClass();
+				$(state).addClass('state'); 
+				$(state).addClass('alliance0'); 
+				$(state).addClass('visible');
+				addPower(state, power);
+				addContent('bipolarSystemDetails', 'A new state ' + stateNumber +' with power ' + power +' was created from disintegration of the bipolar power ');
+			}
+				
+			if (disintegrationClick == true){
+				setTimeout(answeringDisintegration, 3000); 	
+			}
+			else{
+				if (i < events[j].changedStates.length -1){
+					i++;
+					setTimeout(bipolarSystemChange, 3000);
+				}
+				else{
+					i=0; 
+					setTimeout(clearBipolar, 3000);	
+				}	
+			}
 		}
-		function bipolarOutcomes(){      
+	}
+	function bipolarOutcomes(){      
 	    	if (i==0){
-	        	hideStories(); 
-	            var story = document.getElementById('afterWar');
-				$(story).removeClass('hidden');
-				$(story).addClass('visible');
-				removeContent('afterWarDetails');
-				removeContent('bipolarDetails1'); 
-				removeContent('bipolarDetails2');
-				var winners; 
-				var losers;
-				if (events[j].flags.didAttackerWin == true){
-		        	addContent('afterWarDetails', 'The attacking state won the war'); 
-		          	i++; 
-		          	winners = document.getElementsByClassName('attacker');
-		          	losers = document.getElementsByClassName('defender');
+			hideStories(); 
+			var story = document.getElementById('afterWar');
+			$(story).removeClass('hidden');
+			$(story).addClass('visible');
+			removeContent('afterWarDetails');
+			removeContent('bipolarDetails1'); 
+			removeContent('bipolarDetails2');
+			var winners; 
+			var losers;
+			if (events[j].flags.didAttackerWin == true){
+				addContent('afterWarDetails', 'The attacking state won the war'); 
+				i++; 
+				winners = document.getElementsByClassName('attacker');
+				losers = document.getElementsByClassName('defender');
 		        }
-	            else{
-		            addContent('afterWarDetails', 'The attacking state lost the war'); 
-		            i++; 
+			else{
+			    addContent('afterWarDetails', 'The attacking state lost the war'); 
+			    i++; 
 					winners = document.getElementsByClassName('defender');
-		            losers = document.getElementsByClassName('attacker');
-		            } 
+			    losers = document.getElementsByClassName('attacker');
+		    	} 
 		        for (var k=0; k<2; k++){
 			        winner = winners[k]; 
 			        loser = losers[k]; 
@@ -988,11 +1110,11 @@ function startTheSimulation(){
 		          	$(loser).removeClass('defender');
 		           	$(winner).addClass('winner');
 		          	$(loser).addClass('loser');
-	           } 
-		       setTimeout(bipolarOutcomes, 1500);       
-            }
+	           	} 
+		       	setTimeout(bipolarOutcomes, 1500);       
+            	}
 	        else{   
-		   		var power = events[j].changedStates[i][0];
+		   	var power = events[j].changedStates[i][0];
 		       	var stateNumber = events[j].changedStates[i][1];
 		       	var string = 'The power of state ' + stateNumber + ' is now ' + power; 
 		       	addContent('afterWarDetails', string);
@@ -1016,10 +1138,10 @@ function startTheSimulation(){
 			 		setTimeout(toNewTurn, 1500);   
 		    	}
 	       }   
-       }
+       	}
           
-		function bipolarWars(){      
-	   		hideStories(); 
+	function bipolarWars(){      
+	   	hideStories(); 
 	    	if (events[j].war== 0){  
 		    	story = document.getElementById('bipolarPeace');
 	    		$(story).removeClass('hidden'); 
@@ -1046,13 +1168,13 @@ function startTheSimulation(){
 		        	setTimeout(bipolarOutcomes, 2000); 
 	      		}
        		}
-		}
+	}
 		
-		function bipolarAlliances(){
-			if (noPowerClick == true){
-				noPowerQuestion(); 
-			}	
-			else{
+	function bipolarAlliances(){
+		if (noPowerClick == true){
+			noPowerQuestion(); 
+		}	
+		else{
 	      		if (events[j].flags.sorted == false){
 		      		changed = true; 
 			    	events[j].flags.sorted = true;
@@ -1063,64 +1185,64 @@ function startTheSimulation(){
 			    	$(newStory).removeClass('hidden');
 	   				$(newStory).addClass('visible');
 	   				setTimeout(bipolarAlliances, 1000);
-	      	}
-	      	else if (changed == true){ 	
-		      	if (i < events[j].spheres[0].length){
-		       		if (i==0){
-			       		var story = document.getElementById('bipolarDetails1');
-			       		$(story).removeClass('hidden'); 
-			       		$(story).addClass('visible'); 
-			       		var n = events[j].spheres[0][i];
-			       		state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
-			        	$(state).removeClass('alliance0');
-			        	$(state).addClass('sphere1');
-			       		var sphere1 = 'States in the sphere of influence of state ' + n; 
-				    	addContent('bipolarDetails1', sphere1);
-				    	i++; 
-				    	setTimeout(bipolarAlliances, 1000);
-			    	}
+			}
+			else if (changed == true){ 	
+				if (i < events[j].spheres[0].length){
+					if (i==0){
+						var story = document.getElementById('bipolarDetails1');
+						$(story).removeClass('hidden'); 
+						$(story).addClass('visible'); 
+						var n = events[j].spheres[0][i];
+						state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
+						$(state).removeClass('alliance0');
+						$(state).addClass('sphere1');
+						var sphere1 = 'States in the sphere of influence of state ' + n; 
+						addContent('bipolarDetails1', sphere1);
+						i++; 
+						setTimeout(bipolarAlliances, 1000);
+					}
 					else{
-			    		var n= events[j].spheres[0][i]
-			     		state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
-			     		$(state).removeClass('alliance0');
-			    	 	$(state).addClass('sphere1');
-			     		sphere1text='state ' + n;
-			      		addContent('bipolarDetails1', sphere1text);
-			      		i++;
-			      		setTimeout(bipolarAlliances, 1000);
+						var n= events[j].spheres[0][i]
+						state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
+						$(state).removeClass('alliance0');
+						$(state).addClass('sphere1');
+						sphere1text='state ' + n;
+						addContent('bipolarDetails1', sphere1text);
+						i++;
+						setTimeout(bipolarAlliances, 1000);
 		   			}  
-		     	}
-		    	else {
-			    	k = i-events[j].spheres[0].length;
-			    	if (k==0){
-				    	var n = events[j].spheres[1][k];
-			       		state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
-			        	$(state).removeClass('alliance0');
-			        	$(state).addClass('sphere2');
-			        	var story = document.getElementById('bipolarDetails2');
-			       		$(story).removeClass('hidden'); 
-			       		$(story).addClass('visible'); 
-			       		var sphere2 = '<br>States in the sphere of influence of state ' + n; 
-				    	addContent('bipolarDetails2', sphere2);
-				    	i++; 
-				    	setTimeout(bipolarAlliances, 1000); 
-			    	}
-			    	else{
-			    		var m= events[j].spheres[1][k];
-			     		state = states[(((m-1)%4)*4 + Math.floor((m-1)/4))]; 
-			     		$(state).removeClass('alliance0');
-			     		$(state).addClass('sphere2');
-			     		sphere2text='state ' + m;
-			     		addContent('bipolarDetails2', sphere2text);
-		     			if (i < events[j].spheres[0].length + events[j].spheres[1].length -1){
-			     			i++; 
-			     			setTimeout(bipolarAlliances, 1000); 	
-		     			}
-		     			else{
-			     			i=0; 
-			     			setTimeout(thinkWar, 2000); 
-		     			
-	      				}
+				}
+				else {
+					k = i-events[j].spheres[0].length;
+					if (k==0){
+						var n = events[j].spheres[1][k];
+						state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
+						$(state).removeClass('alliance0');
+						$(state).addClass('sphere2');
+						var story = document.getElementById('bipolarDetails2');
+						$(story).removeClass('hidden'); 
+						$(story).addClass('visible'); 
+						var sphere2 = '<br>States in the sphere of influence of state ' + n; 
+						addContent('bipolarDetails2', sphere2);
+						i++; 
+						setTimeout(bipolarAlliances, 1000); 
+					}
+					else{
+						var m= events[j].spheres[1][k];
+						state = states[(((m-1)%4)*4 + Math.floor((m-1)/4))]; 
+						$(state).removeClass('alliance0');
+						$(state).addClass('sphere2');
+						sphere2text='state ' + m;
+						addContent('bipolarDetails2', sphere2text);
+						if (i < events[j].spheres[0].length + events[j].spheres[1].length -1){
+							i++; 
+							setTimeout(bipolarAlliances, 1000); 	
+						}
+						else{
+							i=0; 
+							setTimeout(thinkWar, 2000); 
+						
+						}
   					}
   				}
 			}
@@ -1135,28 +1257,31 @@ function startTheSimulation(){
  					}
   			}		
  		}	     	
-		}
-		function answeringPeace(){
-			var story = document.getElementById('perfectBalanceAnswer'); 
+	}
+	function answeringPeace(){
+		var story = document.getElementById('perfectBalanceAnswer'); 
 	    	$(story).removeClass('hidden'); 
 	    	$(story).addClass('visible'); 
 	    	peaceClick = false; 
 	    	$("#backToPeace").click(function(){
 		    	var unClicked = document.getElementById('peaceQuestion'); 
-				var clicked = document.getElementById('clickedPeace'); 
-				$(unClicked).removeClass('hidden'); 
-				$(unClicked).addClass('visible');
-				$(clicked).removeClass('visible'); 
-				$(clicked).addClass('hidden'); 
-				$(story).removeClass('visible'); 
+			var clicked = document.getElementById('clickedPeace'); 
+			$(unClicked).removeClass('hidden'); 
+			$(unClicked).addClass('visible');
+			$(clicked).removeClass('visible'); 
+			$(clicked).addClass('hidden'); 
+			$(story).removeClass('visible'); 
 	    		$(story).addClass('hidden'); 
-		    		toNewTurn()
+			toNewTurn()
 	    	});     
-		}
-		function toNewTurn(){
-			function goBack(turns){
-				if (visitedOnce == false){
-					visitedOnce = true;
+	}
+	function toNewTurn(){
+		thinkWarVisit = false;
+		visitedAlliance = false;
+	       	scalingVisit = false;	
+		function goBack(turns){
+			if (visitedOnce == false){
+				visitedOnce = true;
 			       	j = j-turns; 
 			       	if (j <= -2){
 				       	j = j+ turns;
@@ -1166,49 +1291,49 @@ function startTheSimulation(){
 			       	else{
 			       		events[j+1].flags.skipScaling = true; 
 			       		if (j>=0 && events.length > 1){
-							if (events[j].polarity != 'bipolar' && events[j+1].polarity == 'bipolar'){
+						if (events[j].polarity != 'bipolar' && events[j+1].polarity == 'bipolar'){
 								events[j+1].flags.sorted = false;
-							}
 						}
-						for (var k=0; k<16; k++){
-							initialiseStateBeforeTurn(j+1, k);
-						}
-						transitionToNewTurn(); 
 					}
+					for (var k=0; k<16; k++){
+						initialiseStateBeforeTurn(j+1, k);
+					}
+					transitionToNewTurn(); 
 				}
-					else{
-						;
-					}
-				};
+			}
+			else{
+				;
+			}
+		};
 			 
-			$('#againOnce').click(function(){
+		$('#againOnce').click(function(){
 				goBack(1)
-			}); 
+		}); 
 			
-			$('#backwardsOnceButton').click(function(){
-				goBack(2); 
+		$('#backwardsOnceButton').click(function(){
+			goBack(2); 
 				
-		     }); 
-			$('#forwardsOnceButton').click(function(){
-				if (visitedForwardOnce == false){
-					visitedForwardOnce = true; 
-					if (j < events.length-1){
-						transitionToNewTurn()	
-					}
-					else{
+		}); 
+		$('#forwardsOnceButton').click(function(){
+			if (visitedForwardOnce == false){
+				visitedForwardOnce = true; 
+				if (j < events.length-1){
+					transitionToNewTurn()	
+				}
+				else{
 			    		var newOutput = getWorldEvents(2, [], true, world, events[j]); 
 			    		numberOfTurns += 1; 
-						events.push(newOutput[0]); 
-						world = newOutput[1]; 
-						transitionToNewTurn();
-					}
+					events.push(newOutput[0]); 
+					world = newOutput[1]; 
+					transitionToNewTurn();
 				}
-		     });
+			}
+		  });
 		     
-		     $('#exitOnce').click(function(){
-				if (visitedOnce == false){
-					visitedOnce = true;
-					var story = document.getElementById('theEnd'); 
+		$('#exitOnce').click(function(){
+			if (visitedOnce == false){
+				visitedOnce = true;
+				var story = document.getElementById('theEnd'); 
 		        	$(story).removeClass('hidden'); 
 		        	$(story).addClass('visible');
 		        	var children = document.getElementById('onceButtons').childNodes;
@@ -1217,14 +1342,14 @@ function startTheSimulation(){
 				     	$(children[k]).addClass('passive'); 
 			     	}
 		        
-				}
-				else{
-					
-				}
+			}
+			else{
 				
-		     }); 
-			function displayOptions(){
-				var option = document.getElementById('options'); 
+			}
+			
+	     	}); 
+		function displayOptions(){
+			var option = document.getElementById('options'); 
 		        $(option).removeClass('hidden'); 
 		        $(option).addClass('visible');
 		        $("#backErrorButton").click(function(){
@@ -1243,18 +1368,18 @@ function startTheSimulation(){
 			        $(query).removeClass('hidden'); 
 			        $(query).addClass('visible'); 
 		        });
-				$("#backwardsButton").click(function(){
-					$("#backwardsQueryButton").click(function(){
+			$("#backwardsButton").click(function(){
+				$("#backwardsQueryButton").click(function(){
 					var backwardsQuery = document.getElementById('backwardsQuery'); 
-		        	$(backwardsQuery).removeClass('visible'); 
-		        	$(backwardsQuery).addClass('hidden');
-		        	if (parseInt($("#backTurns").val()) > j+1){
-			        	var story = document.getElementById('backError'); 
-			        	$(story).removeClass('hidden'); 
-			        	$(story).addClass('visible'); 	
-		        	}
-		        	else{
-		        	 	j = j - parseInt($("#backTurns").val());
+					$(backwardsQuery).removeClass('visible'); 
+					$(backwardsQuery).addClass('hidden');
+					if (parseInt($("#backTurns").val()) > j+1){
+						var story = document.getElementById('backError'); 
+						$(story).removeClass('hidden'); 
+						$(story).addClass('visible'); 	
+					}
+					else{
+						j = j - parseInt($("#backTurns").val());
 						events[j+1].flags.skipScaling = true; 
 						if (j>=0 && events.length > 1){
 							if (events[j].polarity != 'bipolar' && events[j+1].polarity == 'bipolar'){
@@ -1262,12 +1387,12 @@ function startTheSimulation(){
 							}
 						}
 					}
-						for (var k=0; k<16; k++){
-							initialiseStateBeforeTurn(j+1, k);
-						}
-						transitionToNewTurn(); 
+					for (var k=0; k<16; k++){
+						initialiseStateBeforeTurn(j+1, k);
+					}
+				transitionToNewTurn(); 
 				});
-					var option = document.getElementById('options'); 
+				var option = document.getElementById('options'); 
 		        	$(option).removeClass('visible'); 
 		        	$(option).addClass('hidden');
 		        	var backwardsQuery = document.getElementById('backwardsQuery'); 
@@ -1275,24 +1400,23 @@ function startTheSimulation(){
 		        	$(backwardsQuery).addClass('visible');
 		       	});
 		       
-		       
-		       $("#forwardsButton").click(function(){
-			       $("#forwardsQueryButton").click(function(){
-				    if (parseInt($("#forwardTurns").val()) > 50){
-					    var forwardsQuery = document.getElementById('forwardsQuery'); 
-		        		$(forwardsQuery).removeClass('visible'); 
-		        		$(forwardsQuery).addClass('hidden');
-					    var story = document.getElementById('forwardError'); 
-			        	$(story).removeClass('hidden'); 
-			        	$(story).addClass('visible'); 
-				    }
-				    else{
-				     	if (visited != true){
-					      	visited = true; 
-						    var forwardsQuery = document.getElementById('forwardsQuery'); 
-		        			$(forwardsQuery).removeClass('visible'); 
-		        			$(forwardsQuery).addClass('hidden');
-		        			var newTurnCounter = parseInt($("#forwardTurns").val()) + 1; 
+		       	$("#forwardsButton").click(function(){
+				$("#forwardsQueryButton").click(function(){
+					if (parseInt($("#forwardTurns").val()) > 50){
+						var forwardsQuery = document.getElementById('forwardsQuery'); 
+						$(forwardsQuery).removeClass('visible'); 
+						$(forwardsQuery).addClass('hidden');
+						var story = document.getElementById('forwardError'); 
+						$(story).removeClass('hidden'); 
+						$(story).addClass('visible'); 
+					    }
+					    else{
+						if (visited != true){
+							visited = true; 
+							var forwardsQuery = document.getElementById('forwardsQuery'); 
+							$(forwardsQuery).removeClass('visible'); 
+							$(forwardsQuery).addClass('hidden');
+							var newTurnCounter = parseInt($("#forwardTurns").val()) + 1; 
 							numberOfTurns += forwardTurns; 
 							var newOutput = getWorldEvents(newTurnCounter, [], true, world, events[j]); 
 							for (var k=0; k<newOutput.length-1; k++){
@@ -1303,19 +1427,19 @@ function startTheSimulation(){
 						}
 					} 
 				});
-			       var option = document.getElementById('options'); 
-		        	$(option).removeClass('visible'); 
-		        	$(option).addClass('hidden');
-		        	var forwardsQuery = document.getElementById('forwardsQuery'); 
-		        	$(forwardsQuery).removeClass('hidden'); 
-		        	$(forwardsQuery).addClass('visible');
+			        var option = document.getElementById('options'); 
+				$(option).removeClass('visible'); 
+				$(option).addClass('hidden');
+				var forwardsQuery = document.getElementById('forwardsQuery'); 
+				$(forwardsQuery).removeClass('hidden'); 
+				$(forwardsQuery).addClass('visible');
 		       }); 
-		       
+			       
 		       $("#exitButton").click(function(){
-			    	var option = document.getElementById('options'); 
-		        	$(option).removeClass('visible'); 
-		        	$(option).addClass('hidden');
-		        	var story = document.getElementById('theEnd'); 
+				var option = document.getElementById('options'); 
+				$(option).removeClass('visible'); 
+				$(option).addClass('hidden');
+				var story = document.getElementById('theEnd'); 
 		        	$(story).removeClass('hidden'); 
 		        	$(story).addClass('visible');
 		        
@@ -1323,36 +1447,36 @@ function startTheSimulation(){
 		       	});
 		       
 				
-			}
-			function transitionToNewTurn(){
-				var children = document.getElementById('onceButtons').childNodes;
-			     for (var k= 0; k< children.length - 2; k++){
-				     $(children[k]).removeClass('active'); 
-				     $(children[k]).addClass('passive'); 
-			     }			
-				if (events[j+1].polarity == 'multipolar'){
-			   		var story = document.getElementById('newTurnMulti');
-					$(story).removeClass('hidden');
-					$(story).addClass('visible');
-					removeContent('turnDetailsMulti');
-					addContent('turnDetailsMulti', 'This is turn ' + (j+2)); 
-				}     
-				else if (events[j+1].polarity == 'bipolar'){
-					var story = document.getElementById('newTurnBi');
-					$(story).removeClass('hidden');
-					removeContent('turnDetailsBi');
-					addContent('turnDetailsBi', 'This is turn ' + (j+2)); 
-				}  
-				else if (events[j+1].polarity == 'unipolar'){
-					var story = document.getElementById('newTurnUni');
-					$(story).removeClass('hidden');
-					$(story).addClass('visible');
-					removeContent('turnDetailsUni');
-					addContent('turnDetailsUni', 'This is turn ' + (j+2));
-				}      
+		}
+		function transitionToNewTurn(){
+			var children = document.getElementById('onceButtons').childNodes;
+		     	for (var k= 0; k< children.length - 2; k++){
+				$(children[k]).removeClass('active'); 
+			     	$(children[k]).addClass('passive'); 
+		     	}			
+			if (events[j+1].polarity == 'multipolar'){
+				var story = document.getElementById('newTurnMulti');
+				$(story).removeClass('hidden');
+				$(story).addClass('visible');
+				removeContent('turnDetailsMulti');
+				addContent('turnDetailsMulti', 'This is turn ' + (j+2)); 
+			}     
+			else if (events[j+1].polarity == 'bipolar'){
+				var story = document.getElementById('newTurnBi');
+				$(story).removeClass('hidden');
+				removeContent('turnDetailsBi');
+				addContent('turnDetailsBi', 'This is turn ' + (j+2)); 
+			}  
+			else if (events[j+1].polarity == 'unipolar'){
+				var story = document.getElementById('newTurnUni');
+				$(story).removeClass('hidden');
+				$(story).addClass('visible');
+				removeContent('turnDetailsUni');
+				addContent('turnDetailsUni', 'This is turn ' + (j+2));
+			}      
      			i=0;
      			j++;
-		   		setTimeout(scaling, 3000);	   		
+		   	setTimeout(scaling, 3000);	   		
 		   	}	
 			
 			hideStories();
@@ -1366,169 +1490,163 @@ function startTheSimulation(){
 				if (showMany == true){
 		        	displayOptions(); 
 	        	}
-		        else{
-			     	var children = document.getElementById('onceButtons').childNodes;
-			     	for (var k= 0; k< children.length - 2; k++){
-				     	$(children[k]).removeClass('passive'); 
-				     	$(children[k]).addClass('active'); 
-				     		
-			     	}   
-		        }
-	       	 
-	  
-	        }
+		        	else{
+			     		var children = document.getElementById('onceButtons').childNodes;
+			     		for (var k= 0; k< children.length - 2; k++){
+				     		$(children[k]).removeClass('passive'); 
+				     		$(children[k]).addClass('active');     		
+			     		}   
+		        	}
+	        	}
 			else{
 	   			transitionToNewTurn();
 	   		}
- 	}
- 	
- 	function limitedFix(){
-	 	hideStories(); 
-	 	var story = document.getElementById('limitedChange'); 
-	 	$(story).removeClass('hidden'); 
-	 	$(story).addClass('visible'); 
-	 	for (var k=0; k<16; k++){
-		 	var found = false; 
-	 		for (var m=0; m<events[j].changedStates.length; m++){
-		 		if (events[j].changedStates.length == 2){
-			 		if (events[j].changedStates[0][1] == k+1){
-				 		var found = true; 	
-			 		}
-		 		}
-		 	if (found == false){
-			 	if (events[j].statesAfterUpdate[k].length == 2){
-					var state = states[(k%4)*4 + Math.floor(k/4)];
-					$(state).removeClass();
-					$(state).addClass('state');
-					$(state).addClass('alliance0')
-					$(state).addClass('visible');
-					$(state).addClass('power' + events[j].statesAfterUpdate[k][0]);  
-				}
-				
-		 	}
  		}
-	}
-	setTimeout(toNewTurn, 2000); 	
- 	}
+ 	
+ 		function limitedFix(){
+			hideStories(); 
+			var story = document.getElementById('limitedChange'); 
+			$(story).removeClass('hidden'); 
+			$(story).addClass('visible'); 
+			for (var k=0; k<16; k++){
+				var found = false; 
+				for (var m=0; m<events[j].changedStates.length; m++){
+					if (events[j].changedStates.length == 2){
+						if (events[j].changedStates[0][1] == k+1){
+							var found = true; 	
+						}
+					}
+					if (found == false){
+						if (events[j].statesAfterUpdate[k].length == 2){
+							var state = states[(k%4)*4 + Math.floor(k/4)];
+							$(state).removeClass();
+							$(state).addClass('state');
+							$(state).addClass('alliance0')
+							$(state).addClass('visible');
+							$(state).addClass('power' + events[j].statesAfterUpdate[k][0]);  
+						}
+					}	
+				}
+			}
+			setTimeout(toNewTurn, 2000); 	
+ 		}	
 		function outcomes(){     
 			function addStories(state, stateNumber, power){
 				extra = '';
 				disappear = false;
 				if (events[j].statesAfterUpdate[stateNumber-1] == 0){
-	       			extra = ' This is a new state was born from the war'; 
-	       		    $(state).addClass('alliance0');   	
-       		    }
-       		    if (power != events[j].statesAfterUpdate[stateNumber-1][0]){
-	       			if (power < events[j].statesAfterUpdate[stateNumber-1][0]){
-		       			if (power <= 0){
-			       			disappear = true; 
-		       		    }
-		       		   	else{
-		       		    	var diff = powersOfStates[stateNumber-1] - power;
-		       		    	if (diff > 0){
-		       		    		extra = ' Power of the state has decreased by ' + diff;
-	       		    		}
-	       		    		else{
-		       		    		diff = -diff; 
-		       		    		extra = ' Power of the state has increased by ' + diff;
-		       		    			
-	       		    		}
-	       		    	}
-	       		    }
-	       		    else{
-		       		    var diff = power - events[j].statesAfterUpdate[stateNumber-1][0]; 
-		       		    if (diff > 0){
-		       		    	extra = ' Power of the state has increased by ' + diff; 
-	       		    	}
-	       		    	else{
-		       		    	diff = -diff; 	
-		       		    	extra = ' Power of the state has decreased by ' + diff;
-	       		    	}
-	       		    }
-   		      		if (disappear == true){
-	   		      		addContent('afterWarDetails', 'State ' + stateNumber +' was destroyed during the war and will disappear from the world.'); 
-	   		      		$(state).removeClass(); 
-	   		      		$(state).addClass('state'); 
-	   		      		$(state).addClass('alliance0'); 
-	   		      		$(state).addClass('hidden'); 
-   		      			}
-   		      		else{	
-		           		addContent('afterWarDetails', 'State ' + stateNumber +' has power ' + power + '.' + extra); 
-	           		}
-	          	}
+	       				extra = ' This is a new state was born from the war'; 
+	       		    		$(state).addClass('alliance0');   	
+       		    		}		
+       		    		if (power != events[j].statesAfterUpdate[stateNumber-1][0]){
+	       				if (power < events[j].statesAfterUpdate[stateNumber-1][0]){
+		       				if (power <= 0){
+			       				disappear = true; 
+						}
+						else{
+							var diff = powersOfStates[stateNumber-1] - power;
+							if (diff > 0){
+								extra = ' Power of the state has decreased by ' + diff;
+							}
+							else{
+								diff = -diff; 
+								extra = ' Power of the state has increased by ' + diff;	
+							}	
+						}	
+					}
+					else{
+						var diff = power - events[j].statesAfterUpdate[stateNumber-1][0]; 
+						if (diff > 0){
+							extra = ' Power of the state has increased by ' + diff; 
+						}
+						else{
+							diff = -diff; 	
+							extra = ' Power of the state has decreased by ' + diff;
+						}
+					}
+					if (disappear == true){
+						addContent('afterWarDetails', 'State ' + stateNumber +' was destroyed during the war and will disappear from the world.'); 
+						$(state).removeClass(); 
+						$(state).addClass('state'); 
+						$(state).addClass('alliance0'); 
+						$(state).addClass('hidden'); 
+					}
+					else{	
+						addContent('afterWarDetails', 'State ' + stateNumber +' has power ' + power + '.' + extra); 
+					}
+	          		}
 			}
 			
 			if (i==0){
 				hideStories(); 
-	            var story = document.getElementById('afterWar');
+				var story = document.getElementById('afterWar');
 				$(story).removeClass('hidden');
 				$(story).addClass('visible');
 				removeContent('afterWarDetails');
 				var winners; 
 				var losers;
 				if (events[j].flags.didAttackerWin == true){
-		        	addContent('afterWarDetails', 'The attacking alliance won the war'); 
-		          	i++; 
-		          	winners = document.getElementsByClassName('attacker');
-		          	losers = document.getElementsByClassName('defender');
-		        }
-	            else{
-		            addContent('afterWarDetails', 'The attacking alliance lost the war'); 
-		            i++; 
+					addContent('afterWarDetails', 'The attacking alliance won the war'); 
+					i++; 
+					winners = document.getElementsByClassName('attacker');
+					losers = document.getElementsByClassName('defender');
+				}
+			    	else{
+					addContent('afterWarDetails', 'The attacking alliance lost the war'); 
+				    	i++; 
 					winners = document.getElementsByClassName('defender');
-		            losers = document.getElementsByClassName('attacker');
-		        }
-		        for (var n = 0; n< winners.length; n++){
-			         state= winners[n];
-			         $(state).addClass('winner');   
+		            		losers = document.getElementsByClassName('attacker');
+		        	}	
+		        	for (var n = 0; n< winners.length; n++){
+			        	state= winners[n];
+			         	$(state).addClass('winner');   
 			   	}
 			   		
 			   	for (var m=0; m<losers.length; m++){
 					state=losers[m];
 				   	$(state).addClass('loser'); 	
 			   	}
-			    i++; 
-		        setTimeout(outcomes, 1500); 		   	
-            }
-            else{
-	            power = events[j].changedStates[i-1][0];
-		        stateNumber = events[j].changedStates[i-1][1];
-		        var state =  states[(((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4))];
-		        $(state).removeClass();    	
-       		    $(state).addClass('visible');
-       		    $(state).addClass('state'); 
-       		    addPower(state, power); 
-       		    addStories(state, stateNumber, power);      
-	       		if (events[j].flags.worldWar == true || events[j].flags.limitedChange == true){
-		       		if (events[j].flags.limitedChange == true){
-		       		}
-		       		$(state).addClass('alliance0');
-          		}
-	          	else{
-		          	if (events[j].statesAfterUpdate[(stateNumber-1)].length == 2){
-		           		$(state).addClass('alliance' + events[j].statesAfterUpdate[(stateNumber-1)][1]);
-	           		}
-	           		else{
-		           		$(state).addClass('alliance0');
-	           		}  	
-	      		}	
-	          	if (i < (events[j].changedStates).length ){
-		        	i++;
-		       	   	setTimeout(outcomes, 1000); 
-	          	}
-	          	else{
-	       			i=0; 	
-	       			if (events[j].flags.limitedChange == true){
-		       			setTimeout(limitedFix, 2000); 	
-	       			}
-	       			else{
-	       				setTimeout(toNewTurn, 2000);
-       				}
-       			}
+			    	i++; 
+		        	setTimeout(outcomes, 1500); 		   	
+            		}
+            		else{
+				power = events[j].changedStates[i-1][0];
+				stateNumber = events[j].changedStates[i-1][1];
+				var state =  states[(((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4))];
+				$(state).removeClass();    	
+				$(state).addClass('visible');
+				$(state).addClass('state'); 
+				addPower(state, power); 
+				addStories(state, stateNumber, power);      
+				if (events[j].flags.worldWar == true || events[j].flags.limitedChange == true){
+					if (events[j].flags.limitedChange == true){
+					}
+					$(state).addClass('alliance0');
+				}
+				else{
+					if (events[j].statesAfterUpdate[(stateNumber-1)].length == 2){
+						$(state).addClass('alliance' + events[j].statesAfterUpdate[(stateNumber-1)][1]);
+					}
+					else{
+						$(state).addClass('alliance0');
+					}  	
+				}	
+				if (i < (events[j].changedStates).length ){
+					i++;
+					setTimeout(outcomes, 1000); 
+				}
+				else{
+					i=0; 	
+					if (events[j].flags.limitedChange == true){
+						setTimeout(limitedFix, 2000); 	
+					}
+					else{
+						setTimeout(toNewTurn, 2000);
+					}
+				}
    			}
 		}
 		
-			
 		function fightingWar(){
 			hideStories(); 
 			var newStory = document.getElementById('fightingWar');    
@@ -1537,14 +1655,14 @@ function startTheSimulation(){
 			setTimeout(outcomes, 2300);	
 		}
 		   			
-        function escalateWars(){
-	    	if (events[j].flags.worldWar == false){
-		        setTimeout(fightingWar, 100);   
-	        }
-	        else{
-		        hideStories(); 
-		        var newStory = document.getElementById('systemicWar');    
-			    $(newStory).removeClass('hidden');
+		function escalateWars(){
+			if (events[j].flags.worldWar == false){
+				setTimeout(fightingWar, 100);   
+			}
+			else{
+				hideStories(); 
+				var newStory = document.getElementById('systemicWar');    
+			 	$(newStory).removeClass('hidden');
 	   			$(newStory).addClass('visible');
 	   			var attackers = [];
 	   			var defenders = [];
@@ -1573,7 +1691,7 @@ function startTheSimulation(){
 	   			}
 	   			for (var k=0; k<attackers.length; k++){ 
 		   			var attack = attackers[k];
-       		         $(attack).addClass('attacker');
+       		         		$(attack).addClass('attacker');
 	   			}
 	   			  
 	   			for (var k =0; k<events[j].escalation[1].length; k++){
@@ -1591,23 +1709,23 @@ function startTheSimulation(){
 	   			}
 	   			
 	   			setTimeout(fightingWar, 4000);
-          }       
-      }
-      	function assessWars(){
-	      	$("#peaceQuestion").click(function(){
+          		}       
+      		}
+      		function assessWars(){
+	      		$("#peaceQuestion").click(function(){
 		      		var unClicked = document.getElementById('peaceQuestion'); 
-					var clicked = document.getElementById('clickedPeace'); 
-					$(unClicked).removeClass('visible'); 
-					$(unClicked).addClass('hidden');
-					$(clicked).removeClass('hidden'); 
-					$(clicked).addClass('visible');
-					peaceClick = true; 
-				}); 
+				var clicked = document.getElementById('clickedPeace'); 
+				$(unClicked).removeClass('visible'); 
+				$(unClicked).addClass('hidden');
+				$(clicked).removeClass('hidden'); 
+				$(clicked).addClass('visible');
+				peaceClick = true; 
+			}); 
 			hideStories(); 
 			var war = events[j].war;
 			if (war == 0){
 				var newStory = document.getElementById('peaceful');    
-			    $(newStory).removeClass('hidden');
+			    	$(newStory).removeClass('hidden');
 	   			$(newStory).addClass('visible');
 	   			removeContent('peaceDetails');
 	   			if (events[j].flags.perfectBalancing == true){
@@ -1615,16 +1733,16 @@ function startTheSimulation(){
 		   			var question = document.getElementById('peaceQuestion'); 
 		   			$(question).addClass('visible'); 
 		   			$(question).removeClass('hidden'); 
-		       	}
+		       		}	
 			    	setTimeout(toNewTurn, 5000);
-		    }
+		    	}
 			else{
 				for (var k=1; k<=6; k++){
 					removeContent('warDetails' +k); 	
 				}
-       		    var newStory = document.getElementById('limitedWar');    
-		      	$(newStory).removeClass('hidden');
-	   			$(newStory).addClass('visible');
+				var newStory = document.getElementById('limitedWar');    
+				$(newStory).removeClass('hidden');
+				$(newStory).addClass('visible');
 				var attackers = document.getElementsByClassName(war[0]);
 				var defenders = document.getElementsByClassName(war[1]);
 				var attackNumber = war[0].charAt(8); 
@@ -1648,43 +1766,47 @@ function startTheSimulation(){
 					defender = defenders[k];   
 					$(defender).addClass('defender'); 
 				}
-				 i=0; 
-		    setTimeout(escalateWars, 2000);		   
-		    }
+				i=0; 
+				setTimeout(escalateWars, 2000);		   
+		    	}	
 		   
-        }
+		}
           
-		
-	          
  		function thinkWar(){
 	 		var visitedAlliance = false;
-			var clickedContinue = false;
 	 		if (changed == true){
 		 		changed = false;
 		 		events[j].flags.sorted = false; /*this is changed back to false in case this turn is playd again */
 	 		}     
-	    	hideStories(); 
-	        var newStory = document.getElementById('thinkingOfWar');    
+	    		hideStories(); 
+	        	var newStory = document.getElementById('thinkingPause');    
 			$(newStory).removeClass('hidden');
 	   		$(newStory).addClass('visible');
-	   		if (events[j].polarity == 'multipolar'){
-          		setTimeout(assessWars, 2500);
-      		}
-          	else if (events[j].polarity == 'bipolar'){  
-	          	i=0;
-          		setTimeout(bipolarWars, 2500); 
-      		}
-      	}
+			if (thinkWarVisit == false){
+				ajaxGetsQuiz('thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar);
+				thinkWarVisit = true; 
+			}
+			else{
+	   			if (events[j].polarity == 'multipolar'){
+          				setTimeout(assessWars, 2500);
+      				}
+          			else if (events[j].polarity == 'bipolar'){  
+	          			i=0;
+          				setTimeout(bipolarWars, 2500); 
+      				}
+      			}
+		}
       	
 		
 		function updateAlliances(){
-	    	function evaluateAlliances(){
-			   		var stateNumber = events[j].alliances[m][n];
-			   		var alliance = m+1;
-			   		var info = events[j].statesAfterUpdate[stateNumber-1];  
+			alert('in update alliances with visitedAlliance ' + visitedAlliance);
+	    		function evaluateAlliances(){
+				var stateNumber = events[j].alliances[m][n];
+			   	var alliance = m+1;
+			   	var info = events[j].statesAfterUpdate[stateNumber-1];  
 		       		power=info[0];
-			   		state = states[(((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4))];  
-			   		$(state).removeClass(); 
+			   	state = states[(((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4))];  
+			   	$(state).removeClass(); 
        				$(state).addClass('visible');
        				$(state).addClass('state'); 
        		   		$(state).addClass('alliance' + alliance); 
@@ -1713,26 +1835,13 @@ function startTheSimulation(){
 	       					i=0; 
 	       					setTimeout(thinkWar, 4000);
 	       					
-       				}
+       					}
    				}
 			} 
 			
-			$("#allianceContinue").click(function(){
-				    alert('in click!'); 
-					visitedAlliance = true;
-					var expl = document.getElementById('alllianceExplanation');
-					$(expl).removeClass('visible'); 
-				    $(expl).addClass('hidden'); 
-					if (clickedContinue == false){
-						clickedContinue = true; 
-						updateAlliances(); 	
-					}     
-			    });  
-		    function compareAlliances(){
-			    	
-				
-			    if (j==0){
-		   		    return true;	
+		    	function compareAlliances(){
+			    	if (j==0){
+		   			return true;	
 	   			}
 	   			else{
 		   			for (k=0; k<16; k++){
@@ -1744,85 +1853,88 @@ function startTheSimulation(){
 		   				}
 	   				} 
    				}	
-			  return false;  
-		    }
+			  	return false;  
+		    	}
 		    
-		    if (noPowerClick == true){
-				noPowerQuestion();     
-		    }   
-	        else if (i==0){      
+	        	if (i==0){     
+			       	alert('i was 0');	
 			    	hideStories(); 
 			    	if (visitedAlliance == false){
-				    	var expl = document.getElementById('allianceExplanation');
-				    	$(expl).removeClass('hidden'); 
-				    	$(expl).addClass('visible'); 
+					var pause = document.getElementById('alliancePause'); 
+					$(pause).removeClass('hidden'); 
+					$(pause).addClass('visible'); 
+					group_name = 'alliance_questions'
+					ajaxGetsQuiz(group_name, 'allianceQuiz', 'allianceCont', updateAlliances);
+					visitedAlliance = true; 
+					alert('set visited alliance to ' + visitedAlliance); 
 			    	}
 			    	else{
+					alert('visited alliances was true');
 			    		var newStory = document.getElementById('assessAlliances');    
 			    		$(newStory).removeClass('hidden');
-	   					$(newStory).addClass('visible');
+	   				$(newStory).addClass('visible');
 	       				for (k=1; k<=6; k++){
        		   				removeContent('desc' + k);
-   		   				}
-	   					var changed = compareAlliances(1); 
-		   				if (changed == false){
-			   				hideStories(); 
-			   				var str = document.getElementById('allianceDetails'); 
+   		   			}
+	   				var changed = compareAlliances(1); 
+		   			if (changed == false){
+			   			hideStories(); 
+			   			var str = document.getElementById('allianceDetails'); 
 		   			    	$(str).removeClass('hidden'); 
 		   			    	$(str).addClass('visible'); 
 		   			    	setTimeout(thinkWar, 3000); 
 	   			    	}
-	   		 			else{
-		   					var m = 0; 
-		   					var n = 0;
-		   					setTimeout(evaluateAlliances, 3000); 
-	   					}	    		
+	   		 		else{
+		   				var m = 0; 
+		   				var n = 0;
+		   				setTimeout(evaluateAlliances, 3000); 
+	   				}	    		
       	 			}
-  	 			}
-			}      
-        function powerQuestion(){
-	        var story = document.getElementById('powerAnswer'); 
-	    	$(story).removeClass('hidden'); 
-	    	$(story).addClass('visible'); 
-	    	powerClick = false; 
-	    	$("#backToUpdate").click(function(){
-		    	var unClicked = document.getElementById('powerQuestion'); 
+  	 		}
+		}      
+        	function powerQuestion(){
+	        	var story = document.getElementById('powerAnswer'); 
+	    		$(story).removeClass('hidden'); 
+			$(story).addClass('visible'); 
+			powerClick = false; 
+			$("#backToUpdate").click(function(){
+				var unClicked = document.getElementById('powerQuestion'); 
 				var clicked = document.getElementById('clickedPower'); 
 				$(unClicked).removeClass('hidden'); 
 				$(unClicked).addClass('visible');
 				$(clicked).removeClass('visible'); 
 				$(clicked).addClass('hidden'); 
 				$(story).removeClass('visible'); 
-	    		$(story).addClass('hidden'); 
-	    			if (i<15){
-		    			i++; 
-		    			updatePower(); 	
-	    			}
-	    			else{
-		    			i=0; 
-		    			if (events[j].polarity == 'multipolar'){
-	   						updateAlliances(); 
-		 				}
-		 				else if (events[j].polarity == 'bipolar'){
-	   						bipolarAlliances(); 
-	 					}
-	 					else{
-		 					unipolarAlliances(); 
-	 				}
- 				}
-	    	});     
+				$(story).addClass('hidden'); 
+				if (i<15){
+					i++; 
+					updatePower(); 	
+				}
+				else{
+					i=0; 
+					if (events[j].polarity == 'multipolar'){
+							updateAlliances(); 
+					}
+					else if (events[j].polarity == 'bipolar'){
+						bipolarAlliances(); 
+					}
+					else{
+						unipolarAlliances(); 
+					}
+				}
+			});     
 	     	   
-        }
+		}
         
-        function noPowerQuestion(){
-	        var story = document.getElementById('noPowerAnswer'); 
-	    	$(story).removeClass('hidden'); 
-	    	$(story).addClass('visible'); 
-	    	noPowerClick = false; 
-	    	$("#backNoUpdate").click(function(){
+		function noPowerQuestion(){
+			var story = document.getElementById('noPowerAnswer'); 
+			$(story).removeClass('hidden'); 
+			$(story).addClass('visible'); 
+			noPowerClick = false; 
+			$("#backNoUpdate").click(function(){
 				$(story).removeClass('visible'); 
-	    		$(story).addClass('hidden'); 
-	    		var unClicked = document.getElementById('noPowerQuestion'); 
+				$(story).addClass('hidden'); 
+				var unClicked = document.getElementById('noPowerQuestion'); 
 				var clicked = document.getElementById('clickedNoPower'); 
 				$(unClicked).removeClass('hidden'); 
 				$(unClicked).addClass('visible');
@@ -1830,37 +1942,37 @@ function startTheSimulation(){
 				$(clicked).addClass('hidden'); 
 		    		if (events[j].polarity == 'multipolar'){
 	   					updateAlliances(); 
-		 			}
-		 			else if (events[j].polarity == 'bipolar'){
-	   					bipolarAlliances(); 
-	 				}
-	 				else{
-		 				unipolarAlliances(); 
-	 				}
-	    	});        
-        }
+				}
+				else if (events[j].polarity == 'bipolar'){
+					bipolarAlliances(); 
+				}
+				else{
+					unipolarAlliances(); 
+				}
+			});        
+		}
 		function updatePower(){ 
 			var visitedPowerStory = false; 
 			visitedOnce = false;  /*this is to control the button for going back one turn*/
 			visitedForwardOnce = false; 
 			var powerClick = false;
 			$("#powerContinue").click(function(){
-					if (powerClick == false){
-						powerClick = true; 
-						visitedPowerStory = true; 
-						var story =  document.getElementById('updateExplanation');    
-						$(story).removeClass('visible'); 
-						$(story).addClass('hidden'); 
-						updatePower();
-					} 
-				}); 
+				if (powerClick == false){
+					powerClick = true; 
+					visitedPowerStory = true; 
+					var story =  document.getElementById('updateExplanation');    
+					$(story).removeClass('visible'); 
+					$(story).addClass('hidden'); 
+					updatePower();
+				} 
+			}); 
 			
 			if (events[j].flags.powersUpdated == false){
 				i=0; 
 				if (j != 0){
 					hideStories(); 
 					var newStory = document.getElementById('noUpdates');    
-			    	$(newStory).removeClass('hidden');
+					$(newStory).removeClass('hidden');
 	   				$(newStory).addClass('visible'); 
    				}
 	   			if (events[j].polarity == 'multipolar'){
@@ -1873,309 +1985,274 @@ function startTheSimulation(){
 		 			setTimeout(unipolarAlliances, 3000);
 	 			}
  			}
-		    else{
+			else{
 		   		if (visitedPowerStories = false){
-			    	hideStories(); 
-			    	var url = 'quiz/nopower'
-			    	ajaxGetsQuiz(url);
-	            else{
-		            if (i==0){
-			        	var newStory = document.getElementById('updatePowers');   
-			        	$(newStory).removeClass('hidden');
-	   			   		$(newStory).addClass('visible');    
-		            }
-		    		if (events[j].statesAfterUpdate[i] == 0){
+			    		hideStories();
+					visitedPowerStories = true; 
+			    		var url = 'django/alliance_questions/send'
+			    		ajaxGetsQuiz(url);
+				}
+				else{
+					if (i==0){
+						var newStory = document.getElementById('updatePowers');   
+						$(newStory).removeClass('hidden');
+						$(newStory).addClass('visible');    
+					}
+					if (events[j].statesAfterUpdate[i] == 0){
 						if (i<15){
-							if (powerClick == true){
-								setTimeout(powerQuestion, 3000); 	
-							}
-							else{
-								i++; 
-			        			updatePower();  
-		        			}
-	        			}	 
-		         		else{
-			     			i=0; 
-			     			if (powerClick == true){
-				     			setTimeout(powerQuestion, 3000); 	
-			     			}   
-			       			else if (events[j].polarity == 'multipolar'){    
-			       				setTimeout(updateAlliances, 3000);
-		       				}
-		         			else if (events[j].polarity == 'bipolar'){
-			     				setTimeout(bipolarAlliances, 3000); 
-		         			}
-		         			else if (events[j].polarity == 'unipolar'){
-			     				setTimeout(unipolarAlliances, 3000); 
-		         			}
-		         		}		    
-		    		}
-		    		else{ 
-		    			var info = events[j].statesAfterUpdate[i]; 
-		   	   			var power=info[0];
-	   		    		state = states[((i%4)*4 + Math.floor(i/4))]; 
-	   		    		$(state).removeClass(); 
-       					$(state).addClass('visible');
-       					$(state).addClass('state'); 
-       					if (j == 0){
-	       					$(state).addClass('alliance0'); 
-       					}
-       					if (events[j-1].polarity == 'unipolar' && events[j].polarity == 'unipolar'){
-	       					var stateNum = i+1; 
-							if (stateNum == events[j].hegemon){
-								$(state).addClass('alliance100'); 	
-							}	
-							else{
-								$(state).addClass('alliance001'); ; 	
-							}	
-       					}
-       					else if (events[j-1].polarity != 'multipolar'){
-	       						$(state).addClass('alliance0'); 
-       					}
-       					else{
-       						$(state).addClass('alliance' + events[j-1].statesAfterUpdate[i][1]); 
-   						}
-   					
-       					addPower(state, power);
-       					var extra = "";
-       					var diff; 
-       					var oldPower = events[j].statesAfterScaling[i][0];	
-       					var hegemon = 0;
-       					var hegeDecline = '';
-       					var decline = false;
-       					if (events[j].flags.decliningHegemon == true){
-	       					hegemon = events[j].hegemon; 
-       					}
-       					if ((i+1) == hegemon){
-	       					decline = true; 
-       					}
-	   			
-   				
-       					if (power != oldPower){
-	       					if (decline == true){
-		       					diff = oldPower-power; 
-	       						extra = ' Power decreased by '; 
-	       						extra += diff; 
-	       						extra += '. The state is an old hegemonic power whose powers continue to decline. '
-	       					}
-	       					else{
-	       						diff = power-oldPower; 
-	       						extra = ' Power increased by '; 
-	       						extra += diff; 
-       						}
-   						}
-       					var num = i+1; 
-       					addContent('powerDetails', 'State ' + num + ' has power ' + power + '.' + extra + hegeDecline);
-       					if(i < 15){
-	       					if (powerClick == true){
-		       					setTimeout(powerQuestion, 1000); 	
-	       					}
-	       					else{
-	       						i++; 
-	       						setTimeout(updatePower, 1000);
-       						}
-   						}		
-       					else{
-	       					i=0;  
-	       					if (powerClick == true){
-		       					setTimeout(powerQuestion, 3000); 	
-	       					}
-	       					else{
-	       						if (events[j].polarity == 'multipolar'){    
-			        				setTimeout(updateAlliances, 3000);
-		       						}	
+							i++; 
+							updatePower();  
+						}
+						 
+		         			else{
+			     				i=0; 
+			     				if (powerClick == true){
+				     				setTimeout(powerQuestion, 3000); 	
+			     				}	   
+			       				else if (events[j].polarity == 'multipolar'){    
+			       					setTimeout(updateAlliances, 3000);
+		       					}
 		         				else if (events[j].polarity == 'bipolar'){
 			     					setTimeout(bipolarAlliances, 3000); 
 		         				}
 		         				else if (events[j].polarity == 'unipolar'){
 			     					setTimeout(unipolarAlliances, 3000); 
-		         				}	
-	         				}
-			   			}
-	   				}
-   				}
+		         				}
+		         			}		    
+		    			}	
+					else{ 
+						var info = events[j].statesAfterUpdate[i]; 
+						var power=info[0];
+						state = states[((i%4)*4 + Math.floor(i/4))]; 
+						$(state).removeClass(); 
+						$(state).addClass('visible');
+						$(state).addClass('state'); 
+						if (j == 0){
+							$(state).addClass('alliance0'); 
+						}
+						if (events[j-1].polarity == 'unipolar' && events[j].polarity == 'unipolar'){
+							var stateNum = i+1; 
+							if (stateNum == events[j].hegemon){
+							$(state).addClass('alliance100'); 	
+							}	
+							else{
+								$(state).addClass('alliance001'); ; 	
+							}	
+						}
+						else if (events[j-1].polarity != 'multipolar'){
+								$(state).addClass('alliance0'); 
+						}
+						else{
+							$(state).addClass('alliance' + events[j-1].statesAfterUpdate[i][1]); 
+						}
+						
+						addPower(state, power);
+						var extra = "";
+						var diff; 
+						var oldPower = events[j].statesAfterScaling[i][0];	
+						var hegemon = 0;
+						var hegeDecline = '';
+						var decline = false;
+						if (events[j].flags.decliningHegemon == true){
+							hegemon = events[j].hegemon; 
+						}
+						if ((i+1) == hegemon){
+							decline = true; 
+						}
+					
+					
+						if (power != oldPower){
+							if (decline == true){
+								diff = oldPower-power; 
+								extra = ' Power decreased by '; 
+								extra += diff; 
+								extra += '. The state is an old hegemonic power whose powers continue to decline. '
+							}
+							else{
+								diff = power-oldPower; 
+								extra = ' Power increased by '; 
+								extra += diff; 
+							}
+						}
+						var num = i+1; 
+						addContent('powerDetails', 'State ' + num + ' has power ' + power + '.' + extra + hegeDecline);
+						if(i < 15){
+							if (powerClick == true){
+								setTimeout(powerQuestion, 1000); 	
+							}
+							else{
+								i++; 
+								setTimeout(updatePower, 1000);
+							}
+						}		
+						else{
+							i=0;  
+							if (powerClick == true){
+								setTimeout(powerQuestion, 3000); 	
+							}
+							else{
+								if (events[j].polarity == 'multipolar'){    
+									setTimeout(updateAlliances, 3000);
+									}	
+								else if (events[j].polarity == 'bipolar'){
+									setTimeout(bipolarAlliances, 3000); 
+								}
+								else if (events[j].polarity == 'unipolar'){
+									setTimeout(unipolarAlliances, 3000); 
+								}	
+							}
+							
+						}
+					}
+				}
 			}	
 		}		
 	
-		function scalingQuestion(){
-		var story = document.getElementById('scalingAnswer'); 
-	    	$(story).removeClass('hidden'); 
-	    	$(story).addClass('visible'); 
-	    	scalingClick = false; 
-	    	$("#backToScaling").click(function(){
-	    		var unClicked = document.getElementById('scalingQuestion'); 
-				var clicked = document.getElementById('clickedScaling'); 
-				$(unClicked).removeClass('hidden'); 
-				$(unClicked).addClass('visible');
-				$(clicked).removeClass('visible'); 
-				$(clicked).addClass('hidden'); 
-				$(story).removeClass('visible'); 
-	    		$(story).addClass('hidden'); 
-		    		if (i < 15){
-			    		i++; 
-			    		scaling(); 	
-		    		}
-		    		else{
-			    		i=0; 
-			    		updatePower(); 	
-		    		}
-	    	});     
-	     	   
-        }
-    
-    function scaling(){
-	    visited = false;
-	    var alliance; 
-	    $("#scalingQuestion").click(function(){
-		    var unClicked = document.getElementById('scalingQuestion'); 
-			var clicked = document.getElementById('clickedScaling'); 
-			$(unClicked).removeClass('visible'); 
-			$(unClicked).addClass('hidden');
-			$(clicked).removeClass('hidden'); 
-			$(clicked).addClass('visible'); 
-			scalingClick = true; 
-		}); 
-		if (events[j].flags.scaledDown == false || events[j].flags.skipScaling == true){
-			updatePower()
-		}    
-	   else{
-			if (i==0){
-		    	hideStories(); 
-				story = document.getElementById('scaled'); 
+			   
+	    
+		function scaling(){
+			visited = false;
+			var alliance;
+			if (events[j].flags.scaledDown == false || events[j].flags.skipScaling == true){
+				updatePower()
+			}    
+			else if (scalingVisit == false){
+				hideStories(); 
+				story = document.getElementById('scalingPause'); 
+				scalingVisit = true; 
 				$(story).removeClass('hidden'); 
 				$(story).addClass('visible');
-				var alliance; 
+				ajaxGetsQuiz('scaling_questions', 'scalingQuiz', 'scalingCont', scaling);
 			}
-			if (events[j].statesAfterUpdate[i].length == 2){
-				if (events[j].polarity == 'multipolar'){
-					if (j> 0){
-						if(events[j-1].polarity == 'multipolar'){
-							alliance = 'alliance' + events[j-1].statesAfterUpdate[i][1];
-						}
-						else{
-							alliance = 'alliance0';	
-						}
-					}	
-					else{
-						alliance = 'alliance0';		
-					}
+			else{
+				if (i==0){
+					var alliance; 
 				}
-				else if (events[j].polarity == 'bipolar'){
-					if (j > 0){
-						if (events[j-1].polarity == 'bipolar'){
-	   						var sphNum; 
-	   						var stateNum = i+1; 
-	   						for (var k=0; k<events[j].spheres[0].length; k++){
-		   						if(events[j].spheres[0][k] == stateNum){
-			   						sphNum = 1; 
-			   						break; 
-		   						}	
-	   						}
-	   						if(sphNum != 1){
-		   						sphNum = 2; 	
-	   						}
-	   					alliance = 'sphere' + sphNum; 
-   						}
-	   					else{
-		   					alliance = 'alliance0'; 	
-	   					}
-   					}
-	   				else{
-		   				alliance = 'alliance0'; 	
-	   				}	 	
-				}
-				else{
-					if (j>0){
-						if (events[j-1].polarity == 'unipolar'){
-							var stateNum = i+1; 
-							if (stateNum == events[j].hegemon){
-								alliance = 'alliance100'; 	
-							}	
+				if (events[j].statesAfterUpdate[i].length == 2){
+					if (events[j].polarity == 'multipolar'){
+						if (j> 0){
+							if(events[j-1].polarity == 'multipolar'){
+								alliance = 'alliance' + events[j-1].statesAfterUpdate[i][1];
+							}
 							else{
-								alliance = 'alliance001'; 	
+								alliance = 'alliance0';	
+							}
+						}	
+						else{
+							alliance = 'alliance0';		
+						}
+					}
+					else if (events[j].polarity == 'bipolar'){
+						if (j > 0){
+							if (events[j-1].polarity == 'bipolar'){
+								var sphNum; 
+								var stateNum = i+1; 
+								for (var k=0; k<events[j].spheres[0].length; k++){
+									if(events[j].spheres[0][k] == stateNum){
+										sphNum = 1; 
+										break; 
+									}	
+								}
+								if(sphNum != 1){
+									sphNum = 2; 	
+								}
+							alliance = 'sphere' + sphNum; 
+							}
+							else{
+								alliance = 'alliance0'; 	
 							}
 						}
 						else{
-							alliance = 'alliance0'	
-						}
+							alliance = 'alliance0'; 	
+						}	 	
 					}
 					else{
-						alliance = 'alliance0'; 	
+						if (j>0){
+							if (events[j-1].polarity == 'unipolar'){
+								var stateNum = i+1; 
+								if (stateNum == events[j].hegemon){
+									alliance = 'alliance100'; 	
+								}	
+								else{
+									alliance = 'alliance001'; 	
+								}
+							}
+							else{
+								alliance = 'alliance0'	
+							}
+						}
+						else{
+							alliance = 'alliance0'; 	
+						}	
+					}
+					state = states[((i%4)*4 + Math.floor(i/4))];
+					power = events[j].statesAfterScaling[i][0]; 
+					$(state).removeClass(); 
+					$(state).addClass('visible');
+					$(state).addClass('state'); 
+					$(state).addClass(alliance); 
+					addPower(state, power);
+					if (scalingClick == true){
+						setTimeout(scalingQuestion, 1000); 	
+					}	
+					else{
+						if (i<15){
+							i++; 
+							setTimeout(scaling, 1000); 	
+						}
+						else{
+							i=0; 
+							setTimeout(updatePower, 1000);    
+						}	
 					}	
 				}
-				state = states[((i%4)*4 + Math.floor(i/4))];
-				power = events[j].statesAfterScaling[i][0]; 
-	   	    	$(state).removeClass(); 
-       			$(state).addClass('visible');
-  				$(state).addClass('state'); 
-     			$(state).addClass(alliance); 
-       			addPower(state, power);
-       			if (scalingClick == true){
-    				setTimeout(scalingQuestion, 1000); 	
-       			}	
-       			else{
+				else{
 					if (i<15){
 						i++; 
-						setTimeout(scaling, 1000); 	
-					}
+						scaling();	
+					}	
 					else{
 						i=0; 
-	    				setTimeout(updatePower, 1000);    
-    				}
-    			}
+						updatePower(); 	
+					}	
+				}
 			}
-	    	else{
-		    	if (scalingClick == true){
-			    	scalingQuestion(); 	
-		    	}
-		    	else{
-		    		if (i<15){
-			    		i++; 
-			    		scaling();	
-		    		}
-		    		else{
-			    		i=0; 
-			    		updatePower(); 	
-		    		}	
-	    		}
-    		}
-   		}
-    }
-	if (showMany == true){
-     	var output = getWorldEvents(numOfTurns, initialStates, false);
- 	}
- 	else{
-	 	var output = getWorldEvents(1, initialStates, false);
- 	}
-     var events =[]; 
-     for (var k=0; k<output.length-1; k++){
-	  	events.push(output[k]);    
-     } 
-     var world = output[output.length -1]; 
-       j=0;
-       i=0;
-       
-   		var powerClick; 
-   		var noPowerClick;
-   		var scalingClick; 
-   		var peaceClick;
-   		var disintegrationClick;
-   		var declineClick; 
-       	var alliances=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
- 	  	var sphere1text = ''; 
-	   	var sphere2text = '';
-       	var changed = false; 
-       	var visited = false; 
-      	var visitedOnce; 
-      	var visitedForwardOnce; 
-      	/*for pause stories */
-      	var visitedAlliance = false;
-		var clickedContinue = false;
+		}
+		if (showMany == true){
+			var output = getWorldEvents(numOfTurns, initialStates, false);
+		}
+		else{
+			var output = getWorldEvents(1, initialStates, false);
+		}
+		var events =[]; 
+		for (var k=0; k<output.length-1; k++){
+			events.push(output[k]);    
+		} 
+		var world = output[output.length -1]; 
+		j=0;
+		i=0;
+	       
+		var alliances=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+		var sphere1text = ''; 
+		var sphere2text = '';
+		var changed = false; 
+		var visited = false; 
+		var visitedOnce; 
+		var visitedForwardOnce; 
+		/*for pause stories */
+		
+		var visitedAlliance = false;
 		var visitedWar = false;
 		var clickedWar = false; 
-		  
-      	
-      	
+		var thinkWarVisit = false; 
+		var scalingVisit = false; 
+		var powerClick; 
+		var noPowerClick;
+		var scalingClick; 
+		var peaceClick;
+		var disintegrationClick;
+		var declineClick;
+
 		if (events[0].polarity == 'multipolar'){
 			var story = document.getElementById('newTurnMulti');
 			$(story).removeClass('hidden');
@@ -2197,12 +2274,12 @@ function startTheSimulation(){
 			removeContent('turnDetailsUni');
 			addContent('turnDetailsUni', 'This is turn ' + (j+1)); 
 		}      
-     
+
 	       setTimeout(scaling, 1000);
 	       
-       }
 	}
-	
+}
+
 
 }); 
 	  
