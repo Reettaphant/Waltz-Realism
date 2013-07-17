@@ -20,6 +20,8 @@ why no pause after no power?
 perfect balancing has no quizzes!
 make sure that controlling button clicks works even after displayoign an error message
 delete code for old options
+quizzes need to be made larger
+don't show a power update story for the hegemon if the hegemon's powers are in decline
 */
 $(document).ready(function(){
 
@@ -839,7 +841,7 @@ function startTheSimulation(){
 						var state = states[(((k-1)%4)*4 + Math.floor((k-1)/4))]; 
 						$(state).removeClass('alliance0');
 						$(state).addClass('alliance100');  
-						addContent('unipolarDetails0', 'The new hegemon is state ' + k);
+						addContent('unipolarDetails0', 'The new hegemon is state ' + String.fromCharCode(64+parseInt(k));
 						i++; 
 						setTimeout(initialiseUnipolar, 2000); 		
 					}	
@@ -1017,13 +1019,13 @@ function startTheSimulation(){
 						$(state).addClass('sphere2');
 					}
 					addPower(state, power);
-					addContent('bipolarSystemDetails', 'State ' + stateNumber + ' lost power, power is now  ' + power);		
+					addContent('bipolarSystemDetails', 'State ' + String.fromCharCode(65+parseInt(stateNumber)-1) + ' lost power, power is now  ' + power);		
 					
 				}
 				else{
 					$(state).removeClass('visible');
 					$(state).addClass('hidden');  	
-					addContent('bipolarSystemDetails', 'State ' + stateNumber + ' has disappeared from the world.');
+					addContent('bipolarSystemDetails', 'State ' +  String.fromCharCode(65+parseInt(stateNumber)-1)+ ' has disappeared from the world.');
 				}
 			}
 			else{
@@ -1032,7 +1034,7 @@ function startTheSimulation(){
 				$(state).addClass('alliance0'); 
 				$(state).addClass('visible');
 				addPower(state, power);
-				addContent('bipolarSystemDetails', 'A new state ' + stateNumber +' with power ' + power +' was created from disintegration of the bipolar power ');
+				addContent('bipolarSystemDetails', 'A new state ' +  String.fromCharCode(65+parseInt(stateNumber)-1)+' with power ' + power +' was created from disintegration of the bipolar power ');
 			}
 				
 			if (i < events[j].changedStates.length -1){
@@ -1081,7 +1083,7 @@ function startTheSimulation(){
 	        else{   
 		   	var power = events[j].changedStates[i][0];
 		       	var stateNumber = events[j].changedStates[i][1];
-		       	var string = 'The power of state ' + stateNumber + ' is now ' + power; 
+		       	var string = 'The power of state ' + String.fromCharCode(65+parseInt(stateNumber)-1) + ' is now ' + power; 
 		       	addContent('afterWarDetails', string);
 		       	var state = states[((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4)]; 
 		       	$(state).removeClass(); 
@@ -1128,7 +1130,7 @@ function startTheSimulation(){
 		        		$(attacker).addClass('attacker');
 		        		$(defender).addClass('defender');
 	        		}
-	        		var string = 'State ' + events[j].war[0][0] + ' is attacking state ' + events[j].war[1][0];
+	        		var string = 'State ' + String.fromCharCode(64+ parseInt(events[j].war[0][0])) + ' is attacking state ' + String.fromCharCode(64+parseInt(events[j].war[1][0]));
 		        	addContent('bipolarWarDetails', string);   
 		        	setTimeout(bipolarOutcomes, 2000); 
 	      		}
@@ -1163,7 +1165,7 @@ function startTheSimulation(){
 					state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
 					$(state).removeClass('alliance0');
 					$(state).addClass('sphere1');
-					var sphere1 = 'States in the sphere of influence of state ' + n; 
+					var sphere1 = 'States in the sphere of influence of state ' +String.fromCharCode(65+parseInt(n)-1); 
 					addContent('bipolarDetails1', sphere1);
 					i++; 
 					setTimeout(bipolarAlliances, 1000);
@@ -1173,7 +1175,7 @@ function startTheSimulation(){
 					state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
 					$(state).removeClass('alliance0');
 					$(state).addClass('sphere1');
-					sphere1text='state ' + n;
+					sphere1text='state ' + String.fromCharCode(64+parseInt(n));
 					addContent('bipolarDetails1', sphere1text);
 					i++;
 					setTimeout(bipolarAlliances, 1000);
@@ -1189,7 +1191,7 @@ function startTheSimulation(){
 					var story = document.getElementById('bipolarDetails2');
 					$(story).removeClass('hidden'); 
 					$(story).addClass('visible'); 
-					var sphere2 = '<br>States in the sphere of influence of state ' + n; 
+					var sphere2 = '<br>States in the sphere of influence of state ' + String.fromCharCode(64+parseInt(n)); 
 					addContent('bipolarDetails2', sphere2);
 					i++; 
 					setTimeout(bipolarAlliances, 1000); 
@@ -1199,7 +1201,7 @@ function startTheSimulation(){
 					state = states[(((m-1)%4)*4 + Math.floor((m-1)/4))]; 
 					$(state).removeClass('alliance0');
 					$(state).addClass('sphere2');
-					sphere2text='state ' + m;
+					sphere2text='state ' + String.fromCharCode(64+parseInt(n));
 					addContent('bipolarDetails2', sphere2text);
 					if (i < events[j].spheres[0].length + events[j].spheres[1].length -1){
 						i++; 
@@ -1523,14 +1525,14 @@ function startTheSimulation(){
 						}
 					}
 					if (disappear == true){
-						addContent('afterWarDetails', 'State ' + stateNumber +' was destroyed during the war and will disappear from the world.'); 
+						addContent('afterWarDetails', 'State ' + String.fromCharCode(64+parseInt(stateNumber)) +' was destroyed during the war and will disappear from the world.'); 
 						$(state).removeClass(); 
 						$(state).addClass('state'); 
 						$(state).addClass('alliance0'); 
 						$(state).addClass('hidden'); 
 					}
 					else{	
-						addContent('afterWarDetails', 'State ' + stateNumber +' has power ' + power + '.' + extra); 
+						addContent('afterWarDetails', 'State ' + String.fromCharCode(64+parseInt(stateNumber)) +' has power ' + power + '.' + extra); 
 					}
 	          		}
 			}
@@ -1778,7 +1780,15 @@ function startTheSimulation(){
        		   		if (n==0){
 	       		   		addContent('desc' + alliance, 'Alliance ' + alliance);
        		   		}
-       		   		addContent('desc' + alliance, 'State ' + stateNumber + ' joins alliance ' + alliance); 		 
+				if (i==0){
+					alert(String.fromCharCode(65));
+					alert(String.fromCharCode(75)); 
+				}	
+       		   		alert(stateNumber); 
+				var num = parseInt(stateNumber)+65-1;
+			        alert('num is now ' + num); 	
+				alert(String.fromCharCode(num)); 
+				addContent('desc' + alliance, 'State ' + String.fromCharCode(65+parseInt(stateNumber)-1) + ' joins alliance ' + alliance); 		 
        		   		
 	       			if (n < events[j].alliances[m].length - 1){
 		       			n++;
@@ -2026,7 +2036,7 @@ function startTheSimulation(){
 							}
 						}
 						var num = i+1; 
-						addContent('powerDetails', 'State ' + num + ' has power ' + power + '.' + extra + hegeDecline);
+						addContent('powerDetails', 'State ' + String.fromCharCode(64+parseInt(num)) + ' has power ' + power + '.' + extra + hegeDecline);
 						if(i < 15){
 							i++; 
 							setTimeout(updatePower, 1000);

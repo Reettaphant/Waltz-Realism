@@ -656,7 +656,8 @@ form.storyForm{
 	border-right: 2px solid rgba(100, 100, 100, 0.3);	
 }
 
-.state { 
+.state {
+        padding: 3px;	
 	position: absolute;
 	text-align: center; 
 	border-radius: 50%;
