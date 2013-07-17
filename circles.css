@@ -194,39 +194,61 @@ input{
 }
 
 .continueButton{
-	margin: 3px;
-	color: purple; 
-	height: 30px; 
+	position: absolute;
+	color: black; 
+	height: 25px; 
 	width: 60px; 
 	padding: 2px;
+	left: 292px;
+	bottom: 1px;
+
+}
+
+.continueButton:hover{
+	border: solid #4F4F4F 2px; 
 }
 form.quiz{
+	margin-right: 3px; 
+	margin-left: 0.1px; 
 	margin-top: 5px;
 	position: relative; 
 	border-radius: 5px; 
 	font-size: 11px;  
 	width: 340px; 
 	background: #F4F4F4; 
+	padding: 3px;
 }
 
-form.quiz.extraLarge{
-	height: 330px;
-	position: absolute; 
-}
 
-form.quiz.large{
-	height: 280px;
-}
+
+
 
 form.quiz.medium{
-	height: 230px; 
+	height: 240px; 
 }
 
 form.quiz.small{
-	height: 200px; 
+	height: 220px;
+       	font: 12px; 	
 }
-form.quiz.extraSmall{
-	height: 110; 
+.explanation{
+	padding: 2px;
+}
+div.check{
+	font-size: 12px;
+        border: solid 3px #778899;
+	border-radius: 3px; 
+	width: 359px; 
+	padding: 1px;
+	color: #2F4F4F;
+	height: 142px;
+	position: absolute; 
+	bottom: 26px;
+	left: 1px;
+}
+.box{
+	margin-top: 0px;
+	float: left;
 }
 .quizButton{
 	position: absolute;
@@ -236,6 +258,20 @@ form.quiz.extraSmall{
 	bottom: 7px; 
 	right: 7px; 
 	margin: 1px; 
+}
+
+.quizButton:hover{
+	border: solid #4F4F4F 2px; 
+}
+
+.bored{
+	float: left; 
+	margin-top: -1px; 
+}
+
+.checks{
+	position: absolute; 
+	bottom: 1px; 
 }
 .correctMsg{
 	color: green;
@@ -275,7 +311,7 @@ form.quiz.extraSmall{
 }
 
 .form2{
-	heigth: 275px; 	
+	height: 275px; 	
 }
 
 .form3{
@@ -414,10 +450,10 @@ form.quiz.extraSmall{
 
 
 .story{
-	padding: 3px;
+	padding: 0.1px;
 	width: 400px; 
 	height: 500px; 
-	margin: 3px;
+	margin: 0px;
 	padding-bottom: 10px;
 	position: absolute;
 	top: 0;

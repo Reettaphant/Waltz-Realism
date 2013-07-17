@@ -189,15 +189,15 @@
  
    </div>
  
- <div class = 'story hidden' id = 'scaled'>
- <input type ="button" id = 'scalingQuestion' class = 'visible questionButton'  value='?'>
-  <input type ="button" id = 'clickedScaling' class = 'hidden clickedButton'  value='?'>
- <p> The powers of the states are scaled down as this turn begins. </p>
-  </div>
 
   <div class = 'story hidden' id = 'limitedChange'>
  <p> The system is changing polarity after a limited war. </p>
-  </div>  
+	 <div id = 'limitQuiz'> </div>
+	 <div id = 'limitCont' class = 'hidden check'>
+		 <input type = 'checkbox' id = 'limitCheck'> <span> Do not show me this quiz again </span><br>
+		 <input type ="button"  class = 'continueButton'  value='Continue'>
+  	</div> 
+ </div>	
  
  <div class = 'story hidden' id = 'newTurnMulti'>
  <p> New turn is beginning in the world, this world is multipolar </p>
@@ -216,56 +216,80 @@
  <div class = 'story hidden' id = 'updateExplanation'>
  <input type ="button" id = 'powerContinue' class = 'visible continueButton'  value='Continue'>
  </div>
- <div class = 'story hidden' id = 'updatePowers'>
-  <input type ="button" id = 'powerQuestion' class = 'visible questionButton'  value='?'>
-   <input type ="button" id = 'clickedPower' class = 'hidden clickedButton'  value='?'>
- <p> The powers of states are now updating </p>
- <div id= 'powerDetails' class = 'substory'> </div>
- </div>
  <div class = 'story hidden' id = 'scalingPause'>
 	 <p> The powers of the states are being scaled down as the new turn begins. </p>
-	 <div id = 'scalingQuiz'>
+	 <div id = 'scalingQuiz'> </div>
 	 <div id = 'scalingCont' class = 'hidden check'>
-		 <input type = 'checkbox' class = 'noSee'> <span> Do not show me this quiz again </span><br>
-		 <input type ="button"  class = 'continueButton'  value='Continue'>
-	 </div>
+		 <div class = 'explanation'> </div>
+		 <div class = 'checks'>
+		 	<input type = 'checkbox' class = 'box' id = 'scalingCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
+			<input type ="button"  class = 'continueButton'  value='Continue'>
+		</div>
 	 </div>
  </div>
  <div class = 'story hidden' id = 'alliancePause'>
 	 <p>The states are now forming new alliances</p>
-	 <div id = 'allianceQuiz'>
+	 <div id = 'allianceQuiz'> </div>
 	 <div id = 'allianceCont' class = 'hidden check'>
-		 <input type = 'checkbox' class = 'noSee'> <span> Do not show me this quiz again </span><br>
-		 <input type ="button"  class = 'continueButton'  value='Continue'>
-	 </div>
+		 <div class = 'explanation'> </div>
+		 <div class = 'checks'>
+		 	<input type = 'checkbox' class = 'box' id = 'allianceCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
+			<input type ="button"  class = 'continueButton'  value='Continue'>
+		</div>
 	 </div>
  </div>
  <div class = 'story hidden' id = 'thinkingPause'>
-	 <p> States are thinking of whehter or not there will be a war</p>
-	 <div id = thinkingQuiz>
+	 <p> States are thinking of going to  war</p>
+	 <div id = 'thinkingQuiz'> </div>
 	 <div id = 'thinkingCont' class = 'hidden check'>
-		 <input type = 'checkbox' class = 'noSee'> Do not show me this quiz again <br>
-		 <input type ="button"  class = 'continueButton'  value='Continue'>
-	</div>
+		 <div class = 'explanation'> </div>
+		 <div class = 'checks'>
+			 <input type = 'checkbox' class = 'box' id = 'thinkingCheck'> <span class = 'bored'> Do not show me this quiz again </span> <br>
+			<input type ="button"  class = 'continueButton'  value='Continue'>
+		</div>
 	</div>
 </div>
- <div class = 'story hidden' id = 'bipolarAlliances'>
- <p> The world is being divided up into two spheres of influence </p>
- <div id= 'bipolarDetails1' class = 'hidden substory bipolar1'> </div>
- <div id= 'bipolarDetails2' class = 'hidden substory bipolar2'> </div>
- </div>
  
+ <div class = 'story hidden' id = 'bipolarAlliances'>
+ 	<p> The world is being divided up into two spheres of influence </p>
+	<div id = 'bipolarQuiz'> </div>
+	<div id = 'bipolarCont' class = 'hidden check'> 
+		 <div class = 'explanation'> </div>
+		 <div class = 'checks'>
+			 <input type = 'checkbox' class = 'box' id = 'bipolarCheck'> <span class = bored> Do not show me this quiz again </span> <br>
+			<input type ="button"  class = 'continueButton'  value='Continue'>
+		</div>
+	 </div>
+ 	<div id= 'bipolarDetails1' class = 'hidden substory bipolar1'> </div>
+ 	<div id= 'bipolarDetails2' class = 'hidden substory bipolar2'> </div>
+ </div>
   
  <div class = 'story hidden' id = 'bipolarSystemicChange'>
- 	<input type ="button" id = 'disintegrationQuestion' class = 'visible questionButton'  value='?'>
-  	<input type ="button" id = 'clickedDisintegration' class = 'hidden clickedButton'  value='?'>
  	<p> The bipolar system is disintegrating </p>
+	<div id = 'disintegrationQuiz'> </div>
+	<div id = 'disintegrationCont' class = 'hidden check'> 
+		 <div class = 'explanation'> </div>
+		 <div class = 'checks'>
+			 <input type = 'checkbox' class = 'box' id = 'disintegrationCheck'> <span class = 'bored'> Do not show me this quiz again </span> <br>
+			<input type ="button"  class = 'continueButton'  value='Continue'>
+		</div>
+	 </div>
  	<div id= 'bipolarSystemDetails' class = 'substory'> </div>
  </div>
  
  <div class = 'story hidden' id = 'unipolarInitialisation'>
 	 <p> The world is now unipolar </p>
- 	<div id= 'unipolarDetails0' class = 'substory'> </div>
+	<div id = 'unipolarQuiz'> </div>
+	<div id = 'unipolarCont' class = 'hidden check'> 
+		 <div class = 'explanation'> </div>
+		 <div class = 'checks'>
+			 <input type = 'checkbox' class = 'box' id = 'unipolarCheck'> <span class = bored> Do not show me this quiz again </span> <br>
+			<input type ="button"  class = 'continueButton'  value='Continue'>
+	        </div>
+	 </div>
+ </div>
+ <div id= 'unipolarDetails0' class = 'story hidden'> 
+ 	<p> The hegemonic world order is being established </p>
  </div>
  
  <div class = 'story hidden' id = 'unipolarAlliances'>
@@ -282,11 +306,17 @@
  </div>
  
  <div class = 'story hidden' id = 'decliningUnipolar'>
- 	<input type ="button" id = 'declineQuestion' class = 'visible questionButton'  value='?'>
- 	 <input type ="button" id = 'clickedDecline' class = 'hidden clickedButton'  value='?'>
  	<p> The hegemon's powers are declining! </p>
- <div id= 'unipolarDecline' class = 'substory hidden'> </div>
+	<div id = 'unipolarPowerQuiz'> </div>
+	<div id = 'unipolarPowerCont' class = 'hidden check'> 
+		 <div class = 'explanation'> </div>
+		 <div class = 'checks'>
+			 <input type = 'checkbox' class = 'box' id = 'unipolarPowerCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
+			<input type ="button"  class = 'continueButton'  value='Continue'>
+		</div>
+	 </div>
  </div>
+<div id= 'unipolarDecline' class = 'story hidden'> </div>
  <div class = 'story hidden' id = 'bipolarWar'>
   <div id= 'bipolarWarDetails' class = 'substory'> </div>
  <div id= 'bipolarWarDetails2'> </div>
@@ -295,35 +325,49 @@
  <p> The bipolar world remains peaceful </p> </div>
  
  <div class = 'story hidden' id = 'noUpdates'>
- <input type ="button" id = 'noPowerQuestion' class = 'visible questionButton'  value='?'>
-  <input type ="button" id = 'clickedNoPower' class = 'hidden clickedButton'  value='?'>
  <p> State powers were not updated this turn </p>
- </div>
+	<div id = 'noPowerQuiz'> </div>
+	<div id = 'noPowerCont' class = 'hidden check'> 
+		 <div class = 'explanation'> </div>
+		 <div class = 'checks'>
+			 <input type = 'checkbox' class = 'box' id = 'noPowerCheck'> <span class = 'bored'>Do not show me this quiz again </span><br>
+			<input type ="button"  class = 'continueButton'  value='Continue'>
+		</div>
+	 </div>
  
+</div>
   <div id= 'allianceDetails' class = ' story hidden'> <p> Alliances were not updated this turn </p> </div>
  <div class = 'story hidden' id = 'assessAlliances'>
- <p> States are now assessing their alliances </p>
- <div id = 'desc1' class = 'hidden description1'> </div>
- <div id = 'desc2'class = 'hidden description2'> </div>
- <div id = 'desc3'class = 'hidden description3'> </div>
- <div id = 'desc4'class = 'hidden description4'> </div>
- <div id = 'desc5'class = 'hidden description5'> </div>
- <div id = 'desc6'class = 'hidden description6'> </div>
- <div id = 'desc7'class = 'hidden description7'> </div>
+ 	<p> States are now assessing their alliances </p>
+ 	<div id = 'desc1' class = 'hidden description1'> </div>
+ 	<div id = 'desc2'class = 'hidden description2'> </div>
+ 	<div id = 'desc3'class = 'hidden description3'> </div>
+ 	<div id = 'desc4'class = 'hidden description4'> </div>
+ 	<div id = 'desc5'class = 'hidden description5'> </div>
+ 	<div id = 'desc6'class = 'hidden description6'> </div>
+ 	<div id = 'desc7'class = 'hidden description7'> </div>
  
  </div>
  
 
-<div class = 'story hidden' id = 'powerPause'
+ <div class = 'story hidden' id = 'updatePowers'>
 	<p> The powers of states are now updating </p>
-	<input type = 'button' class = 'continueButton' value = 'continue'
+	<div id = 'powerQuiz'> </div>
+	<div id = 'powerCont' class = 'hidden check'> 
+		 <div class = 'explanation'> </div>
+		 <div class = 'checks'>
+			 <input type = 'checkbox' class = 'box' id = 'powerCheck'> <span class = bored> Do not show me this quiz again </span> <br>
+			<input type ="button"  class = 'continueButton'  value='Continue'>
+		</div>
+	 </div>
 </div>
 
 
+ <div class = 'story hidden' id = 'updatingPowers'>
+	<p> The powers of states are now updating </p>
+ 	<div id= 'powerDetails' class = 'substory'> </div>
 </div>
  <div class = 'story hidden' id = 'peaceful'>
- <input type ="button" id = 'peaceQuestion' class = 'hidden questionButton'  value='?'>
-  <input type ="button" id = 'clickedPeace' class = 'hidden clickedButton'  value='?'>
  <p> Balancing power was succesful and there was no war this time </p>
  <div id= 'peaceDetails' class = 'substory'> </div>
  </div>
@@ -339,14 +383,21 @@
  </div>
  
 <div class = 'story hidden' id = 'systemicWar'>
- <p> War is escalating into a systemic war </p>
- <div id= 'systWarDetails1' class = 'hidden description1'> </div>
- <div id= 'systWarDetails2' class = 'hidden description2'> </div>
- <div id= 'systWarDetails3' class = 'hidden description3'> </div>
- <div id= 'systWarDetails4' class = 'hidden description4'> </div>
- <div id= 'systWarDetails5' class = 'hidden description5'> </div>
-	 <p> I am visible! </p>
- <div id= 'systWarDetails6' class = 'hidden description6'> </div>
+ 	<p> War is escalating into a systemic war </p>
+	 <div id = 'escalationQuiz'> </div>
+	 <div id = 'escalationCont' class = 'hidden check'>
+		 <div class = 'explanation'> </div>
+		 <div class = 'checks'>
+		 	<input type = 'checkbox' class = 'box' id = 'escalationCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
+			<input type ="button"  class = 'continueButton'  value='Continue'>
+		</div>
+	 </div>
+ 	<div id= 'systWarDetails1' class = 'hidden description1'> </div>
+ 	<div id= 'systWarDetails2' class = 'hidden description2'> </div>
+ 	<div id= 'systWarDetails3' class = 'hidden description3'> </div>
+ 	<div id= 'systWarDetails4' class = 'hidden description4'> </div>
+ 	<div id= 'systWarDetails5' class = 'hidden description5'> </div>
+ 	<div id= 'systWarDetails6' class = 'hidden description6'> </div>
  </div>
  
  
@@ -357,9 +408,8 @@
  
  
  <div class = 'story hidden' id = 'afterWar'>
- <p> World and its states after the war </p>
-	 <p> I am visible! </p>
- <div id= 'afterWarDetails' class = 'substory'> </div>
+ 	<p> World and its states after the war </p>
+ 	<div id= 'afterWarDetails' class = 'substory'> </div>
  </div>
  
 
@@ -408,45 +458,6 @@
   
  
   
- <div class = 'answer hidden' id = 'powerAnswer'>
- <p> At the beginnign of each turn in a multipolar world, the computer checks if powers of states
- are going to update. Each state has a probability of their powers growing that is influenced by 
- the intellectual and the territorial advantages of that state </p>
-   <input type ="button" id = 'backToUpdate' class = 'visible backButton changingButton'  value='Back to simulation'>
- </div>
- 
- 
-  <div class = 'answer hidden' id = 'noPowerAnswer'>
- <p> Sometimes states powers are not updated. In a multipolar world, states may update their powers after a peaceful 
- turn. How much the powers are updated is chosen at random, and sometimes no powers are updated. In a bipolar world powers are never updated. This is 
- not because shifts in the state powers would not occur, but it is because these shifts do not affect the way in which 
- these worlds function.  </p>
-   <input type ="button" id = 'backNoUpdate' class = 'visible backButton changingButton'  value='Back to simulation'>
-   </div>
-  
-  <div class = 'answer hidden' id = 'perfectBalanceAnswer'>
- <p> The assumptions made in this simulation is that an alliance will only attack another alliance if that alliance's attack power 
- is greater than the defending power of another alliance. The simulation also makes an assumption, often made by defensive realists, that 
- the attacking alliance is always slightly disadvantaged. Taking this into account, the simulation equates an alliance's defensive powers 
- the power of that alliance, but the attacking power of the same alliance is only 90% of their attacking power. Thus, if the powers of all 
- alliances are the same, or very close to being the same, no alliance will consider it in their interests to attack another alliance.  </p>
-   <input type ="button" id = 'backToPeace' class = 'visible backButton changingButton'  value='Back to simulation'>
-  </div>
-  
-  <div class = 'answer hidden' id = 'disintegrationAnswer'>
- <p> According to Waltz's defensive realism, bipolar systems are supposed to be durable. This bipolar system has, however, disintegrated 
- for no apparent reason. A similar situation was seen at the end of the cold war, when Waltz's realism failed to predict the collapse of the USSR. 
- Waltz does not think that this is a weakness in his theory. He argues that the purpose of the theory is to identify patterns, but not predict particular outcomes.
- Waltz thus argues that his job is not to explain the disintegration of particular bipolar systems, and the reason for the collapse of the bipolar order 
- in this simulation shall remain a mystery.  </p>
-   <input type ="button" id = 'backDisintegration' class = 'visible backButton changingButton'  value='Back to simulation'>
-  </div>
-  
-   <div class = 'answer hidden' id = 'declineAnswer'>
- <p> Unipolar systems are durable, but they do not last forever. In this simulation, due to the unipolar power overstreching itself, after the first 
- three unipolar turns, the hegemon's powers will start to decline.   </p>
-   <input type ="button" id = 'backDecline' class = 'visible backButton changingButton'  value='Back to simulation'>
-  </div>
   
  <div id =simulationOutput class = 'hidden'>
  </div>

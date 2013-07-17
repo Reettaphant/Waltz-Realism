@@ -8,6 +8,18 @@ backwards forwards not working
 states from numbers to letters
 size of board
 no more setting of parameters manually, but can say if want multi, bi or unipolar world
+unipolardetails0 not working, also add mory story e.g. hegemonic world order being established
+make a different update power story and quiz for a unipolar world
+should unipolar power be updated as long as the unipolar state is not changing polarity?
+how to prevent unipolar - multipolar - unipolar again, extra argument to check polarity that will only allow polarity shift when the state is very weak?
+now is saying that there was a limited change after a systemic war, why is this?
+somehow make sure that all polarities will be visited in a reasonable amoutn of time. 
+should there be questions about limited wars in multipolar worlds and their consequences?
+quizzes should be in a particular order
+why no pause after no power?
+perfect balancing has no quizzes!
+make sure that controlling button clicks works even after displayoign an error message
+delete code for old options
 */
 $(document).ready(function(){
 
@@ -23,7 +35,8 @@ $(document).ready(function(){
 	var completedQuizzes = {}	
 	var lastSeenFromGroup={}
 
-
+	
+	
 	$(function(){
 		$("#powerButton").click(startTheSimulation);
   	});
@@ -190,7 +203,7 @@ function removeContent(div) {
 	document.getElementById(div).innerHTML = "<br>";
 }	
 
-function addContent(div, content){  
+function addContent(div, content){ 
 	document.getElementById(div).innerHTML += content;
 	document.getElementById(div).innerHTML += '<br>';
 }
@@ -198,9 +211,8 @@ function addContent(div, content){
 
 function startTheSimulation(){
 	
-	function ajaxGetsQuiz(group_name, pause, contDiv, continueFunction){
-		alert(pause);
-		var control = false; 
+	function ajaxGetsQuiz(group_name, pause, contDiv, continueFunction, checkbox){
+		var control = false;
 		/*here first, get values from dicts. if keys are not there, just set 
 		i * them to empty, remember to update how values are updated below */
 		if (group_name in lastSeenFromGroup){
@@ -233,85 +245,83 @@ function startTheSimulation(){
 		 * now: send finsihed quizzes and last seen quizzes only as relevant 
 		 * to that group, send by usign the url
 		 * according to length*/		 
-				alert('j in beginnign of get data' + j); 
 				var groupName = url.split("/")[2]; 
 				lastSeenFromGroup[groupName]= data['quiz_name'];
 				var answers = data['answers']
-				if (answers.length == 5){
-					var toAppend = '<form class = "quiz extraLarge">';
-				}
-				
-				if (answers.length == 4){
-					var toAppend = '<form class = "quiz large">';
-				}
-				if (answers.length == 3){
-					var toAppend = '<form class = "quiz medium">';
-				}
-				if (answers.length == 2){
+				if (answers== undefined){
 					var toAppend = '<form class = "quiz small">';
 				}
-				if (answers.length == 0){
-					var toAppend = '<form class = "quiz extraSmall">';
+				
+				else if (answers.length == 3){
+					var toAppend = '<form class = "quiz medium">';
+				}
+				else if (answers.length == 2){
+					var toAppend = '<form class = "quiz medium">';
 				}
 				toAppend += data['question'];
 				toAppend += '<br>'
-				var m=0
-				var mapping = [];
-				var orgi = answers.slice(); 
-				while(answers.length != 0){
-					var num = Math.floor(Math.random() * answers.length);
-					add=0;
-					for (k=0; k<orgi.length; k++){
-						if (orgi[k] == answers[num]){
-							mapping.push(k); 
+				if (answers != undefined){
+					var m=0
+					var mapping = [];
+					var orgi = answers.slice(); 
+					while(answers.length != 0){
+						var num = Math.floor(Math.random() * answers.length);
+						add=0;
+						for (k=0; k<orgi.length; k++){
+							if (orgi[k] == answers[num]){
+								mapping.push(k); 
+							}
 						}
+						answer = answers.splice(num, 1); 
+						toAppend += '<input type = "radio" name = "'
+						toAppend += url
+						toAppend += '" value = "'
+						toAppend += answer[0][1];
+						if (answer[0][1] == true){
+							var corr = m;
+						}
+						toAppend += '">';
+						toAppend += answer[0][0]
+						toAppend += '</input> <br>'
+						answers.splice(num, answer);
+						m++; 
 					}
-					answer = answers.splice(num, 1); 
-					toAppend += '<input type = "radio" name = "'
-					toAppend += url
-					toAppend += '" value = "'
-					toAppend += answer[0][1];
-					if (answer[0][1] == true){
-						var corr = m;
-					}
-					toAppend += '">';
-					toAppend += answer[0][0]
-					toAppend += '</input> <br>'
-					answers.splice(num, answer);
-					m++; 
+					toAppend += '<br>'
+					toAppend += '<input type = "button" class = "quizButton" value = "submit">';
+					toAppend += '<div class = "hidden errorMsg"> Sorry, your answer was incorrect </div> <div class = "hidden correctMsg"> Your answer was correct! </div> <div class = "hidden noMsg"> You did not choose an answer </div>';
 				}
-				toAppend += '<br>'
-				toAppend += '<input type = "button" class = "quizButton" value = "submit">';
-				toAppend += '<div class = "hidden errorMsg"> Sorry, your answer was incorrect </div> <div class = "hidden correctMsg"> Your answer was correct! </div> <div class = "hidden noMsg"> You did not choose an answer </div>';
+				else{
+					toAppend += '<input type = "button" class = "continueButton" value = "continue">';
+				}
 				toAppend += '</form>';
 				addContent(pause, toAppend);
+				$('.continueButton').click(function(){
+					/*checkbox: not part of the form but appears with the continue button? */
+					/*why not reacting to click?*/
+					if (control == false){
+						control = true;
+						var cont = document.getElementById(contDiv);
+						var check = document.getElementById(checkbox);
+						if (check.checked==true){
+							if (group_name in completedQuizzes){
+								var addToList = '0'+data['quiz_name'];
+								completedQuizzes[group_name]+=addToList;
+							}
+							else{
+								completedQuizzes[group_name] = data['quiz_name'];
+							}
+						}
+					        var expl = cont.childNodes;
+						expl[1].innerHTML='';
+						$(cont).removeClass('visible'); 
+						$(cont).addClass('hidden'); 
+						removeContent(pause);
+						continueFunction(); 	
+					}
+							
+				});  
 				$(".quizButton").click(function(){
 									
-					$('.continueButton').click(function(){
-						/*checkbox: not part of the form but appears with the continue button? */
-						/*why not reacting to click?*/
-						if (control == false){
-							control = true;
-							var cont = document.getElementById(contDiv);
-							var check = document.getElementsByClassName('noSee')[0];
-							if (check.checked){
-								alert('pushing new quiz to completed'); 
-								if (group_name in completedQuizzes){
-									var addToList = data['quiz_name']+'0';
-									completedQuizzes[group_name]+=addToList;
-									
-								}
-								else{
-									completedQuizzes[group_name] = data['quiz_name'];
-								}
-							}
-							continueFunction(); 	
-							$(cont).removeClass('visible'); 
-							$(cont).addClass('hidden'); 
-							}
-					   			
-							removeContent(pause); 
-					});  
 					var q= document.getElementsByClassName('quiz')[0]; 
 					var children = q.childNodes; 
 					var radios = []
@@ -337,7 +347,12 @@ function startTheSimulation(){
 								var cont = document.getElementById(contDiv); 
 								$(cont).addClass('visible'); 
 								$(cont).removeClass('hidden');
-							        $('.noSee').prop('checked', false); 
+								var addInfo = cont.children[0];
+								addInfo.innerHTML += data['end'];
+								var children = document.getElementById(pause).childNodes;
+								var formChildren = children[1].childNodes;
+								var qButton = formChildren[formChildren.length-6];
+							        $(qButton).addClass('hidden'); 	
 							}
 							else{
 								msgW = document.getElementsByClassName('errorMsg')[0]; 
@@ -360,12 +375,9 @@ function startTheSimulation(){
 					}
 					if (found == true){
 						var orgiNumber = mapping[k];
-						alert(orgiNumber); 
 						var url2 = '/quiz/'+ data['quiz_name'] + '/submit/';
-						alert(url2); 
 						$.get(url2, {chosen: orgiNumber})
 							.done(function(){
-								alert('success'); 
 							});
 					}
 				});							
@@ -752,15 +764,6 @@ function startTheSimulation(){
 	        var m = 0; 
 	        var n = 0; 
 	        var toDisintegrate = false; 
-	        $("#declineQuestion").click(function(){
-			var unClicked = document.getElementById('declineQuestion'); 
-			var clicked = document.getElementById('clickedDecline'); 
-			$(unClicked).removeClass('visible'); 
-			$(unClicked).addClass('hidden');
-			$(clicked).removeClass('hidden'); 
-			$(clicked).addClass('visible');
-			declineClick = true; 
-		});
 	       	
 	        function initialiseUnipolar(){
 		        if (m != events[j].hegemon-1 && events[j].statesAfterUpdate[m].length != 1){
@@ -788,32 +791,6 @@ function startTheSimulation(){
 			}
 		}
         	
-        	function answeringDecline(){
-	        	/*toDisinterate true goes to disintegrate unipolar, else goes toNewTurn*/
-	        	var story = document.getElementById('declineAnswer'); 
-	    		$(story).removeClass('hidden'); 
-	    		$(story).addClass('visible'); 
-	    		declineClick = false; 
-	    		$("#backDecline").click(function(){
-				$(story).removeClass('visible'); 
-	    			$(story).addClass('hidden'); 
-	    			var unClicked = document.getElementById('declineQuestion'); 
-				var clicked = document.getElementById('clickedDecline'); 
-				$(unClicked).removeClass('hidden'); 
-				$(unClicked).addClass('visible');
-				$(clicked).removeClass('visible'); 
-				$(clicked).addClass('hidden'); 
-				if (toDisintegrate == true){
-					toDisintegrate = false; 
-					disintegrateUnipolar(); 
-				}
-				
-				else{
-					toNewTurn(); 
-				}
-	    		});     
-	     	   
-        	}
         	
 	        function disintegrateUnipolar(){
 		 
@@ -839,39 +816,51 @@ function startTheSimulation(){
 			else{
 				setTimeout(toNewTurn, 600); 
 			}
+		}
 	
-	        }	
-		if (noPowerClick == true){
-			noPowerQuestion(); 	
-		}	
-		else{
+	        	
 			removeContent('unipolarDecline'); 
 			if (i==0){
 				hideStories(); 
 				if (events[j].flags.firstHegemon == true){
-					var story = document.getElementById('unipolarInitialisation'); 
-					$(story).removeClass('hidden'); 
-					$(story).addClass('visible');
-					removeContent('unipolarDetails0'); 
-					k=events[j].hegemon;
-					var state = states[(((k-1)%4)*4 + Math.floor((k-1)/4))]; 
-					$(state).removeClass('alliance0');
-					$(state).addClass('alliance100');  
-					addContent('unipolarDetails0', 'The new hegemon is state ' + k);
-					i++; 
-					setTimeout(initialiseUnipolar, 2000); 			
+					if (unipolarVisit == false){
+						var story = document.getElementById('unipolarInitialisation'); 
+						$(story).removeClass('hidden'); 
+						$(story).addClass('visible');
+						removeContent('unipolarDetails0'); 
+						unipolarVisit = true; 
+						ajaxGetsQuiz('unipolar_transform_questions', 'unipolarQuiz', 'unipolarCont', unipolarAlliances, 'unipolarCheck'); 
+					}
+					else{
+						var unipolar = document.getElementById('unipolarDetails0'); 
+						$(unipolar).removeClass('hidden'); 
+						$(unipolar).addClass('visible'); 
+						k=events[j].hegemon;
+						var state = states[(((k-1)%4)*4 + Math.floor((k-1)/4))]; 
+						$(state).removeClass('alliance0');
+						$(state).addClass('alliance100');  
+						addContent('unipolarDetails0', 'The new hegemon is state ' + k);
+						i++; 
+						setTimeout(initialiseUnipolar, 2000); 		
+					}	
 				}	
 				else{
 					var story = document.getElementById('unipolarAlliances'); 
 					if (events[j].changedStates.length != 1){ 
-						i++; 
-						var story = document.getElementById('decliningUnipolar'); 
-						hideStories(); 
-						$(story).removeClass('hidden'); 
-						$(story).addClass('visible');
-						removeContent('unipolarDetails');
-						addContent('unipolarDetails', 'The hegemon\'s powers are declining!');
-						setTimeout(unipolarAlliances, 2000);
+						if (unipolarPowerVisit == false){
+							unipolarPowerVisit = true;
+							var story = document.getElementById('decliningUnipolar'); 
+							hideStories(); 
+							$(story).removeClass('hidden'); 
+							$(story).addClass('visible');
+							ajaxGetsQuiz('unipolar_power_questions', 'unipolarPowerQuiz', 'unipolarPowerCont', unipolarAlliances, 'unipolarPowerCheck'); 
+						}
+						else{
+							i++; 
+							removeContent('unipolarDetails');
+							addContent('unipolarDetails', 'The hegemon\'s powers are declining!');
+							setTimeout(unipolarAlliances, 2000);
+						}
 					}
 					else{
 						var story = document.getElementById('peacefulUnipolar'); 
@@ -910,13 +899,7 @@ function startTheSimulation(){
 					addPower(state, events[j].changedStates[1][0]);
 					i=0
 					if (events[j].endPolarity != 'unipolar'){
-						if (declineClick == true){
-							toDisintegrate = true; 
-							answeringDecline(); 
-						}
-						else{
-							setTimeout(disintegrateUnipolar, 2000);  
-						}	
+						setTimeout(disintegrateUnipolar, 2000);  
 					} 
 					else{
 						var s = document.getElementById('unipolarDetails');
@@ -924,12 +907,7 @@ function startTheSimulation(){
 						$(s).removeClass('hidden'); 
 						addContent('unipolarDetails', 'The world remains unipolar');
 						
-						if (declineClick == true){
-							answeringDecline(); 
-						}
-						else{
-							setTimeout(toNewTurn, 2000);	
-						}	
+						setTimeout(toNewTurn, 2000);	
 					}
 				}
 				else{
@@ -937,16 +915,11 @@ function startTheSimulation(){
 					$(s).addClass('visible');
 					$(s).removeClass('hidden'); 
 					addContent('unipolarDetails0', 'The unipolar world is peaceful'); 
-					if (declineClick == true){
-						answeringDecline(); 
-					}
-					else{
-						setTimeout(toNewTurn, 2000);	
-					}
+					setTimeout(toNewTurn, 2000);	
 				} 
 			}
 		}	
-       }
+       
 		
 	function clearBipolar(){
 	    	function clearFirst(){
@@ -1007,23 +980,20 @@ function startTheSimulation(){
 			 		
 	}
 	function bipolarSystemChange(){		
-		$("#disintegrationQuestion").click(function(){
-				var unClicked = document.getElementById('disintegrationQuestion'); 
-				var clicked = document.getElementById('clickedDisintegration'); 
-				$(unClicked).removeClass('visible'); 
-				$(unClicked).addClass('hidden');
-				$(clicked).removeClass('hidden'); 
-				$(clicked).addClass('visible'); 
-				disintegrationClick = true; 
-		}); 
 		if (i==0){
-			hideStories(); 
-			story = document.getElementById('bipolarSystemicChange'); 
-			$(story).removeClass('hidden'); 
-			$(story).addClass('visible');
-			removeContent('bipolarSystemDetails');
-			i++; 
-			setTimeout(bipolarSystemChange, 2000); 
+			if (disintegrationVisit == false){
+				hideStories(); 
+				story = document.getElementById('bipolarSystemicChange'); 
+				$(story).removeClass('hidden'); 
+				$(story).addClass('visible');
+				removeContent('bipolarSystemDetails');
+				disintegrationVisit = true; 
+				ajaxGetsQuiz('disintegration_questions', 'disintegrationQuiz', 'disintegrationCont', bipolarSystemChange, 'disintegrationCheck'); 
+			}
+			else{
+				i++; 
+				setTimeout(bipolarSystemChange, 2000); 
+			}
 		}
 		else if (i!=0){
 			stateNumber = events[j].changedStates[i][1]; 	
@@ -1065,19 +1035,14 @@ function startTheSimulation(){
 				addContent('bipolarSystemDetails', 'A new state ' + stateNumber +' with power ' + power +' was created from disintegration of the bipolar power ');
 			}
 				
-			if (disintegrationClick == true){
-				setTimeout(answeringDisintegration, 3000); 	
+			if (i < events[j].changedStates.length -1){
+				i++;
+				setTimeout(bipolarSystemChange, 3000);
 			}
 			else{
-				if (i < events[j].changedStates.length -1){
-					i++;
-					setTimeout(bipolarSystemChange, 3000);
-				}
-				else{
-					i=0; 
-					setTimeout(clearBipolar, 3000);	
-				}	
-			}
+				i=0; 
+				setTimeout(clearBipolar, 3000);	
+			}	
 		}
 	}
 	function bipolarOutcomes(){      
@@ -1171,122 +1136,102 @@ function startTheSimulation(){
 	}
 		
 	function bipolarAlliances(){
-		if (noPowerClick == true){
-			noPowerQuestion(); 
-		}	
-		else{
-	      		if (events[j].flags.sorted == false){
-		      		changed = true; 
-			    	events[j].flags.sorted = true;
-			    	hideStories(); 
-			    	var newStory = document.getElementById('bipolarAlliances');    
-			    	removeContent('bipolarDetails1');
-			    	removeContent('bipolarDetails2');
-			    	$(newStory).removeClass('hidden');
-	   				$(newStory).addClass('visible');
-	   				setTimeout(bipolarAlliances, 1000);
+		if (events[j].flags.sorted == false){
+			if (bipolarVisit == false){
+				bipolarVisit = true; 
+				hideStories(); 
+				var newStory = document.getElementById('bipolarAlliances');    
+				removeContent('bipolarDetails1');
+				removeContent('bipolarDetails2');
+				$(newStory).removeClass('hidden');
+				$(newStory).addClass('visible');
+				ajaxGetsQuiz('first_bipolar', 'bipolarQuiz', 'bipolarCont', bipolarAlliances, 'bipolarCheck'); 
 			}
-			else if (changed == true){ 	
-				if (i < events[j].spheres[0].length){
-					if (i==0){
-						var story = document.getElementById('bipolarDetails1');
-						$(story).removeClass('hidden'); 
-						$(story).addClass('visible'); 
-						var n = events[j].spheres[0][i];
-						state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
-						$(state).removeClass('alliance0');
-						$(state).addClass('sphere1');
-						var sphere1 = 'States in the sphere of influence of state ' + n; 
-						addContent('bipolarDetails1', sphere1);
-						i++; 
-						setTimeout(bipolarAlliances, 1000);
-					}
-					else{
-						var n= events[j].spheres[0][i]
-						state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
-						$(state).removeClass('alliance0');
-						$(state).addClass('sphere1');
-						sphere1text='state ' + n;
-						addContent('bipolarDetails1', sphere1text);
-						i++;
-						setTimeout(bipolarAlliances, 1000);
-		   			}  
+			else{
+				changed = true; 
+				events[j].flags.sorted = true;
+				setTimeout(bipolarAlliances, 1000);
+			}
+		}
+		else if (changed == true){ 	
+			if (i < events[j].spheres[0].length){
+				if (i==0){
+					var story = document.getElementById('bipolarDetails1');
+					$(story).removeClass('hidden'); 
+					$(story).addClass('visible'); 
+					var n = events[j].spheres[0][i];
+					state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
+					$(state).removeClass('alliance0');
+					$(state).addClass('sphere1');
+					var sphere1 = 'States in the sphere of influence of state ' + n; 
+					addContent('bipolarDetails1', sphere1);
+					i++; 
+					setTimeout(bipolarAlliances, 1000);
 				}
-				else {
-					k = i-events[j].spheres[0].length;
-					if (k==0){
-						var n = events[j].spheres[1][k];
-						state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
-						$(state).removeClass('alliance0');
-						$(state).addClass('sphere2');
-						var story = document.getElementById('bipolarDetails2');
-						$(story).removeClass('hidden'); 
-						$(story).addClass('visible'); 
-						var sphere2 = '<br>States in the sphere of influence of state ' + n; 
-						addContent('bipolarDetails2', sphere2);
+				else{
+					var n= events[j].spheres[0][i]
+					state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
+					$(state).removeClass('alliance0');
+					$(state).addClass('sphere1');
+					sphere1text='state ' + n;
+					addContent('bipolarDetails1', sphere1text);
+					i++;
+					setTimeout(bipolarAlliances, 1000);
+				}  
+			}
+			else {
+				k = i-events[j].spheres[0].length;
+				if (k==0){
+					var n = events[j].spheres[1][k];
+					state = states[(((n-1)%4)*4 + Math.floor((n-1)/4))]; 
+					$(state).removeClass('alliance0');
+					$(state).addClass('sphere2');
+					var story = document.getElementById('bipolarDetails2');
+					$(story).removeClass('hidden'); 
+					$(story).addClass('visible'); 
+					var sphere2 = '<br>States in the sphere of influence of state ' + n; 
+					addContent('bipolarDetails2', sphere2);
+					i++; 
+					setTimeout(bipolarAlliances, 1000); 
+				}
+				else{
+					var m= events[j].spheres[1][k];
+					state = states[(((m-1)%4)*4 + Math.floor((m-1)/4))]; 
+					$(state).removeClass('alliance0');
+					$(state).addClass('sphere2');
+					sphere2text='state ' + m;
+					addContent('bipolarDetails2', sphere2text);
+					if (i < events[j].spheres[0].length + events[j].spheres[1].length -1){
 						i++; 
-						setTimeout(bipolarAlliances, 1000); 
+						setTimeout(bipolarAlliances, 1000); 	
 					}
 					else{
-						var m= events[j].spheres[1][k];
-						state = states[(((m-1)%4)*4 + Math.floor((m-1)/4))]; 
-						$(state).removeClass('alliance0');
-						$(state).addClass('sphere2');
-						sphere2text='state ' + m;
-						addContent('bipolarDetails2', sphere2text);
-						if (i < events[j].spheres[0].length + events[j].spheres[1].length -1){
-							i++; 
-							setTimeout(bipolarAlliances, 1000); 	
-						}
-						else{
-							i=0; 
-							setTimeout(thinkWar, 2000); 
-						
-						}
-  					}
-  				}
+						i=0; 
+						setTimeout(thinkWar, 2000); 
+					
+					}
+				}
 			}
-			
-  			else{	
-	 			if (events[j].polarity == events[j].endPolarity || events[j].endPolarity == undefined){ /*maybe this in need of a change?*/
-	 				thinkWar();  	
- 				}
- 				else{
-	 				i=0; 
-	 				bipolarSystemChange();
- 					}
-  			}		
- 		}	     	
-	}
-	function answeringPeace(){
-		var story = document.getElementById('perfectBalanceAnswer'); 
-	    	$(story).removeClass('hidden'); 
-	    	$(story).addClass('visible'); 
-	    	peaceClick = false; 
-	    	$("#backToPeace").click(function(){
-		    	var unClicked = document.getElementById('peaceQuestion'); 
-			var clicked = document.getElementById('clickedPeace'); 
-			$(unClicked).removeClass('hidden'); 
-			$(unClicked).addClass('visible');
-			$(clicked).removeClass('visible'); 
-			$(clicked).addClass('hidden'); 
-			$(story).removeClass('visible'); 
-	    		$(story).addClass('hidden'); 
-			toNewTurn()
-	    	});     
-	}
-	function toNewTurn(){
-		thinkWarVisit = false;
-		visitedAlliance = false;
-	       	scalingVisit = false;	
+		}
+		
+		else{	
+			if (events[j].polarity == events[j].endPolarity || events[j].endPolarity == undefined){ /*maybe this in need of a change?*/
+				thinkWar();  	
+			}
+			else{
+				i=0; 
+				bipolarSystemChange();
+				}
+		}		
+	}	     	
 		function goBack(turns){
-			if (visitedOnce == false){
-				visitedOnce = true;
+			/*j incremented in the next function */
+			if (controlClick== false){
+				controlClick = true;
 			       	j = j-turns; 
-			       	if (j <= -2){
-				       	j = j+ turns;
-				       	visitedOnce = false; 
-				    	toNewTurn();  	
+			       	if (j == -2){
+				        j=0;
+					controlClick = false; 
 			       	}
 			       	else{
 			       		events[j+1].flags.skipScaling = true; 
@@ -1315,8 +1260,8 @@ function startTheSimulation(){
 				
 		}); 
 		$('#forwardsOnceButton').click(function(){
-			if (visitedForwardOnce == false){
-				visitedForwardOnce = true; 
+			if (controlClick == false){
+				controlClick = true; 
 				if (j < events.length-1){
 					transitionToNewTurn()	
 				}
@@ -1331,8 +1276,8 @@ function startTheSimulation(){
 		  });
 		     
 		$('#exitOnce').click(function(){
-			if (visitedOnce == false){
-				visitedOnce = true;
+			if (controlClick == false){
+				controlClick = true;
 				var story = document.getElementById('theEnd'); 
 		        	$(story).removeClass('hidden'); 
 		        	$(story).addClass('visible');
@@ -1348,6 +1293,50 @@ function startTheSimulation(){
 			}
 			
 	     	}); 
+		function transitionToNewTurn(){
+			var children = document.getElementById('onceButtons').childNodes;
+		     	for (var k= 0; k< children.length - 2; k++){
+				$(children[k]).removeClass('active'); 
+			     	$(children[k]).addClass('passive'); 
+		     	}			
+			if (events[j+1].polarity == 'multipolar'){
+				var story = document.getElementById('newTurnMulti');
+				$(story).removeClass('hidden');
+				$(story).addClass('visible');
+				removeContent('turnDetailsMulti');
+				addContent('turnDetailsMulti', 'This is turn ' + (j+2)); 
+			}     
+			else if (events[j+1].polarity == 'bipolar'){
+				var story = document.getElementById('newTurnBi');
+				$(story).removeClass('hidden');
+				removeContent('turnDetailsBi');
+				addContent('turnDetailsBi', 'This is turn ' + (j+2)); 
+			}  
+			else if (events[j+1].polarity == 'unipolar'){
+				var story = document.getElementById('newTurnUni');
+				$(story).removeClass('hidden');
+				$(story).addClass('visible');
+				removeContent('turnDetailsUni');
+				addContent('turnDetailsUni', 'This is turn ' + (j+2));
+			}      
+     			i=0;
+     			j++;
+		   	setTimeout(scaling, 3000);	   		
+		   	}	
+			
+	function toNewTurn(){
+		controlClick = false; 
+		limitVisit = false; 
+		escalationVisit = false;
+		noPowerVisit = false; 
+		unipolarPowerVisit = false; 
+		disintegrationVisit = false; 
+		thinkWarVisit = false;
+		visitedAlliance = false;
+	       	scalingVisit = false;	
+		bipolarVisit = false; 
+		unipolarVisit = false;
+	        powerVisit = false; 	
 		function displayOptions(){
 			var option = document.getElementById('options'); 
 		        $(option).removeClass('hidden'); 
@@ -1448,44 +1437,7 @@ function startTheSimulation(){
 		       
 				
 		}
-		function transitionToNewTurn(){
-			var children = document.getElementById('onceButtons').childNodes;
-		     	for (var k= 0; k< children.length - 2; k++){
-				$(children[k]).removeClass('active'); 
-			     	$(children[k]).addClass('passive'); 
-		     	}			
-			if (events[j+1].polarity == 'multipolar'){
-				var story = document.getElementById('newTurnMulti');
-				$(story).removeClass('hidden');
-				$(story).addClass('visible');
-				removeContent('turnDetailsMulti');
-				addContent('turnDetailsMulti', 'This is turn ' + (j+2)); 
-			}     
-			else if (events[j+1].polarity == 'bipolar'){
-				var story = document.getElementById('newTurnBi');
-				$(story).removeClass('hidden');
-				removeContent('turnDetailsBi');
-				addContent('turnDetailsBi', 'This is turn ' + (j+2)); 
-			}  
-			else if (events[j+1].polarity == 'unipolar'){
-				var story = document.getElementById('newTurnUni');
-				$(story).removeClass('hidden');
-				$(story).addClass('visible');
-				removeContent('turnDetailsUni');
-				addContent('turnDetailsUni', 'This is turn ' + (j+2));
-			}      
-     			i=0;
-     			j++;
-		   	setTimeout(scaling, 3000);	   		
-		   	}	
-			
 			hideStories();
-			var question = document.getElementById('peaceQuestion'); 
-			$(question).removeClass('visible'); 
-			$(question).addClass('hidden'); 
-			if (peaceClick == true){
-				answeringPeace(); 
-			}
 			if (j == events.length-1 || onlyOnce == true){	/*here chooses if continue simulation or if should stop showing the simulation*/
 				if (showMany == true){
 		        	displayOptions(); 
@@ -1504,32 +1456,38 @@ function startTheSimulation(){
  		}
  	
  		function limitedFix(){
-			hideStories(); 
-			var story = document.getElementById('limitedChange'); 
-			$(story).removeClass('hidden'); 
-			$(story).addClass('visible'); 
-			for (var k=0; k<16; k++){
-				var found = false; 
-				for (var m=0; m<events[j].changedStates.length; m++){
-					if (events[j].changedStates.length == 2){
-						if (events[j].changedStates[0][1] == k+1){
-							var found = true; 	
-						}
-					}
-					if (found == false){
-						if (events[j].statesAfterUpdate[k].length == 2){
-							var state = states[(k%4)*4 + Math.floor(k/4)];
-							$(state).removeClass();
-							$(state).addClass('state');
-							$(state).addClass('alliance0')
-							$(state).addClass('visible');
-							$(state).addClass('power' + events[j].statesAfterUpdate[k][0]);  
-						}
-					}	
-				}
+			if (limitVisit == false){
+				hideStories(); 
+				var story = document.getElementById('limitedChange'); 
+				$(story).removeClass('hidden'); 
+				$(story).addClass('visible');
+			        limitVisit = true;
+				ajaxGetsQuiz('limit_questions', 'limitQuiz', 'limitCont', limitedFix, 'limitCheck'); 
 			}
-			setTimeout(toNewTurn, 2000); 	
- 		}	
+			else{
+				for (var k=0; k<16; k++){
+					var found = false; 
+					for (var m=0; m<events[j].changedStates.length; m++){
+						if (events[j].changedStates.length == 2){
+							if (events[j].changedStates[0][1] == k+1){
+								var found = true; 	
+							}
+						}
+						if (found == false){
+							if (events[j].statesAfterUpdate[k].length == 2){
+								var state = states[(k%4)*4 + Math.floor(k/4)];
+								$(state).removeClass();
+								$(state).addClass('state');
+								$(state).addClass('alliance0')
+								$(state).addClass('visible');
+								$(state).addClass('power' + events[j].statesAfterUpdate[k][0]);  
+							}
+						}	
+					}
+				}
+				setTimeout(toNewTurn, 2000); 	
+			}
+		}	
 		function outcomes(){     
 			function addStories(state, stateNumber, power){
 				extra = '';
@@ -1660,67 +1618,64 @@ function startTheSimulation(){
 				setTimeout(fightingWar, 100);   
 			}
 			else{
-				hideStories(); 
-				var newStory = document.getElementById('systemicWar');    
-			 	$(newStory).removeClass('hidden');
-	   			$(newStory).addClass('visible');
-	   			var attackers = [];
-	   			var defenders = [];
-	   			for (var k=0; k<events[j].escalation[0].length; k++){
-	   				var at = document.getElementsByClassName(events[j].escalation[0][k]);
-	   				for (var l=0; l<at.length; l++){
-		   				attackers.push(at[l]); 	
-	   				}
-   				}	
-   				for (var k=0; k<events[j].escalation[1].length; k++){
-	   				def = document.getElementsByClassName(events[j].escalation[1][k]); 
-	   				for (var l=0; l<def.length; l++){
-		   				defenders.push(def[l]); 
+				if (escalationVisit == false){
+					escalationVisit = true; 
+					hideStories(); 
+					var newStory = document.getElementById('systemicWar');    
+			 		$(newStory).removeClass('hidden');
+	   				$(newStory).addClass('visible');
+					ajaxGetsQuiz('escalation_questions', 'escalationQuiz', 'escalationCont', escalateWars, 'escalationCheck');
+				}
+				else{
+	   				var attackers = [];
+	   				var defenders = [];
+	   				for (var k=0; k<events[j].escalation[0].length; k++){
+	   					var at = document.getElementsByClassName(events[j].escalation[0][k]);
+	   					for (var l=0; l<at.length; l++){
+		   					attackers.push(at[l]); 	
+	   					}
+   					}	
+   					for (var k=0; k<events[j].escalation[1].length; k++){
+	   					def = document.getElementsByClassName(events[j].escalation[1][k]); 
+	   					for (var l=0; l<def.length; l++){
+		   					defenders.push(def[l]); 
 		   				
+	   					}
+   					}
+	   			
+	   				for (var k =0; k < events[j].escalation[0].length; k++){
+		   				string = 'Alliance ' + events[j].escalation[0][k].charAt(8)+ ' joins the attacking coalition ' + '<br>';
+		   				var warStory = document.getElementById('systWarDetails'+ events[j].escalation[0][k].charAt(8));
+		   				$(warStory).removeClass('hidden');
+	   					$(warStory).addClass('visible');
+	   					removeContent('systWarDetails'+ events[j].escalation[0][k].charAt(8)); 
+		   				addContent('systWarDetails'+ events[j].escalation[0][k].charAt(8), string);
+		   			
 	   				}
-   				}
-	   			
-	   			for (var k =0; k < events[j].escalation[0].length; k++){
-		   			string = 'Alliance ' + events[j].escalation[0][k].charAt(8)+ ' joins the attacking coalition ' + '<br>';
-		   			var warStory = document.getElementById('systWarDetails'+ events[j].escalation[0][k].charAt(8));
-		   			$(warStory).removeClass('hidden');
-	   				$(warStory).addClass('visible');
-	   				removeContent('systWarDetails'+ events[j].escalation[0][k].charAt(8)); 
-		   			addContent('systWarDetails'+ events[j].escalation[0][k].charAt(8), string);
-		   			
-	   			}
-	   			for (var k=0; k<attackers.length; k++){ 
-		   			var attack = attackers[k];
-       		         		$(attack).addClass('attacker');
-	   			}
+	   				for (var k=0; k<attackers.length; k++){ 
+		   				var attack = attackers[k];
+       		         			$(attack).addClass('attacker');
+	   				}
 	   			  
-	   			for (var k =0; k<events[j].escalation[1].length; k++){
-		   			string = 'Alliance ' + events[j].escalation[1][k].charAt(8)+ ' joins the defeding coalition ' + '<br>';
-		   			var warStory = document.getElementById('systWarDetails' + events[j].escalation[1][k].charAt(8));
-	   				removeContent('systWarDetails'+ events[j].escalation[1][k].charAt(8));
-	   				$(warStory).removeClass('hidden');
-	   				$(warStory).addClass('visible');
-		   			addContent('systWarDetails'+ events[j].escalation[1][k].charAt(8), string);
-	   			}
+	   				for (var k =0; k<events[j].escalation[1].length; k++){
+		   				string = 'Alliance ' + events[j].escalation[1][k].charAt(8)+ ' joins the defeding coalition ' + '<br>';
+		   				var warStory = document.getElementById('systWarDetails' + events[j].escalation[1][k].charAt(8));
+	   					removeContent('systWarDetails'+ events[j].escalation[1][k].charAt(8));
+	   					$(warStory).removeClass('hidden');
+	   					$(warStory).addClass('visible');
+		   				addContent('systWarDetails'+ events[j].escalation[1][k].charAt(8), string);
+	   				}
 		   			
-	   			for (var k=0; k<defenders.length; k++){	   
-		   			var defend = defenders[k];
-		   			$(defend).addClass('defender'); 
-	   			}
+	   				for (var k=0; k<defenders.length; k++){	   
+		   				var defend = defenders[k];
+		   				$(defend).addClass('defender'); 
+	   				}
 	   			
-	   			setTimeout(fightingWar, 4000);
-          		}       
-      		}
+	   				setTimeout(fightingWar, 4000);
+          			}       
+      			}
+		}
       		function assessWars(){
-	      		$("#peaceQuestion").click(function(){
-		      		var unClicked = document.getElementById('peaceQuestion'); 
-				var clicked = document.getElementById('clickedPeace'); 
-				$(unClicked).removeClass('visible'); 
-				$(unClicked).addClass('hidden');
-				$(clicked).removeClass('hidden'); 
-				$(clicked).addClass('visible');
-				peaceClick = true; 
-			}); 
 			hideStories(); 
 			var war = events[j].war;
 			if (war == 0){
@@ -1783,7 +1738,12 @@ function startTheSimulation(){
 			$(newStory).removeClass('hidden');
 	   		$(newStory).addClass('visible');
 			if (thinkWarVisit == false){
-				ajaxGetsQuiz('thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar);
+				if (events[j].polarity == 'multipolar'){
+					ajaxGetsQuiz('thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+				}
+				else if (events[j].polarity == 'bipolar'){
+					ajaxGetsQuiz('thinking_bipolar', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+				}
 				thinkWarVisit = true; 
 			}
 			else{
@@ -1799,7 +1759,6 @@ function startTheSimulation(){
       	
 		
 		function updateAlliances(){
-			alert('in update alliances with visitedAlliance ' + visitedAlliance);
 	    		function evaluateAlliances(){
 				var stateNumber = events[j].alliances[m][n];
 			   	var alliance = m+1;
@@ -1857,19 +1816,16 @@ function startTheSimulation(){
 		    	}
 		    
 	        	if (i==0){     
-			       	alert('i was 0');	
 			    	hideStories(); 
 			    	if (visitedAlliance == false){
 					var pause = document.getElementById('alliancePause'); 
 					$(pause).removeClass('hidden'); 
 					$(pause).addClass('visible'); 
 					group_name = 'alliance_questions'
-					ajaxGetsQuiz(group_name, 'allianceQuiz', 'allianceCont', updateAlliances);
+					ajaxGetsQuiz(group_name, 'allianceQuiz', 'allianceCont', updateAlliances, 'allianceCheck');
 					visitedAlliance = true; 
-					alert('set visited alliance to ' + visitedAlliance); 
 			    	}
 			    	else{
-					alert('visited alliances was true');
 			    		var newStory = document.getElementById('assessAlliances');    
 			    		$(newStory).removeClass('hidden');
 	   				$(newStory).addClass('visible');
@@ -1952,52 +1908,50 @@ function startTheSimulation(){
 			});        
 		}
 		function updatePower(){ 
-			var visitedPowerStory = false; 
-			visitedOnce = false;  /*this is to control the button for going back one turn*/
-			visitedForwardOnce = false; 
-			var powerClick = false;
-			$("#powerContinue").click(function(){
-				if (powerClick == false){
-					powerClick = true; 
-					visitedPowerStory = true; 
-					var story =  document.getElementById('updateExplanation');    
-					$(story).removeClass('visible'); 
-					$(story).addClass('hidden'); 
-					updatePower();
-				} 
-			}); 
 			
 			if (events[j].flags.powersUpdated == false){
 				i=0; 
-				if (j != 0){
+				if (noPowerVisit = false && j != 0){
+					noPowerVisit = true; 
 					hideStories(); 
 					var newStory = document.getElementById('noUpdates');    
 					$(newStory).removeClass('hidden');
-	   				$(newStory).addClass('visible'); 
+					$(newStory).addClass('visible');	
+					ajaxGetsQuiz('no_power_questions', 'noPowerQuiz', 'noPowerCont', updatePower, 'noPowerCheck'); 
    				}
-	   			if (events[j].polarity == 'multipolar'){
-	   				setTimeout(updateAlliances, 3000);
-		 		}
-		 		else if (events[j].polarity == 'bipolar'){
-	   				setTimeout(bipolarAlliances, 3000);
-	 			}
-	 			else{
-		 			setTimeout(unipolarAlliances, 3000);
-	 			}
- 			}
+				else{
+					if (events[j].polarity == 'multipolar'){
+						setTimeout(updateAlliances, 3000);
+					}
+					else if (events[j].polarity == 'bipolar'){
+						setTimeout(bipolarAlliances, 3000);
+					}
+					else{
+						setTimeout(unipolarAlliances, 3000);
+					}
+				}
+			
+			}
 			else{
-		   		if (visitedPowerStories = false){
+		   		if (powerVisit == false){
 			    		hideStories();
-					visitedPowerStories = true; 
-			    		var url = 'django/alliance_questions/send'
-			    		ajaxGetsQuiz(url);
+					var newStory = document.getElementById('updatePowers');   
+					$(newStory).removeClass('hidden');
+					$(newStory).addClass('visible');    
+					powerVisit= true; 
+					removeContent('powerDetails');
+					if (events[j].polarity == 'multipolar'){
+						ajaxGetsQuiz('power_questions', 'powerQuiz', 'powerCont', updatePower, 'powerCheck');
+					}
+					else{
+						ajaxGetsQuiz('uni_questions', 'powerQuiz', 'powerCont', updatePower, 'powerCheck');
+
+					}
 				}
 				else{
-					if (i==0){
-						var newStory = document.getElementById('updatePowers');   
-						$(newStory).removeClass('hidden');
-						$(newStory).addClass('visible');    
-					}
+					var newStory = document.getElementById('updatingPowers');   
+					$(newStory).removeClass('hidden');
+					$(newStory).addClass('visible');    
 					if (events[j].statesAfterUpdate[i] == 0){
 						if (i<15){
 							i++; 
@@ -2006,10 +1960,7 @@ function startTheSimulation(){
 						 
 		         			else{
 			     				i=0; 
-			     				if (powerClick == true){
-				     				setTimeout(powerQuestion, 3000); 	
-			     				}	   
-			       				else if (events[j].polarity == 'multipolar'){    
+			       				if (events[j].polarity == 'multipolar'){    
 			       					setTimeout(updateAlliances, 3000);
 		       					}
 		         				else if (events[j].polarity == 'bipolar'){
@@ -2077,13 +2028,8 @@ function startTheSimulation(){
 						var num = i+1; 
 						addContent('powerDetails', 'State ' + num + ' has power ' + power + '.' + extra + hegeDecline);
 						if(i < 15){
-							if (powerClick == true){
-								setTimeout(powerQuestion, 1000); 	
-							}
-							else{
-								i++; 
-								setTimeout(updatePower, 1000);
-							}
+							i++; 
+							setTimeout(updatePower, 1000);
 						}		
 						else{
 							i=0;  
@@ -2122,7 +2068,7 @@ function startTheSimulation(){
 				scalingVisit = true; 
 				$(story).removeClass('hidden'); 
 				$(story).addClass('visible');
-				ajaxGetsQuiz('scaling_questions', 'scalingQuiz', 'scalingCont', scaling);
+				ajaxGetsQuiz('scaling_questions', 'scalingQuiz', 'scalingCont', scaling, 'scalingCheck');
 			}
 			else{
 				if (i==0){
@@ -2237,22 +2183,21 @@ function startTheSimulation(){
 		var sphere2text = '';
 		var changed = false; 
 		var visited = false; 
-		var visitedOnce; 
-		var visitedForwardOnce; 
 		/*for pause stories */
-		
+		var noPowerVisit = false; 	
 		var visitedAlliance = false;
 		var visitedWar = false;
 		var clickedWar = false; 
 		var thinkWarVisit = false; 
-		var scalingVisit = false; 
-		var powerClick; 
-		var noPowerClick;
-		var scalingClick; 
-		var peaceClick;
-		var disintegrationClick;
-		var declineClick;
-
+		var scalingVisit = false;
+	        var bipolarVisit = false;
+		var unipolarVisit = false; 	
+		var disintegrationVisit = false; 
+		var unipolarPowerVisit = false; 
+		var powerVisit = false; 
+		var escalationVisit = false;
+	        var limitVisit = false; 
+	        var controlClick = true; 		
 		if (events[0].polarity == 'multipolar'){
 			var story = document.getElementById('newTurnMulti');
 			$(story).removeClass('hidden');

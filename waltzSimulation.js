@@ -117,40 +117,32 @@
 	    	this.scaled = false; 
 	    	if (this.polarity[this.polarity.length-1] != 'bipolar' && this.worldHistory[this.worldHistory.length-1] == 'peaceful' && h != 0){
 		    	addContent('now assessing world update'); 
-	    		for (var k=0; k < world.states.length; k++){
-		    		var current = world.states[k]; 
-		    		if (this.hegemon != current.label){
-		    			if (current.decliningHegemon != true){
-			    			var prob = current.getProbability(); 
-			    			if (prob < 2*Math.random()){
-				    			if (current.power < 3){
-					    			current.addPower(1); 
-				    			}
-				    			else{
-					    			current.addPower(Math.round(0.30 * current.power)); 
-				    			}
-					    		this.updatedPower = true; 	
-			    			}	
-							else if (prob < Math.random()){
-								current.addPower(Math.round(0.15 * current.power)); 
-								this.updatedPower = true;
-							}	
+			for (var k=0; k < world.states.length; k++){
+				var current = world.states[k]; 
+				if (current.decliningHegemon != true){
+					var prob = current.getProbability(); 
+					if (prob < 2*Math.random()){
+						if (current.power < 3){
+							current.addPower(1); 
 						}
-						else {
-							if (current.power > 7){
-				 				current.addPower(Math.round(current.power * -0.7)); 
-			 				}
-			 				else{
-				 				current.power = 1; 	
-			 				}	
-				 			this.decliningHegemon = true; 
-				 			current.decliningHegemon = false;  
-				 			this.updatedPower = true;  
-			    		}
-		    		}
-    			}
-			}
-		}, 
+						else{
+							current.addPower(Math.round(0.30 * current.power)); 
+						}
+					this.updatedPower = true;
+					}
+					else if (prob < Math.random()){
+						current.addPower(Math.round(0.15 * current.power)); 
+						this.updatedPower = true;
+					}	
+					
+				
+				}
+				
+			    }
+		    	}
+    		},
+		
+	 
 		
 		deleteStates: function (){
 			for (var k=0; k < this.states.length; k++){
@@ -434,6 +426,7 @@
 	War.prototype = {
 		calculateWar: function(){
 			function calculateMultipolarWar(){
+				var isWar = false; 
 				addContent('calculating multipolar war'); 
 				coalitionCounter = coalitions.slice(); 
 				for (var k=0; k<coalitions.length; k++){
@@ -447,7 +440,6 @@
 				}
 				
 				if (world.perfectBalancing == false){
-					var isWars = false; 
 					for (var k=0; k<coalitions.length; k++){
 						var num = Math.floor(Math.random() * coalitions.length);
 						currentCoalition = coalitions[num];
@@ -460,7 +452,7 @@
 								var powerDifference = attackPower - defencePower; 
 								if (powerDifference >= 0){
 									var prob = (0.25 + (2*powerDifference)/(defencePower+attackPower));
-                           			if (Math.random() < 0.50 + (2*powerDifference)/(defencePower+attackPower)){
+                           			if (Math.random() < 0.50 + (2*powerDifference)/(defencePower+attackPower)){ 
 	                           			isWar = true; 
 	                           			wars=[[currentCoalition], [testCoal], false]; 
 	                           			currentCoalition.atWar = true; 
@@ -483,73 +475,74 @@
 							break; 
 						}
 					}
-				var found = false;
+					var found = false;
 					if(wars != 0){
 						for (var k =0; k<coalitionCounter.length; k++){
 							if	(coalitionCounter[k].atWar == false){
-								notInWar.push(coalitionCounter[k]);	
-								found = true; 
+									notInWar.push(coalitionCounter[k]);	
+									found = true; 
 							}
 						}
-					}
-					if (found == false){
-						wars[2]=true;
-						worldWar = true; 
-						addContent('escalated into systemic becasue everyone was fighting'); 
-						return 'systemic war' 	
-					}
-					else{
-						var escProb = Math.random(); 
-						if (escProb<0.25){ 
-							addContent('escalated into systemic because other states joined'); 
-							wars[2]=true; 
+					
+						if (found == false){
+							wars[2]=true;
 							worldWar = true; 
-							while (notInWar.length != 0){
-								coalitionToJoin = notInWar[0]; 
-								notInWar.splice(0, 1);
-								var aPower = 0; 
-								var dPower = 0; 
-								for (var k=0; k< wars[0].length; k++){
-									aPower += wars[0][k].power; 	
-								}	
-								aPower *= 0.9; 
-								for (var k=0; k< wars[1].length; k++){
-									dPower += wars[1][k].power; 	
-								}		
-								if (aPower < dPower){
-									wars[0].push(coalitionToJoin); 
-									for (var k=0; k<coalitionCounter.length; k++){
-										if (coalitionCounter[k] == coalitionToJoin){
-											var alNum = k+1; 
-											esc1.push('alliance'+alNum);  
-											break; 	
-										}	
+							addContent('escalated into systemic becasue everyone was fighting'); 
+							return 'systemic war' 	
+						}
+						else{
+							var escProb = Math.random(); 
+							if (escProb<0.25){
+								addContent('escalated into systemic because other states joined'); 
+								wars[2]=true; 
+								worldWar = true; 
+								while (notInWar.length != 0){
+									coalitionToJoin = notInWar[0]; 
+									notInWar.splice(0, 1);
+									var aPower = 0; 
+									var dPower = 0; 
+									for (var k=0; k< wars[0].length; k++){
+										aPower += wars[0][k].power; 	
+									}	
+									aPower *= 0.9; 
+									for (var k=0; k< wars[1].length; k++){
+										dPower += wars[1][k].power; 	
+									}		
+									if (aPower < dPower){
+										wars[0].push(coalitionToJoin); 
+										for (var k=0; k<coalitionCounter.length; k++){
+											if (coalitionCounter[k] == coalitionToJoin){
+												var alNum = k+1; 
+												esc1.push('alliance'+alNum);  
+												break; 	
+											}	
+										}
+										coalitionToJoin.atWar == true; 	
 									}
-									coalitionToJoin.atWar == true; 	
+									else{
+										wars[1].push(coalitionToJoin);
+										for (var k=0; k<coalitionCounter.length; k++){
+											if (coalitionCounter[k] == coalitionToJoin){
+												var alNum = k+1; 
+												esc2.push('alliance'+alNum);
+												break; 	
+											}	
+										}	 	
+										coalitionToJoin.atWar == true;
+									}
 								}
-								else{
-									wars[1].push(coalitionToJoin);
-									for (var k=0; k<coalitionCounter.length; k++){
-										if (coalitionCounter[k] == coalitionToJoin){
-											var alNum = k+1; 
-											esc2.push('alliance'+alNum);
-											break; 	
-										}	
-									} 	
-									coalitionToJoin.atWar == true;
-								}
-							}
-							return 'systemic war'
+								return 'systemic war'
+							}	
 						}
 					}
-					if (isWar = true){
+					if (isWar == true){
 						return 'limited war'; 
 					}
-					else{
+					else{  
 						return 'peaceful'; 	
 					}
-			}
-			else{
+			}	
+			else{		
 					return 'peaceful'; 	
 			}
 		}
@@ -660,7 +653,8 @@
 						if (Math.random() < 0.95){
 							this.world.states[0].addPower(Math.round(-1 * this.world.states[0].power/4)); 
 							this.changedStates.push([this.world.states[0].power, parseInt(this.world.states[0].label)]);
-							this.world.states[0].decliningHegemon= true;		
+							this.world.states[0].decliningHegemon= true;	
+							this.world.decliningHegemon = true; 
 						}	
 					}
 				}	
@@ -1238,10 +1232,7 @@
 		 	world.updatedPower = false; 
 		 	turn.flags.powersUpdated = true; 	
 	 	}
-	 	if (world.decliningHegemon == true){
-		 	world.decliningHegemon = false; 
-		 	turn.flags.decliningHegemon = true; 	
-	 	}
+		
 	 	
 	 	world.deleteStates(); 
 	 	addContent('packing states after deleting');
@@ -1390,17 +1381,20 @@
      	}
      	turn.hegemon = world.hegemon; 
  
-     	
-	    if (turn.polarity != 'bipolar' || world.worldHistory[h] == 'systemic change'){
+	if (world.decliningHegemon == true){
+		world.decliningHegemon = false;
+		turn.flags.decliningHegemon = true; 	
+	}
+	    if (turn.polarity == 'multipolar' || (turn.polarity == 'bipolar' && world.worldHistory[world.worldHistory.length-1] == 'systemic change')|| (turn.polarity == 'unipolar' && turn.flags.decliningHegemon == true)){
      		world.setPolarity(); 
      		turn.endPolarity = world.polarity[world.polarity.length-1];
 	    	world.polarity.splice(world.polarity.length-1, 1); 
  		}
 	 	else{	
 	    	turn.endPolarity = world.polarity[world.polarity.length-1];
-		}
-     	if (turn.endPolarity != turn.polarity && world.worldHistory[h] != 'systemic change' && world.worldHistory[h] != 'systemic war'){
-	   		turn.flags.limitedChange = true; 
+	}
+     	if (turn.endPolarity != turn.polarity && world.worldHistory[world.worldHistory.length-1] != 'systemic change' && world.worldHistory[world.worldHistory.length-1] != 'systemic war'){
+			turn.flags.limitedChange = true; 
 	   		world.worldHistory.splice(world.worldHistory.length-1, 1); 
 	   		world.worldHistory.push('systemic war'); 
 	    	if (turn.endPolarity == 'bipolar'){
