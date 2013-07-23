@@ -15,6 +15,7 @@ body{
 }
 
 h1 {
+	box-shadow: inset -0em -1em 0.5em rgba(0, 0, 0, .1);
 	margin: 10px;
     	font-weight: 500;
     	font-family: 'Titillium Web', sans-serif;
@@ -41,6 +42,7 @@ h3{
 .visible{display: block;}
 
 form{
+   	box-shadow: inset -3em -3em 15em rgba(0, 0, 0, .1);
 	background: #EEE8CD; 
 	color: #2F4F4F;
  	margin: auto; 
@@ -74,16 +76,13 @@ form{
 	height: 230px; 	
 }
 
-#initialExtraOptions{
-	padding-top: 10px;
-	margin-left: 8px; 	
-}
 
 #firstQu{
 	padding-top: 10px;
 	margin-left: 8px; 	
 }
 input.errorButton{
+	box-shadow: inset -0em -1em 1em rgba(0, 0, 0, .2);
 	position: absolute;
 	width: 110px;
 	height: 30px;
@@ -139,33 +138,7 @@ input.errorButton{
 	font-weight: bold; 
 	border-radius: 15px; 	
 }
-.questionButton{
-	margin: 5px; 
-	float: left; 
-	width: 50px; 
-	height: 50px; 
-	background: #FA957A; 
-	border: 3px solid #BB1A1A; 
-	border-radius: 20px; 
-	color: #BB1A1A; 
-	font-size: 30px; 
-	font-weight: bold; 	
-}	
-
-.clickedButton{
-	margin: 5px; 
-	float: left; 
-	width: 50px; 
-	height: 50px; 
-	background: #E8705B; 
-	border: 3px solid #AB1A22; 
-	border-radius: 20px; 
-	color: #AB1A22; 
-	font-size: 30px; 
-	font-weight: bold; 	
-	position: relative;
-	top: 1px;
-}	
+	
 .radioButton{
 	width: 25px; 
 	float: none; 
@@ -194,6 +167,7 @@ input{
 }
 
 .continueButton{
+	box-shadow: inset -0em -1em 0.8em rgba(0, 0, 0, .2);
 	position: absolute;
 	color: black; 
 	height: 25px; 
@@ -208,6 +182,7 @@ input{
 	border: solid #4F4F4F 2px; 
 }
 form.quiz{
+	box-shadow: inset 0em -0em 0em rgba(0, 0, 0, .0);
 	margin-right: 3px; 
 	margin-left: 0.1px; 
 	margin-top: 5px;
@@ -224,11 +199,11 @@ form.quiz{
 
 
 form.quiz.medium{
-	height: 240px; 
+	height: 260px; 
 }
 
 form.quiz.small{
-	height: 220px;
+	height: 180px;
        	font: 12px; 	
 }
 .explanation{
@@ -251,6 +226,7 @@ div.check{
 	float: left;
 }
 .quizButton{
+	box-shadow: inset -0em -1em 0.8em rgba(0, 0, 0, .2);
 	position: absolute;
 	padding: 2px;
     	height: 25px; 	
@@ -306,46 +282,64 @@ div.check{
 	 
 }
 
-.form1{
-	height: 185px; 	
-}
 
-.form2{
-	height: 275px; 	
-}
-
-.form3{
-	height: 370px; 
-}
-
-.form4{
-	height: 465px; 
-}
 
 .form5{
-	height: 560px; 	
+	height: 750px; 	
 }
 
 .form6{
-	height: 655px; 	
-}
-
-.form7{
-	height: 745px; 	
-}
-
-.form8{
 	height: 840px; 	
 }
 
+.form7{
+	height: 930px; 	
+}
+
+.form8{
+	height: 1020px; 	
+}
+
 .form9{
-	height: 935px; 
+	height: 1110px; 
 }
 
 .form10{
-	height: 1030px; 	
+	height: 1200px; 	
+}
+
+#advancedButton1{
+	box-shadow: inset -0em -1em 1em rgba(0, 0, 0, .2);
+	margin-top: 40px;
+	margin-left: 7px; 
+	padding: 3px; 
+	border-radius: 10px;
+	width: 300px; 
+	height: 25px;
+	background: #D8BFD8;
+	font-weight: bold; 
+}
+
+#advancedButton1:hover{
+	border: grey; 
+}
+#advancedButton2:hover{
+	border: grey; 
+}
+#advancedButton2{
+	box-shadow: inset -0em -1em 1em rgba(0, 0, 0, .2);
+	margin-left: 7px;
+	margin-top: 40px;
+	margin-bottom: 5px; 
+	padding: 3px; 
+	border-radius: 10px;
+	width: 300px; 
+	height: 25px;
+	background: #DADAD8;
+	font-weight: bold; 
 }
 #buttonForStates{
+	box-shadow: inset -0em -1em 1em rgba(0, 0, 0, .2);
 	padding-bottom: 1px;
 	width:100px;
 	position:absolute;
@@ -437,6 +431,7 @@ div.check{
 	right: 500px; 	
 }
 #stateFrame{
+	   box-shadow: inset -3em -3em 15em rgba(0, 0, 0, .1);
 	   background: #F4F4F4; 
 	   position: relative;
 	   width: 1195px;
@@ -533,6 +528,7 @@ div.check{
 
 #forwardOnceArrow{
 	margin-top: -4px; 
+	box-shadow: inset -0em -5em 5em rgba(0, 0, 0, .6);
 	margin-left: 20px; 
 	width: 0; 
 	height: 0; 
@@ -545,6 +541,7 @@ div.check{
 }
 .backForthOnce{
 	border: solid 2px #5D478B; 
+	box-shadow: inset -0em -1em 2em rgba(0, 0, 0, .15);
 	color: black;
 	float: left; 
 	font-size: 9px; 
@@ -656,8 +653,21 @@ form.storyForm{
 	border-right: 2px solid rgba(100, 100, 100, 0.3);	
 }
 
-.state {
-        padding: 3px;	
+
+.stateImage{
+	bottom: 1em; 
+	right: -2.0em; 
+	position: absolute; 
+	width: 3em; 
+	height: 3em; 
+}
+div.state {
+ 	-webkit-transition: border 2s, background-color 2s, width 2s, height 2s, -webkit-transform 2s; 	
+ 	-moz-transition: background-color 2s, width 2s, height 2s, -moz-transform 2s; 	
+ 	-o-transition: background-color 2s, width 2s, height 2s, -o-transform 2s; 	
+	    
+	padding: 3px;	
+	box-shadow: inset -1em -1em 2em rgba(0, 0, 0, .4);
 	position: absolute;
 	text-align: center; 
 	border-radius: 50%;
@@ -665,23 +675,25 @@ form.storyForm{
 }
 .attacker {
 
-	border: 3px solid #CD2626;
+	border: 5px dotted	#CD2626;
 	
 }
 
 .defender {
 	
-	border: 3px solid #8B008B;
+	border: 5px dotted #8B008B;
 }
 
 .winner {
 	
-	border: 3px solid #698B22;
+	border: 5px #698B22;
+	border-style: outset; 
 }
 
 .loser{
 
-border: 3px solid black;	
+border: 5px  black;	
+border-style: outset; 
 }
 
 
