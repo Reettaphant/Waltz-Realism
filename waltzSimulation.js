@@ -492,7 +492,7 @@
 						}
 						else{
 							var escProb = Math.random(); 
-							if (escProb<0.25){
+							if (escProb<0.25){ /*changed from 0,25*/
 								addContent('escalated into systemic because other states joined'); 
 								wars[2]=true; 
 								worldWar = true; 
@@ -548,7 +548,7 @@
 		}
 		function calculateBipolarWar(){
 			var x = Math.random(); 
-			if (x < 0.2 && spheres[0].length > 1 && spheres[1].length > 1){ 
+			if (x < 1.2 && spheres[0].length > 1 && spheres[1].length > 1){/*changed from 0.2 */ 
 				bipolarWar = true; 
 				var sph1=[]; 
 				var sph2=[]; 

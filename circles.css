@@ -213,7 +213,7 @@ div.check{
 	font-size: 12px;
         border: solid 3px #778899;
 	border-radius: 3px; 
-	width: 359px; 
+	width: 357px; 
 	padding: 1px;
 	color: #2F4F4F;
 	height: 142px;
@@ -656,7 +656,7 @@ form.storyForm{
 
 .stateImage{
 	bottom: 1em; 
-	right: -2.0em; 
+	right: -1.7em; 
 	position: absolute; 
 	width: 3em; 
 	height: 3em; 
@@ -672,28 +672,6 @@ div.state {
 	text-align: center; 
 	border-radius: 50%;
     float: left;
-}
-.attacker {
-
-	border: 5px dotted	#CD2626;
-	
-}
-
-.defender {
-	
-	border: 5px dotted #8B008B;
-}
-
-.winner {
-	
-	border: 5px #698B22;
-	border-style: outset; 
-}
-
-.loser{
-
-border: 5px  black;	
-border-style: outset; 
 }
 
 

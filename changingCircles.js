@@ -3,13 +3,14 @@
 remember to add escaping when generating quizzes before allowing anyone else to generate quizzes
 to do: 
 size of board
+the first options still need styling
 how to prevent unipolar - multipolar - unipolar again, extra argument to check polarity that will only allow polarity shift when the state is very weak?
 somehow make sure that all polarities will be visited in a reasonable amoutn of time. 
 perfect balancing has no quizzes!
-quizzes need to be made smaller
-unipolar initialisation faster
-scaling down faster
-make cool css animations for when there is a war
+need more explanations when system is changing polarity
+also somehow need to make sure that bipolar war happens once but only once for each bipolar world
+bipolar transform still sometimes giving multipolar worlds
+bipolar war question: first major wars? answer no, only smaller second: why is this
 */
 $(document).ready(function(){
 
@@ -198,6 +199,10 @@ function removeContent(div) {
 
 	document.getElementById(div).innerHTML = "<br>";
 }	
+function removeQuizContent(div) {
+
+	document.getElementById(div).innerHTML = "";
+}	
 
 function addContent(div, content){ 
 	document.getElementById(div).innerHTML += content;
@@ -261,7 +266,7 @@ function startTheSimulation(){
 					var toAppend = '<form class = "quiz medium">';
 				}
 				toAppend += data['question'];
-				toAppend += '<br>'
+				toAppend += '<br>';
 				if (answers != undefined){
 					var m=0
 					var mapping = [];
@@ -317,7 +322,7 @@ function startTheSimulation(){
 						expl[1].innerHTML='';
 						$(cont).removeClass('visible'); 
 						$(cont).addClass('hidden'); 
-						removeContent(pause);
+						removeQuizContent(pause);
 						continueFunction(); 	
 					}
 							
@@ -667,9 +672,9 @@ function startTheSimulation(){
 		
 		if (automaticBi == true){  
 			for (var k=2; k<initialStates.length; k++){
-				if (initialStates[k][0] > 7){
-					totalInitial -= Math.floor(0.7*initialStates[k][0]);
-					initialStates[k][0] -= Math.floor(0.7 * initialStates[k][0]);
+				if (initialStates[k][0] > 8){
+					totalInitial -= Math.floor(0.8*initialStates[k][0]);
+					initialStates[k][0] -= Math.floor(0.8 * initialStates[k][0]);
 					powersOfStates[initialStates[k][3]] = initialStates[k][0];
 				}
 				else{
@@ -680,7 +685,7 @@ function startTheSimulation(){
 				}
 			}
 			var currentInitial = mostInitial + secondInitial;
-			var powerNeeded = Math.round((5/2) * (0.7*totalInitial + 2 -currentInitial) + 0.2*totalInitial);                                
+			var powerNeeded = Math.round((5/2) * (0.85*totalInitial + 2 -currentInitial) + 0.2*totalInitial);                                
 			if(powerNeeded > 0){			                                    
 				initialStates[0][0] += powerNeeded;
 			        initialStates[1][0] += powerNeeded; 
@@ -1078,7 +1083,7 @@ function startTheSimulation(){
 						}
 					}
 					if (sphere1 == true){
-						$(state).addClass('sphere1'); 
+						$(state).addClass('sphere1');
 					}
 					else{
 						$(state).addClass('sphere2');
@@ -1138,7 +1143,31 @@ function startTheSimulation(){
 		        for (var k=0; k<2; k++){
 			        winner = winners[k]; 
 			        loser = losers[k]; 
-		          	$(winner).removeClass('attacker');
+		          	var winnerChildren = winner.childNodes; 
+				alert(winnerChildren.length);
+			       	alert($(winnerChildren[0]).hasClass('attackImage')); 	
+				for (var n=0; n<winnerChildren.length; n++){
+					if ($(winnerChildren[n]).hasClass('attackImage') || $(winnerChildren[n]).hasClass('defenderImage')){
+						$(winnerChildren[n]).removeClass('visible'); 
+						$(winnerChildren[n]).addClass('hidden'); 
+					}
+					if ($(winnerChildren[n]).hasClass('winnerImage')){
+						$(winnerChildren[n]).addClass('visible'); 
+						$(winnerChildren[n]).removeClass('hidden'); 
+					}
+				}
+				var loserChildren = loser.childNodes; 
+				for (var n=0; n<loserChildren.length; n++){
+					if ($(loserChildren[n]).hasClass('attackImage') || $(loserChildren[n]).hasClass('defenderImage')){
+						$(loserChildren[n]).removeClass('visible'); 
+						$(loserChildren[n]).addClass('hidden'); 
+					}
+					if ($(loserChildren[n]).hasClass('loserImage')){
+						$(loserChildren[n]).addClass('visible'); 
+						$(loserChildren[n]).removeClass('hidden'); 
+					}
+				}
+				$(winner).removeClass('attacker');
 		          	$(loser).removeClass('defender');
 		           	$(winner).addClass('winner');
 		          	$(loser).addClass('loser');
@@ -1161,13 +1190,21 @@ function startTheSimulation(){
 		       	else{
 			       $(state).addClass('sphere1');   
 		       	}
+			var children = state.childNodes; 
+			for (var m=0; m< children.length; m++){
+				if ($(children[m]).hasClass('winnerImage') || $(children[m]).hasClass('loserImage')){
+					$(children[m]).removeClass('visible');
+					$(children[m]).addClass('hidden'); 	
+
+				}
+			}	
 		    	if (i < events[j].changedStates.length-1){
 			 		i++; 
 			 		setTimeout(bipolarOutcomes, 3000);    
 		    	}	   
 		    	else{
-			 		i=0;	
-			 		setTimeout(toNewTurn, 3000);   
+				i=0;	
+				setTimeout(toNewTurn, 3000);   
 		    	}
 	       }   
        	}
@@ -1194,6 +1231,22 @@ function startTheSimulation(){
 		        		defender = states[((l%4)*4 + Math.floor(l/4))];
 		        		$(attacker).addClass('attacker');
 		        		$(defender).addClass('defender');
+					var attackerChil = attacker.childNodes; 
+					for (var m=0; m< attackerChil.length; m++){
+						if ($(attackerChil[m]).hasClass('attackImage')){
+							$(attackerChil[m]).removeClass('hidden'); 
+							$(attackerChil[m]).addClass('visible'); 
+						}
+					
+					}
+					var defenderChil = defender.childNodes; 
+					for (var m=0; m< defenderChil.length; m++){
+						if ($(defenderChil[m]).hasClass('defenderImage')){
+							$(defenderChil[m]).removeClass('hidden'); 
+							$(defenderChil[m]).addClass('visible'); 
+						}
+					
+					}
 	        		}
 	        		var string = 'State ' + String.fromCharCode(64+ parseInt(events[j].war[0][0])) + ' is attacking state ' + String.fromCharCode(64+parseInt(events[j].war[1][0]));
 		        	addContent('bipolarWarDetails', string);   
@@ -1455,6 +1508,18 @@ function startTheSimulation(){
 		}	
 		function outcomes(){     
 			function addStories(state, stateNumber, power){
+				var chil = state.childNodes;
+				for (var m=0; m<chil.length; m++){
+					if ($(chil[m]).hasClass( 'loserImage')){
+						$(chil[m]).removeClass('visible'); 
+						$(chil[m]).addClass('hidden');
+					}
+					if ($(chil[m]).hasClass( 'winnerImage')){
+						$(chil[m]).removeClass('visible'); 
+						$(chil[m]).addClass('hidden');
+					}
+				}	
+			   	
 				extra = '';
 				disappear = false;
 				if (events[j].statesAfterUpdate[stateNumber-1] == 0){
@@ -1508,6 +1573,29 @@ function startTheSimulation(){
 				removeContent('afterWarDetails');
 				var winners; 
 				var losers;
+				var oldDefenders = document.getElementsByClassName('defender');
+				for (var m=0; m<oldDefenders.length; m++){
+					var oldDefender = oldDefenders[m]; 
+					var chil = oldDefender.childNodes; 
+					for (var n=0; n<chil.length; n++){
+						if ($(chil[n]).hasClass( 'defenderImage')){
+							$(chil[n]).removeClass('visible'); 
+							$(chil[n]).addClass('hidden'); 
+						}
+					}	
+				}
+				var oldAttackers = document.getElementsByClassName('attacker'); 
+				for (var m=0; m<oldAttackers.length; m++){
+					var oldAttacker = oldAttackers[m]; 
+					var chil = oldAttacker.childNodes; 
+					for (var n=0; n<chil.length; n++){
+						if ($(chil[n]).hasClass( 'attackImage')){
+							$(chil[n]).removeClass('visible'); 
+							$(chil[n]).addClass('hidden'); 
+						}
+					}	
+				}
+				
 				if (events[j].flags.didAttackerWin == true){
 					addContent('afterWarDetails', 'The attacking alliance won the war'); 
 					i++; 
@@ -1523,11 +1611,27 @@ function startTheSimulation(){
 		        	for (var n = 0; n< winners.length; n++){
 			        	state= winners[n];
 			         	$(state).addClass('winner');   
+					var chil = state.childNodes;
+					for (var m=0; m<chil.length; m++){
+						if ($(chil[m]).hasClass( 'winnerImage')){
+							$(chil[m]).removeClass('hidden'); 
+							$(chil[m]).addClass('visible');
+						       	break;	
+						}
+					}	
 			   	}
 			   		
-			   	for (var m=0; m<losers.length; m++){
-					state=losers[m];
+			   	for (var n=0; n<losers.length; n++){
+					state=losers[n];
 				   	$(state).addClass('loser'); 	
+					var chil = state.childNodes;
+					for (var m=0; m<chil.length; m++){
+						if ($(chil[m]).hasClass( 'loserImage')){
+							$(chil[m]).removeClass('hidden'); 
+							$(chil[m]).addClass('visible');
+						       	break;	
+						}
+					}	
 			   	}
 			    	i++; 
 		        	setTimeout(outcomes, 1500); 		   	
@@ -1619,7 +1723,15 @@ function startTheSimulation(){
 	   				}
 	   				for (var k=0; k<attackers.length; k++){ 
 		   				var attack = attackers[k];
+						var chil = attack.childNodes; 
+						for (var m=0; m<chil.length; m++){
+							if ($(chil[m]).hasClass( 'attackImage')){
+								break;
+							}
+						}	
        		         			$(attack).addClass('attacker');
+						$(chil[m]).removeClass('hidden'); 
+						$(chil[m]).addClass('visible'); 
 	   				}
 	   			  
 	   				for (var k =0; k<events[j].escalation[1].length; k++){
@@ -1633,7 +1745,15 @@ function startTheSimulation(){
 		   			
 	   				for (var k=0; k<defenders.length; k++){	   
 		   				var defend = defenders[k];
-		   				$(defend).addClass('defender'); 
+						var chil = defend.childNodes; 
+						for (var m=0; m<chil.length; m++){
+							if ($(chil[m]).hasClass( 'defenderImage')){
+								break;
+							}
+						}	
+       		         			$(defend).addClass('defender');
+						$(chil[m]).removeClass('hidden'); 
+						$(chil[m]).addClass('visible'); 
 	   				}
 	   			
 	   				setTimeout(fightingWar, 4000);
@@ -1678,16 +1798,29 @@ function startTheSimulation(){
 				removeContent('warDetails' + defendNumber); 
 				addContent('warDetails' + defendNumber, 'Alliance number ' + defendNumber + ' is defending itself'); 
 				for (var k = 0; k < attackers.length; k++){
-					attacker = attackers[k];   
+					attacker = attackers[k]; 
+				        var chil = attacker.childNodes; 
+					for (var m=0; m<chil.length; m++){
+						if ($(chil[m]).hasClass( 'attackImage')){
+							break;
+						}
+					}	
 					$(attacker).addClass('attacker');
-					alert(attacker.childNodes[2]); 
-				        $(attacker.childNodes[2]).removeClass('hidden'); 
-					$(attacker.childNodes[2]).addClass('visible'); 	
+				        $(chil[m]).removeClass('hidden'); 
+					$(chil[m]).addClass('visible'); 	
 				}
 					   
 				for (var k = 0; k < defenders.length; k++){
-					defender = defenders[k];   
-					$(defender).addClass('defender'); 
+					defender = defenders[k];  
+				        var chil = defender.childNodes; 
+					for (var m=0; m<chil.length; m++){
+						if ($(chil[m]).hasClass( 'defenderImage')){
+							break;
+						}
+					}	
+					$(defender).addClass('defender');
+				       	$(chil[m]).removeClass('hidden'); 
+					$(chil[m]).addClass('visible'); 	
 				}
 				i=0; 
 				setTimeout(escalateWars, 2000);		   
