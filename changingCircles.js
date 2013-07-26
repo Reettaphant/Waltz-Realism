@@ -5,12 +5,14 @@ to do:
 size of board
 the first options still need styling
 how to prevent unipolar - multipolar - unipolar again, extra argument to check polarity that will only allow polarity shift when the state is very weak?
-somehow make sure that all polarities will be visited in a reasonable amoutn of time. 
 perfect balancing has no quizzes!
-need more explanations when system is changing polarity
+need more explanations when system is changing polarity: ask, before click to new turn think what is now the polarity of the new world
 also somehow need to make sure that bipolar war happens once but only once for each bipolar world
-bipolar transform still sometimes giving multipolar worlds
 bipolar war question: first major wars? answer no, only smaller second: why is this
+now old hege power continues to decline not working at all?
+smaller steps in sizes for power transforms??
+correct/ incorrect boxes could be prettier
+need to make beginning questionaires that explain simu: probabilities and tendencies: why is this? (one q) pause with quizzes: get most out if basic familiarity, can help to test understanding
 */
 $(document).ready(function(){
 
@@ -25,7 +27,7 @@ $(document).ready(function(){
 	var goForth = false; 
 	var completedQuizzes = {}	
 	var lastSeenFromGroup={}
-
+	var previously = 'default';
 	
 	
 	$(function(){
@@ -157,7 +159,7 @@ $(function(){
 			
 			var lotteryNumber = Math.random();
 			if (lotteryNumber < 0.333){
-				automaticUni = true; 
+				automaticUni = true;	
 				startTheSimulation(); 
 			}
 	
@@ -1395,7 +1397,7 @@ function startTheSimulation(){
 					transitionToNewTurn()	
 				}
 				else{
-			    		var newOutput = getWorldEvents(2, [], true, world, events[j]); 
+			    		var newOutput = getWorldEvents(2, [], true, world, events[j], previously); 
 					events.push(newOutput[0]); 
 					world = newOutput[1]; 
 					transitionToNewTurn();
@@ -1952,65 +1954,7 @@ function startTheSimulation(){
       	 			}
   	 		}
 		}      
-        	function powerQuestion(){
-	        	var story = document.getElementById('powerAnswer'); 
-	    		$(story).removeClass('hidden'); 
-			$(story).addClass('visible'); 
-			powerClick = false; 
-			$("#backToUpdate").click(function(){
-				var unClicked = document.getElementById('powerQuestion'); 
-				var clicked = document.getElementById('clickedPower'); 
-				$(unClicked).removeClass('hidden'); 
-				$(unClicked).addClass('visible');
-				$(clicked).removeClass('visible'); 
-				$(clicked).addClass('hidden'); 
-				$(story).removeClass('visible'); 
-				$(story).addClass('hidden'); 
-				if (i<15){
-					i++; 
-					updatePower(); 	
-				}
-				else{
-					i=0; 
-					if (events[j].polarity == 'multipolar'){
-							updateAlliances(); 
-					}
-					else if (events[j].polarity == 'bipolar'){
-						bipolarAlliances(); 
-					}
-					else{
-						unipolarAlliances(); 
-					}
-				}
-			});     
-	     	   
-		}
         
-		function noPowerQuestion(){
-			var story = document.getElementById('noPowerAnswer'); 
-			$(story).removeClass('hidden'); 
-			$(story).addClass('visible'); 
-			noPowerClick = false; 
-			$("#backNoUpdate").click(function(){
-				$(story).removeClass('visible'); 
-				$(story).addClass('hidden'); 
-				var unClicked = document.getElementById('noPowerQuestion'); 
-				var clicked = document.getElementById('clickedNoPower'); 
-				$(unClicked).removeClass('hidden'); 
-				$(unClicked).addClass('visible');
-				$(clicked).removeClass('visible'); 
-				$(clicked).addClass('hidden'); 
-		    		if (events[j].polarity == 'multipolar'){
-	   					updateAlliances(); 
-				}
-				else if (events[j].polarity == 'bipolar'){
-					bipolarAlliances(); 
-				}
-				else{
-					unipolarAlliances(); 
-				}
-			});        
-		}
 		function updatePower(){ 
 			
 			if (events[j].flags.powersUpdated == false){
@@ -2028,9 +1972,11 @@ function startTheSimulation(){
 						setTimeout(updateAlliances, 3000);
 					}
 					else if (events[j].polarity == 'bipolar'){
+						previously = 'bipolar';
 						setTimeout(bipolarAlliances, 3000);
 					}
 					else{
+						previously = 'unipolar';
 						setTimeout(unipolarAlliances, 3000);
 					}
 				}
@@ -2064,19 +2010,21 @@ function startTheSimulation(){
 						 
 		         			else{
 			     				i=0; 
-			       				if (events[j].polarity == 'multipolar'){    
+			       				if (events[j].polarity == 'multipolar'){ 	
 			       					setTimeout(updateAlliances, 3000);
 		       					}
 		         				else if (events[j].polarity == 'bipolar'){
+								previously = 'bipolar';
 			     					setTimeout(bipolarAlliances, 3000); 
 		         				}
 		         				else if (events[j].polarity == 'unipolar'){
+								previosuly = 'unipolar';
 			     					setTimeout(unipolarAlliances, 3000); 
 		         				}
 		         			}		    
 		    			}	
 					else{
-						if (events[j].flags.decliningHegemon == false  || events[j].hegemon != i+1){
+						if ((events[j].flags.decliningHegemon == true && events[j].hegemon == i+1 && events[j].polarity == 'unipolar')==false){
 							var info = events[j].statesAfterUpdate[i]; 
 							var power=info[0];
 							state = states[((i%4)*4 + Math.floor(i/4))]; 
@@ -2143,9 +2091,11 @@ function startTheSimulation(){
 								setTimeout(updateAlliances, 3000);
 								}	
 							else if (events[j].polarity == 'bipolar'){
+								previously = 'bipolar';
 								setTimeout(bipolarAlliances, 3000); 
 							}
 							else if (events[j].polarity == 'unipolar'){
+								previously = 'unipolar';
 								setTimeout(unipolarAlliances, 3000); 
 							}	
 						
@@ -2260,7 +2210,7 @@ function startTheSimulation(){
 				}
 			}
 		}
-		var output = getWorldEvents(1, initialStates, false);
+		var output = getWorldEvents(1, initialStates, false, previously);
 		var events =[]; 
 		for (var k=0; k<output.length-1; k++){
 			events.push(output[k]);    
