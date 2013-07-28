@@ -1,6 +1,6 @@
 
  
- function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorld, lastEvent, previously){
+ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorld, lastEvent, previously, bipolarCounter){
 	 
 	function addContent(content){   
 			div = "simulationOutput"; 
@@ -75,7 +75,7 @@
 	 	this.worldWar = false; 
 	 	this.bipolarChange = false; 
 	 	this.unipolarChange = false; 
-	 	
+	        this.multipolarCounter = 0;	
      }
      
      World.prototype = {
@@ -121,7 +121,7 @@
 				var current = world.states[k]; 
 				if (current.decliningHegemon != true){
 					var prob = current.getProbability(); 
-					if (prob < 2*Math.random()){
+					if (prob > 2*Math.random()){
 						if (current.power < 3){
 							current.addPower(1); 
 						}
@@ -131,15 +131,15 @@
 					
 						this.updatedPower = true;
 					}
-					else if (prob < Math.random()){
+					else if (prob > Math.random()){
 						current.addPower(Math.round(0.15 * current.power)); 
 						this.updatedPower = true;
 					}	
 					
-				
 				}
 				else{
 					this.updatedPower = true; 
+					world.decliningHegemon = true;
 					current.addPower(Math.floor(-0.5 * current.power)); 
 				}
 				
@@ -505,8 +505,8 @@
 							return 'systemic war' 	
 						}
 						else{
-							var escProb = Math.random(); 
-							if (escProb<0.25){ /*changed from 0,25*/
+							var escProb = Math.random();
+							if ((escProb<0.25 && multipolarCounter != 0)|| multipolarCounter >= 3){ /*changed from 0,25*/
 								addContent('escalated into systemic because other states joined'); 
 								wars[2]=true; 
 								worldWar = true; 
@@ -562,7 +562,10 @@
 		}
 		function calculateBipolarWar(){
 			var x = Math.random(); 
-			if (x < 0.2 && spheres[0].length > 1 && spheres[1].length > 1){/*changed from 0.2 */ 
+			if (bipolarCounter == 0){
+				return false;
+			}
+			else if ((x < 0.2 || bipolarCounter == 1) && spheres[0].length > 1 && spheres[1].length > 1){/*changed from 0.2 */ 
 				bipolarWar = true; 
 				var sph1=[]; 
 				var sph2=[]; 
@@ -639,6 +642,8 @@
 		if (this.world.polarity[this.world.polarity.length -1] == 'multipolar'){
 			var wars =0; 
 			this.world = world; 
+			var multipolarCounter;
+			multipolarCounter=this.world.multipolarCounter; 
 			var worldWar = false; 
 			var coalitions = this.world.coalitions.slice(); 
 			var escCoal = this.world.coalitions.slice();
@@ -755,8 +760,7 @@
 			}	
 			if (foundDec == false){
 				for (var k=0; k<wars[1].length; k++){
-					for (l=0; l<wars[0][k].states.length; l++){
-					
+					for (l=0; l<wars[1][k].states.length; l++){
 						if (wars[1][k].states[l].decliningHegemon == true || wars[1][k].states[l].noWin == true){
 							this.outcomes = [wars, true];
 					       		foundDec=true;	
@@ -1212,7 +1216,7 @@
 		     this.power += pw
 	     },
 	     getProbability: function(){
-		  return (this.territory + this.innovation)/10 + 0.1    
+		  return (this.territory + this.innovation)/10 + 0.1  
 	     }
      }
      
@@ -1429,6 +1433,7 @@
      	turn.hegemon = world.hegemon; 
  
 	if (world.decliningHegemon == true){
+		alert('setting dec heg to true');
 		world.decliningHegemon = false;
 		turn.flags.decliningHegemon = true; 	
 	}
@@ -1448,7 +1453,13 @@
 		    	turn.flags.sorted = false; 
     		}
      	}
-     	
+     	if (turn.endPolariy != turn.polarity && turn.polarity == 'multipolar'){
+		world.multipolarCounter = 0;
+	}	
+     	if (turn.endPolarity == turn.polarity && turn.polarity == 'multipolar'){
+
+		world.multipolarCounter +=1;
+	}	
     	events.push(turn); 
     	world.animCoalitions = []; 
     	 
