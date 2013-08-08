@@ -1,15 +1,29 @@
 
-/*need to make sure that power update quizzes are working correctly, some variables might be set to false in the wrong place
+/*
+ * 
+ *
+ * need to make sure that power update quizzes are working correctly, some variables might be set to false in the wrong place
 remember to add escaping when generating quizzes before allowing anyone else to generate quizzes
 to do:
-intellect and territory influence on probs
 also ask: why do wars escalte?
-initialising bipolar still not working properly
-size of board
-the first options still need styling
-smaller steps in sizes for power transforms??
-correct/ incorrect boxes could be prettier
+size of board?
+where find out territory and intellect
+hide back forth buttons if all options for state parameters not entered correctly
 need to make beginning questionaires that explain simu: probabilities and tendencies: why is this? also, what is the goal, what do states want: security, and as a result, never perpetual peace (one q) pause with quizzes: get most out if basic familiarity, can help to test understanding
+question boxes that explain simu
+in questions always emphasise according to waltz
+make end explantions for answers that were incorrect
+also need a start page that explains what is going on
+1. how divided into alliances
+2. when war
+3. when escalates
+4. when unipolar peaceful
+5. when declines
+6. when bipolar stable
+7. when declines
+*make scaling down responsive to how many states in the world and whcih polarity, also can do scaling later if make positioning of elements better, 
+explain: bipolar best balance because must confront the other state
+balancing can fail if e.g. bandwagon
 */
 $(document).ready(function(){
 
@@ -145,6 +159,9 @@ $(function(){
 		
 		
 		num = ($("#numberOfStates").val());
+		if (num == 1){
+			num = Math.round(Math.random()*5)+5;
+		}
 		numOfTurns = 1; 	
 		($('#stateNumbers')).removeClass('visible'); 
 			($('#stateNumbers')).addClass('hidden'); 
@@ -647,10 +664,9 @@ function startTheSimulation(){
 			powersOfStates[k] = pwr;
 		}	
 
-
 		initialStates.sort(initialPowerSort); 
 		var mostInitial = initialStates[0][0];
-		var secondInitial = initialStates[0][1];
+		var secondInitial = initialStates[1][0];
 		if (automaticMulti == true){
       		
 			while (true){
@@ -682,20 +698,19 @@ function startTheSimulation(){
 		
 		if (automaticBi == true){  
 			for (var k=2; k<initialStates.length; k++){
-				if (initialStates[k][0] > 8){
-					totalInitial -= Math.floor(0.8*initialStates[k][0]);
-					initialStates[k][0] -= Math.floor(0.8 * initialStates[k][0]);
+				if (initialStates[k][0] > 4){
+					totalInitial -= Math.floor(0.6*initialStates[k][0]);
+					initialStates[k][0] -= Math.floor(0.6 * initialStates[k][0]);
 					powersOfStates[initialStates[k][3]] = initialStates[k][0];
 				}
 				else{
-
-					totalInitial -= (initialStates[k][0])-1;
-					initialStates[k][0] == 1;
+					totalInitial -= (initialStates[k][0]-1);
+					initialStates[k][0] = 1;
 					powersOfStates[initialStates[k][3]] = initialStates[k][0];
 				}
 			}
 			var currentInitial = mostInitial + secondInitial;
-			var powerNeeded = Math.round((5/2) * (0.85*totalInitial + 2 -currentInitial) + 0.2*totalInitial);                                
+			var powerNeeded = Math.round((2 * totalInitial) - (currentInitial/0.4));    
 			if(powerNeeded > 0){			                                    
 				initialStates[0][0] += powerNeeded;
 			        initialStates[1][0] += powerNeeded; 
@@ -706,12 +721,16 @@ function startTheSimulation(){
 				powersOfStates[initialStates[1][3]] = initialStates[1][0];
 			}                                
 			var greatestDifference = Math.floor(totalInitial/15 + 1);					        
-			if (mostInitial - secondInitial > greatestDifference){		
+			if (mostInitial - secondInitial > greatestDifference){	
 				diff = mostInitial- secondInitial- greatestDifference;							
-				initialStates[0][0] += (Math.floor((-diff/2)+1));	
+				initialStates[0][0] += (Math.floor(-(diff/2)+1));	
+				totalInitial -= mostInitial+secondInitial;
 				powersOfStates[initialStates[0][3]] = initialStates[0][0];
 				initialStates[1][0] += (Math.floor((diff/2)+1));
 				powersOfStates[initialStates[1][3]] = initialStates[1][0];
+				mostInitial = initialStates[0][0]; 
+				secondInitial = initialStates[1][0];
+			        totalInitial += mostInitial + secondInitial; 	
 			}
 		}
 		
@@ -884,7 +903,7 @@ function startTheSimulation(){
 				}
 				else{
 					if (m != events[j].hegemon-1){
-						setTimeout(initialiseUnipolar, 2000); 
+						setTimeout(initialiseUnipolar, 1000); 
 				}
 					else{
 						initialiseUnipolar(); 
@@ -912,7 +931,7 @@ function startTheSimulation(){
 				}
 				else{
 					if (n != events[j].hegemon-1){
-						setTimeout(disintegrateUnipolar, 2000); 
+						setTimeout(disintegrateUnipolar, 1000); 
 					}
 					else{
 						disintegrateUnipolar(); 
@@ -1036,11 +1055,11 @@ function startTheSimulation(){
 			$(state).addClass('alliance0');
 			k++; 
 			if (k< events[j].spheres[0].length){
-				setTimeout(clearFirst, 2000); 	
+				setTimeout(clearFirst, 1000); 	
 			}
 			else{
 				k=0
-				setTimeout(clearSecond, 2000); 	
+				setTimeout(clearSecond, 1000); 	
 			}
 	        }
 	        function clearSecond(){
@@ -1050,7 +1069,7 @@ function startTheSimulation(){
 			$(state).addClass('alliance0');
 			k++; 
 			if (k< events[j].spheres[1].length){
-				setTimeout(clearSecond, 2000); 	
+				setTimeout(clearSecond, 1000); 	
 			}
 			else{
 				k=0
@@ -1058,7 +1077,7 @@ function startTheSimulation(){
 			}
 	        }
 	        var k = 0; 
-		setTimeout(clearFirst, 3000);    
+		setTimeout(clearFirst, 2000);    
 	}
 		
 			 		
@@ -1277,7 +1296,19 @@ function startTheSimulation(){
 				removeContent('bipolarDetails2');
 				$(newStory).removeClass('hidden');
 				$(newStory).addClass('visible');
-				ajaxGetsQuiz('first_bipolar', 'bipolarQuiz', 'bipolarCont', bipolarAlliances, 'bipolarCheck'); 
+				if (bipolarKnow == true){
+					ajaxGetsQuiz('first_bipolar', 'bipolarQuiz', 'bipolarCont', bipolarAlliances, 'bipolarCheck'); 
+				}
+				else{
+					var expl = document.getElementById('bipolarExp'); 
+					$(expl).removeClass('hidden'); 
+					$(expl).addClass('visible'); 
+					('#elaborateBipolar').click(function(){
+						var expl = document.getElementById('bipolarExp'); 
+						$(expl).removeClass('hidden'); 
+						$(expl).addClass('visible'); 
+					});
+				}
 			}
 			else{
 				changed = true; 
@@ -1886,11 +1917,30 @@ function startTheSimulation(){
 	   		$(newStory).addClass('visible');
 			if (thinkWarVisit == false){
 				if (events[j].polarity == 'multipolar'){
-					ajaxGetsQuiz('thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+					if (thinkingKnow == true){
+						ajaxGetsQuiz('thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+					}
+					else{
+						var expl = document.getElementById('thinkingExpl'); 
+						$(expl).removeClass('hidden'); 
+						$(expl).addClass('visible'); 
+						$('#elaborateThinking').click(function(){
+							var expl = document.getElementById('thinkingExpl'); 
+							alert('click');
+							$(expl).removeClass('visible'); 
+							$(expl).addClass('hidden');
+							if (document.getElementById('thinkingKnow').checked== true){
+								thinkingKnow = true; 
+								alert('check'); 
+							}
+							ajaxGetsQuiz('thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+						}); 
+					}
+
 				}
-				else if (events[j].polarity == 'bipolar'){
-					ajaxGetsQuiz('thinking_bipolar', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
-				}
+					else if (events[j].polarity == 'bipolar'){
+						ajaxGetsQuiz('thinking_bipolar', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+					}
 				thinkWarVisit = true; 
 			}
 			else{
@@ -1968,12 +2018,28 @@ function startTheSimulation(){
 	        	if (i==0){     
 			    	hideStories(); 
 			    	if (visitedAlliance == false){
-					var pause = document.getElementById('alliancePause'); 
-					$(pause).removeClass('hidden'); 
-					$(pause).addClass('visible'); 
-					group_name = 'alliance_questions'
-					ajaxGetsQuiz(group_name, 'allianceQuiz', 'allianceCont', updateAlliances, 'allianceCheck');
-					visitedAlliance = true; 
+					if (allianceKnow == false){
+						var pause = document.getElementById('alliancePause'); 
+						$(pause).removeClass('hidden'); 
+						$(pause).addClass('visible'); 
+						$('#elaborateAlliance').click(function(){
+							var expl = document.getElementById('allianceExpl');
+							$(expl).removeClass('visible'); 
+							$(expl).addClass('hidden');
+							group_name = 'alliance_questions'
+							ajaxGetsQuiz(group_name, 'allianceQuiz', 'allianceCont', updateAlliances, 'allianceCheck');
+							visitedAlliance = true;
+							if (document.getElementById('allianceKnow').checked){
+								alert('check'); 
+								allianceKnow = true;
+							}
+						});	
+					}
+					else{
+						group_name = 'alliance_questions'
+						ajaxGetsQuiz(group_name, 'allianceQuiz', 'allianceCont', updateAlliances, 'allianceCheck');
+						visitedAlliance = true;
+					}
 			    	}
 			    	else{
 			    		var newStory = document.getElementById('assessAlliances');    
@@ -2234,11 +2300,11 @@ function startTheSimulation(){
 					addPower(state, power);
 					if (i<15){
 						i++; 
-						setTimeout(scaling, 2000); 	
+						setTimeout(scaling, 1500); 	
 					}
 					else{
 						i=0; 
-						setTimeout(updatePower, 2000);    
+						setTimeout(updatePower, 1500);    
 					}	
 				}
 				else{
@@ -2286,7 +2352,10 @@ function startTheSimulation(){
 		var limitedEnd = false; 
 		var multipolarEnd = false; 
 		var bipolarEnd = false;
-		var unipolarEnd = false;	
+		var unipolarEnd = false;
+		var allianceKnow = false; 
+		var thinkingKnow = false; 
+		var bipolarKnow = false; 	
 		if (events[0].polarity == 'multipolar'){
 			var story = document.getElementById('newTurnMulti');
 			$(story).removeClass('hidden');
