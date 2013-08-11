@@ -1,7 +1,9 @@
 
 /*
  * 
- *
+ *finish doing expls for power updates
+ * hege decline should happen without a pause
+ * make sure only one button press after explanations when moving on to quiz
  * need to make sure that power update quizzes are working correctly, some variables might be set to false in the wrong place
 remember to add escaping when generating quizzes before allowing anyone else to generate quizzes
 to do:
@@ -257,7 +259,7 @@ function startTheSimulation(){
 		url += completed; 
 		url += '/'; 
 		url += lastSeen;
-		url += '/send'; 
+		url += '/send';
 		$.get(url, 
 			function(data){
 		/*keeping track of what was the last quiz seen in a quiz group, keeping track of which quizzes no more
@@ -916,7 +918,17 @@ function startTheSimulation(){
 			}
 		}
         	
-        	
+       		function displayUniPeace(){ 
+			var q = document.getElementById('unipolarWar');
+			$(q).removeClass('visible');
+			$(q).addClass('hidden');
+			var story = document.getElementById('peacefulUnipolar'); 
+			removeContent('unipolarDetails');
+			$(story).removeClass('hidden'); 
+			$(story).addClass('visible');
+			setTimeout(toNewTurn, 2000); 
+		}
+
 	        function disintegrateUnipolar(){
 		 
 		        if (n != events[j].hegemon-1 && events[j].statesAfterUpdate[n].length != 1){
@@ -953,8 +965,26 @@ function startTheSimulation(){
 						$(story).removeClass('hidden'); 
 						$(story).addClass('visible');
 						removeContent('unipolarDetails0'); 
-						unipolarVisit = true; 
-						ajaxGetsQuiz('unipolar_transform_questions', 'unipolarQuiz', 'unipolarCont', unipolarAlliances, 'unipolarCheck'); 
+						unipolarVisit = true;
+					        if (unipolarKnow == true){	
+							ajaxGetsQuiz('unipolar_transform_questions', 'unipolarQuiz', 'unipolarCont', unipolarAlliances, 'unipolarCheck'); 
+					
+						}
+						else{
+						 	var expl = document.getElementById('unipolarExpl');
+							$(expl).removeClass('hidden'); 
+							$(expl).addClass('visible'); 
+							$('#elaborateUnipolar').click(function(){
+								var expl = document.getElementById('unipolarExpl');
+								$(expl).removeClass('visible'); 
+								$(expl).addClass('hidden');
+							        if (document.getElementById('unipolarKnow').checked == true){
+									unipolarKnow = true; 
+								}	
+								ajaxGetsQuiz('unipolar_transform_questions', 'unipolarQuiz', 'unipolarCont', unipolarAlliances, 'unipolarCheck'); 
+							});
+						
+						}
 					}
 					else{
 						var unipolar = document.getElementById('unipolarDetails0'); 
@@ -978,7 +1008,27 @@ function startTheSimulation(){
 							hideStories(); 
 							$(story).removeClass('hidden'); 
 							$(story).addClass('visible');
-							ajaxGetsQuiz('unipolar_power_questions', 'unipolarPowerQuiz', 'unipolarPowerCont', unipolarAlliances, 'unipolarPowerCheck'); 
+							if (declineExpl == true){
+								ajaxGetsQuiz('unipolar_power_questions', 'unipolarPowerQuiz', 'unipolarPowerCont', unipolarAlliances, 'unipolarPowerCheck'); 
+							}
+							else{
+								var expl = document.getElementById('declineExpl'); 
+								$(expl).removeClass('hidden'); 
+								$(expl).addClass('visible');
+								var decQ = false; 
+								$('#elaborateDecline').click(function(){
+									if (decQ == false){
+										decQ = true;
+										var expl = document.getElementById('declineExpl'); 
+										$(expl).removeClass('visible'); 
+										$(expl).addClass('hidden');
+ 										if (document.getElementById('declineKnow').checked == true){
+											declineKnow = true; 
+										}
+										ajaxGetsQuiz('unipolar_power_questions', 'unipolarPowerQuiz', 'unipolarPowerCont', unipolarAlliances, 'unipolarPowerCheck'); 
+									}
+								});
+							}
 						}
 						else{
 							i++; 
@@ -988,12 +1038,17 @@ function startTheSimulation(){
 						}
 					}
 					else{
-						var story = document.getElementById('peacefulUnipolar'); 
-						hideStories();
-						removeContent('unipolarDetails');
-						$(story).removeClass('hidden'); 
-						$(story).addClass('visible');
-						setTimeout(toNewTurn, 2000); 
+						var old = document.getElementById('unipolarDetails0');
+						$(old).removeClass('visible');
+						$(old).addClass('hidden');
+						var q = document.getElementById('unipolarWar');
+						$(q).removeClass('hidden');
+						$(q).addClass('visible');
+						if (unipolarWarVisit == false){
+							unipolarWarVisit = true;
+							ajaxGetsQuiz('unipolar_war', 'unipolarWarQuiz', 'unipolarWarCont', displayUniPeace, 'unipolarWarCheck');
+					
+						}
 					}
 				}
    			}
@@ -1037,11 +1092,17 @@ function startTheSimulation(){
 					}
 				}
 				else{
-					var s = document.getElementById('unipolarDetails');
-					$(s).addClass('visible');
-					$(s).removeClass('hidden'); 
-					addContent('unipolarDetails0', 'The unipolar world is peaceful'); 
-					setTimeout(toNewTurn, 2000);	
+					var old = document.getElementById('unipolarDetails0');
+					$(old).removeClass('visible');
+					$(old).addClass('hidden');
+					var q = document.getElementById('unipolarWar');
+					$(q).removeClass('hidden');
+					$(q).addClass('visible');
+					if (unipolarWarVisit == false){
+						unipolarWarVisit = true;
+						ajaxGetsQuiz('unipolar_war', 'unipolarWarQuiz', 'unipolarWarCont', displayUniPeace, 'unipolarWarCheck');
+				
+					}
 				} 
 			}
 		}	
@@ -1092,7 +1153,23 @@ function startTheSimulation(){
 				$(story).addClass('visible');
 				removeContent('bipolarSystemDetails');
 				disintegrationVisit = true; 
-				ajaxGetsQuiz('disintegration_questions', 'disintegrationQuiz', 'disintegrationCont', bipolarSystemChange, 'disintegrationCheck'); 
+				if (disinKnow == true){
+					ajaxGetsQuiz('disintegration_questions', 'disintegrationQuiz', 'disintegrationCont', bipolarSystemChange, 'disintegrationCheck'); 
+				}
+				else{
+					var expl = document.getElementById('disinExpl'); 
+					$(expl).removeClass('hidden'); 
+					$(expl).addClass('visible'); 
+					$('#elaborateDisin').click(function(){
+						var expl = document.getElementById('disinExpl'); 
+						$(expl).removeClass('visible'); 
+						$(expl).addClass('hidden'); 
+						if (document.getElementById('disinKnow').checked == true){
+							disinKnow = true;
+						}	
+						ajaxGetsQuiz('disintegration_questions', 'disintegrationQuiz', 'disintegrationCont', bipolarSystemChange, 'disintegrationCheck'); 
+					}); 
+				}
 			}
 			else{
 				i++; 
@@ -1303,10 +1380,14 @@ function startTheSimulation(){
 					var expl = document.getElementById('bipolarExp'); 
 					$(expl).removeClass('hidden'); 
 					$(expl).addClass('visible'); 
-					('#elaborateBipolar').click(function(){
+					$('#elaborateBipolar').click(function(){
 						var expl = document.getElementById('bipolarExp'); 
-						$(expl).removeClass('hidden'); 
-						$(expl).addClass('visible'); 
+						$(expl).removeClass('visible'); 
+						$(expl).addClass('hidden');
+					        if (document.getElementById('bipolarKnow').checked == true){
+							bipolarKnow = true; 
+						}	
+						ajaxGetsQuiz('first_bipolar', 'bipolarQuiz', 'bipolarCont', bipolarAlliances, 'bipolarCheck'); 
 					});
 				}
 			}
@@ -1499,6 +1580,7 @@ function startTheSimulation(){
 		   	}	
 			
 	function toNewTurn(){
+		unipolarWarVisit = false;
 		perfectVisit = false; 
 		controlClick = false; 
 		limitVisit = false; 
@@ -1926,21 +2008,36 @@ function startTheSimulation(){
 						$(expl).addClass('visible'); 
 						$('#elaborateThinking').click(function(){
 							var expl = document.getElementById('thinkingExpl'); 
-							alert('click');
 							$(expl).removeClass('visible'); 
 							$(expl).addClass('hidden');
 							if (document.getElementById('thinkingKnow').checked== true){
 								thinkingKnow = true; 
-								alert('check'); 
 							}
 							ajaxGetsQuiz('thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
 						}); 
 					}
 
 				}
-					else if (events[j].polarity == 'bipolar'){
+				else if (events[j].polarity == 'bipolar'){
+					if (bipolarThinkingKnow == true){
 						ajaxGetsQuiz('thinking_bipolar', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
 					}
+					else{
+						
+						var expl = document.getElementById('bipolarThinkingExpl'); 
+						$(expl).removeClass('hidden'); 
+						$(expl).addClass('visible'); 
+						$('#elaborateThinkingBipolar').click(function(){
+							var expl = document.getElementById('bipolarThinkingExpl'); 
+							$(expl).removeClass('visible'); 
+							$(expl).addClass('hidden');
+							if (document.getElementById('bipolarThinkingKnow').checked== true){
+								bipolarThinkingKnow = true; 
+							}
+							ajaxGetsQuiz('thinking_bipolar', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+						});
+					}	
+				}
 				thinkWarVisit = true; 
 			}
 			else{
@@ -2030,7 +2127,6 @@ function startTheSimulation(){
 							ajaxGetsQuiz(group_name, 'allianceQuiz', 'allianceCont', updateAlliances, 'allianceCheck');
 							visitedAlliance = true;
 							if (document.getElementById('allianceKnow').checked){
-								alert('check'); 
 								allianceKnow = true;
 							}
 						});	
@@ -2347,7 +2443,8 @@ function startTheSimulation(){
 		var powerVisit = false; 
 		var perfectVisit = false;
 		var escalationVisit = false;
-	        var limitVisit = false; 
+	        var limitVisit = false;
+	       	var unipolarWarVisit = false;	
 	        var controlClick = true; 	
 		var limitedEnd = false; 
 		var multipolarEnd = false; 
@@ -2355,7 +2452,14 @@ function startTheSimulation(){
 		var unipolarEnd = false;
 		var allianceKnow = false; 
 		var thinkingKnow = false; 
-		var bipolarKnow = false; 	
+		var bipolarKnow = false; 
+		var bipolarThinkingKnow = false;	
+		var disinKnow = false;
+	        var declineKnow = false;
+		var unipolarKnow = false; 
+		var uniDisKnow = false;
+		var uniDisExpl = false; 
+			
 		if (events[0].polarity == 'multipolar'){
 			var story = document.getElementById('newTurnMulti');
 			$(story).removeClass('hidden');

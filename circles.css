@@ -142,6 +142,18 @@ input{
 .continueButton:hover{
 	border: solid #4F4F4F 2px; 
 }
+
+.explButton{
+	width: 70px; 
+	height: 30px;
+	margin: 3px; 
+}
+
+.theoryExp{
+	padding: 2px; 
+	border: 3px solid #778899;
+	font-size: 11px;
+}
 form.quiz{
 	box-shadow: inset 0em -0em 0em rgba(0, 0, 0, .0);
 	margin-right: 3px; 
@@ -158,22 +170,9 @@ form.quiz{
 
 
 
-.theoryExp{
-	margin-right: 3px; 
-	border: 3px solid #778899;
-	margin-left: 0.1px; 
-	margin-top: 5px;
-	position: relative; 
-	border-radius: 5px; 
-	font-size: 11px;  
-	width: 340px; 
-	background: #F4F4F4; 
-	padding: 3px;
-
-}
 
 form.quiz.medium{
-	height: 250px; 
+	height: 450px; 
 }
 
 form.quiz.small{
