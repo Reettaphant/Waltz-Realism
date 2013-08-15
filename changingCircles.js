@@ -956,10 +956,11 @@ function startTheSimulation(){
 						$(story).removeClass('hidden'); 
 						$(story).addClass('visible');
 						removeContent('unipolarDetails0'); 
-						unipolarVisit = true;
 					        if (unipolarKnow == true){	
-							ajaxGetsQuiz('unipolar_transform_questions', 'unipolarQuiz', 'unipolarCont', unipolarAlliances, 'unipolarCheck'); 
-					
+							if (unipolarVisit == false){
+								unipolarVisit = true;
+								ajaxGetsQuiz('unipolar_transform_questions', 'unipolarQuiz', 'unipolarCont', unipolarAlliances, 'unipolarCheck'); 
+							}
 						}
 						else{
 						 	var expl = document.getElementById('unipolarExpl');
@@ -972,7 +973,10 @@ function startTheSimulation(){
 							        if (document.getElementById('unipolarKnow').checked == true){
 									unipolarKnow = true; 
 								}	
-								ajaxGetsQuiz('unipolar_transform_questions', 'unipolarQuiz', 'unipolarCont', unipolarAlliances, 'unipolarCheck'); 
+								if (unipolarVisit == false){
+									unipolarVisit = true;
+									ajaxGetsQuiz('unipolar_transform_questions', 'unipolarQuiz', 'unipolarCont', unipolarAlliances, 'unipolarCheck');
+								}	
 							});
 						
 						}
@@ -993,32 +997,36 @@ function startTheSimulation(){
 				else{
 					var story = document.getElementById('unipolarAlliances'); 
 					if (events[j].changedStates.length != 1){ 
-						if (unipolarPowerVisit == false){
-							unipolarPowerVisit = true;
-							var story = document.getElementById('decliningUnipolar'); 
-							hideStories(); 
-							$(story).removeClass('hidden'); 
-							$(story).addClass('visible');
-							if (declineExpl == true){
+						var story = document.getElementById('decliningUnipolar'); 
+						hideStories(); 
+						$(story).removeClass('hidden'); 
+						$(story).addClass('visible');
+						if (declineExpl == true){
+							if (unipolarPowerVisit == false){
+								unipolarPowerVisit = true; 
 								ajaxGetsQuiz('unipolar_power_questions', 'unipolarPowerQuiz', 'unipolarPowerCont', unipolarAlliances, 'unipolarPowerCheck'); 
 							}
-							else{
-								var expl = document.getElementById('declineExpl'); 
-								$(expl).removeClass('hidden'); 
-								$(expl).addClass('visible');
-								var decQ = false; 
-								$('#elaborateDecline').click(function(){
-									if (decQ == false){
-										decQ = true;
-										var expl = document.getElementById('declineExpl'); 
-										$(expl).removeClass('visible'); 
-										$(expl).addClass('hidden');
- 										if (document.getElementById('declineKnow').checked == true){
-											declineKnow = true; 
-										}
-										ajaxGetsQuiz('unipolar_power_questions', 'unipolarPowerQuiz', 'unipolarPowerCont', unipolarAlliances, 'unipolarPowerCheck'); 
+						}
+						else{
+							var expl = document.getElementById('declineExpl'); 
+							$(expl).removeClass('hidden'); 
+							$(expl).addClass('visible');
+							var decQ = false; 
+							$('#elaborateDecline').click(function(){
+								if (decQ == false){
+									decQ = true;
+									var expl = document.getElementById('declineExpl'); 
+									$(expl).removeClass('visible'); 
+									$(expl).addClass('hidden');
+									if (document.getElementById('declineKnow').checked == true){
+										declineKnow = true; 
 									}
-								});
+									if (unipolarPowerVisit = false){
+										unipolarPowerVisit = true; 
+										ajaxGetsQuiz('unipolar_power_questions', 'unipolarPowerQuiz', 'unipolarPowerCont', unipolarAlliances, 'unipolarPowerCheck');
+									}	
+								}
+							});
 							}
 						}
 						else{
@@ -1146,9 +1154,11 @@ function startTheSimulation(){
 				$(story).removeClass('hidden'); 
 				$(story).addClass('visible');
 				removeContent('bipolarSystemDetails');
-				disintegrationVisit = true; 
 				if (disinKnow == true){
-					ajaxGetsQuiz('disintegration_questions', 'disintegrationQuiz', 'disintegrationCont', bipolarSystemChange, 'disintegrationCheck'); 
+					if (disinVisit == false){
+						disinVist = true; 
+						ajaxGetsQuiz('disintegration_questions', 'disintegrationQuiz', 'disintegrationCont', bipolarSystemChange, 'disintegrationCheck'); 
+					}
 				}
 				else{
 					var expl = document.getElementById('disinExpl'); 
@@ -1161,7 +1171,10 @@ function startTheSimulation(){
 						if (document.getElementById('disinKnow').checked == true){
 							disinKnow = true;
 						}	
-						ajaxGetsQuiz('disintegration_questions', 'disintegrationQuiz', 'disintegrationCont', bipolarSystemChange, 'disintegrationCheck'); 
+						if (disinVisit == false){
+							disinVist = true; 
+							ajaxGetsQuiz('disintegration_questions', 'disintegrationQuiz', 'disintegrationCont', bipolarSystemChange, 'disintegrationCheck'); 
+						}
 					}); 
 				}
 			}
@@ -1360,7 +1373,6 @@ function startTheSimulation(){
 	function bipolarAlliances(){
 		if (events[j].flags.sorted == false){
 			if (bipolarVisit == false){
-				bipolarVisit = true; 
 				hideStories(); 
 				var newStory = document.getElementById('bipolarAlliances');    
 				removeContent('bipolarDetails1');
@@ -1368,7 +1380,11 @@ function startTheSimulation(){
 				$(newStory).removeClass('hidden');
 				$(newStory).addClass('visible');
 				if (bipolarKnow == true){
-					ajaxGetsQuiz('first_bipolar', 'bipolarQuiz', 'bipolarCont', bipolarAlliances, 'bipolarCheck'); 
+					if (bipolarVisit == false){
+						bipolarVisit = true; 
+						ajaxGetsQuiz('first_bipolar', 'bipolarQuiz', 'bipolarCont', bipolarAlliances, 'bipolarCheck'); 
+				
+					}
 				}
 				else{
 					var expl = document.getElementById('bipolarExp'); 
@@ -1381,7 +1397,10 @@ function startTheSimulation(){
 					        if (document.getElementById('bipolarKnow').checked == true){
 							bipolarKnow = true; 
 						}	
-						ajaxGetsQuiz('first_bipolar', 'bipolarQuiz', 'bipolarCont', bipolarAlliances, 'bipolarCheck'); 
+						if (bipolarVisit == false){
+							bipolarVisit = true; 
+							ajaxGetsQuiz('first_bipolar', 'bipolarQuiz', 'bipolarCont', bipolarAlliances, 'bipolarCheck'); 
+						}
 					});
 				}
 			}
@@ -1993,7 +2012,10 @@ function startTheSimulation(){
 			if (thinkWarVisit == false){
 				if (events[j].polarity == 'multipolar'){
 					if (thinkingKnow == true){
-						ajaxGetsQuiz('thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+						if (thinkingWarVisit == false){
+							thinkingWarVisit = true; 
+							ajaxGetsQuiz('thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+						}
 					}
 					else{
 						var expl = document.getElementById('thinkingExpl'); 
@@ -2006,14 +2028,21 @@ function startTheSimulation(){
 							if (document.getElementById('thinkingKnow').checked== true){
 								thinkingKnow = true; 
 							}
-							ajaxGetsQuiz('thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+							if (thinkingWarVisit == false){
+								thinkingWarVisit = true;
+								ajaxGetsQuiz('thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+							}
 						}); 
 					}
 
 				}
 				else if (events[j].polarity == 'bipolar'){
 					if (bipolarThinkingKnow == true){
-						ajaxGetsQuiz('thinking_bipolar', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+						if (thinkingWarVisit == false){
+							ajaxGetsQuiz('thinking_bipolar', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+							thinkingWarVisit = true;
+						}
+
 					}
 					else{
 						
@@ -2027,7 +2056,10 @@ function startTheSimulation(){
 							if (document.getElementById('bipolarThinkingKnow').checked== true){
 								bipolarThinkingKnow = true; 
 							}
-							ajaxGetsQuiz('thinking_bipolar', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+							if (thinkingWarVisit == false){
+								ajaxGetsQuiz('thinking_bipolar', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
+								thinkingWarVisit = true;
+							}
 						});
 					}	
 				}
