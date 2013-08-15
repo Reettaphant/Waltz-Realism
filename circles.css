@@ -142,20 +142,25 @@ input{
 .continueButton:hover{
 	border: solid #4F4F4F 2px; 
 }
-
 .explButton{
-	width: 70px; 
-	height: 30px;
-	margin: 3px; 
+	float: left; 
+	padding: 2px;
+	width: 58px; 
+	height: 27px;
+	margin-left: 275px;
 }
-
+.explButton:hover{
+	border: solid black 2px;
+}
 .theoryExp{
-	padding: 2px; 
+	text-align: justify; 
+	padding: 4px;
+	background: #F4F4F4; 
 	border: 3px solid #778899;
 	font-size: 11px;
 }
 form.quiz{
-	box-shadow: inset 0em -0em 0em rgba(0, 0, 0, .0);
+	box-shadow: inset -0em -0em 0em rgba(0, 0, 0, .0);
 	margin-right: 3px; 
 	margin-left: 0.1px; 
 	margin-top: 5px;
@@ -172,7 +177,7 @@ form.quiz{
 
 
 form.quiz.medium{
-	height: 450px; 
+	height: 419px; 
 }
 
 form.quiz.small{
@@ -184,28 +189,32 @@ form.quiz.small{
 }
 div.check{
 	font-size: 12px;
-        border: solid 3px #778899;
+	border-top: none;
 	border-radius: 3px; 
 	width: 344px; 
 	padding: 1px;
 	color: #2F4F4F;
-	height: 142px;
+	height: 47px;
 	position: absolute; 
-	bottom: 26px;
+	bottom: 40px;
 	left: 1px;
 }
 .box{
-	margin-top: 0px;
+	margin-top: -2px;
 	float: left;
+}
+
+.fill{
+	float: left; 
+	width: 275px; 
+	height: 30px; 
+
 }
 .quizButton{
 	box-shadow: inset -0em -1em 0.8em rgba(0, 0, 0, .2);
-	position: absolute;
 	padding: 2px;
     	height: 25px; 	
 	width: 50px; 
-	bottom: 7px; 
-	right: 7px; 
 	margin: 1px; 
 }
 
@@ -217,29 +226,35 @@ div.check{
 	float: left; 
 	margin-top: -1px; 
 }
-
+.explCheck{
+	position: absolute;
+	padding: 9px; 
+}
 .checks{
 	position: absolute; 
 	bottom: 1px; 
 }
 .correctMsg{
-	color: green;
+	text-align: justify;
+	color: #2F4F4F;
 	font-size: 12px; 
 	padding: 2px; 
-	border: solid green; 
-	width: 175px; 
-	margin: 1px;
+	border: solid #228B22; 
+	width: 325px; 
+	margin: 3px;
+	margin-top: 30px; 
 }
 
 .errorMsg{
-	color: red; 
+	margin: 3px; 
+	color: #2F4F4F;
 	font-size: 12px;
 	padding: 2px; 
-	border: solid red;
-	width: 185px;
+	border: solid #CD3333;
+	width: 325px;
 }
 .noMsg{
-	color: black; 
+	color: #2F4F4F;
 	font-size: 12px;
 	padding: 2px; 
 	border: solid black;

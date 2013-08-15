@@ -1,30 +1,16 @@
 
 /*
- * 
+ * now a problem in alliance expl appearign second time but maybe this has been fixed- check tomorrow and then can make a commit/
+ *probably will need to make two significant changes in the way that the simulation runs: need some small wars in uni world, in multi world need to make bigger alliances and limited wars only fought between states and maybe wars that escalate between alliances but might need to ask someone 
  *finish doing expls for power updates
- * hege decline should happen without a pause
- * make sure only one button press after explanations when moving on to quiz
  * need to make sure that power update quizzes are working correctly, some variables might be set to false in the wrong place
 remember to add escaping when generating quizzes before allowing anyone else to generate quizzes
 to do:
 also ask: why do wars escalte?
 size of board?
 where find out territory and intellect
-hide back forth buttons if all options for state parameters not entered correctly
-need to make beginning questionaires that explain simu: probabilities and tendencies: why is this? also, what is the goal, what do states want: security, and as a result, never perpetual peace (one q) pause with quizzes: get most out if basic familiarity, can help to test understanding
-question boxes that explain simu
-in questions always emphasise according to waltz
-make end explantions for answers that were incorrect
-also need a start page that explains what is going on
-1. how divided into alliances
-2. when war
-3. when escalates
-4. when unipolar peaceful
-5. when declines
-6. when bipolar stable
-7. when declines
+need to make beginning questionaires that explain simu: probabilities and tendencies: why is this? also, what is the goal, what do states want: security, and as a result, never perpetual peace (one q), also why is this explained through spheres and why is a computerised simu particularly good for waltz
 *make scaling down responsive to how many states in the world and whcih polarity, also can do scaling later if make positioning of elements better, 
-explain: bipolar best balance because must confront the other state
 balancing can fail if e.g. bandwagon
 */
 $(document).ready(function(){
@@ -251,7 +237,7 @@ function startTheSimulation(){
 
 		}
 		else{
-			var completed = 'empty'
+			var completed = 'empty';
 		}
 		var url = '/quiz/';
 		url+=group_name;
@@ -269,18 +255,16 @@ function startTheSimulation(){
 		/*need to add two new messages, one in case has already seen, another if has already seen all the quizzes, making forms of different size
 		 * now: send finsihed quizzes and last seen quizzes only as relevant 
 		 * to that group, send by usign the url
-		 * according to length*/		 
+		 * according to length*/
+				var ends = [];	
 				var groupName = url.split("/")[2]; 
 				lastSeenFromGroup[groupName]= data['quiz_name'];
-				var answers = data['answers']
+				var answers = data['answers'];
 				if (answers== undefined){
 					var toAppend = '<form class = "quiz small">';
 				}
 				
-				else if (answers.length == 3){
-					var toAppend = '<form class = "quiz medium">';
-				}
-				else if (answers.length == 2){
+				else {
 					var toAppend = '<form class = "quiz medium">';
 				}
 				toAppend += data['question'];
@@ -302,6 +286,7 @@ function startTheSimulation(){
 						toAppend += url
 						toAppend += '" value = "'
 						toAppend += answer[0][1];
+						ends.push(answer[0][2]);
 						if (answer[0][1] == true){
 							var corr = m;
 						}
@@ -312,14 +297,89 @@ function startTheSimulation(){
 						m++; 
 					}
 					toAppend += '<br>'
-					toAppend += '<input type = "button" class = "quizButton" value = "submit">';
-					toAppend += '<div class = "hidden errorMsg"> Sorry, your answer was incorrect </div> <div class = "hidden correctMsg"> Your answer was correct! </div> <div class = "hidden noMsg"> You did not choose an answer </div>';
+					toAppend += '<div class = "fill"> </div> <input type = "button" class = "quizButton" value = "submit">';
+					toAppend += '<div class = "hidden errorMsg"> </div> <div class = "hidden correctMsg">  </div> <div class = "hidden noMsg"> You did not choose an answer </div>';
 				}
 				else{
 					toAppend += '<input type = "button" class = "continueButton" value = "continue">';
 				}
 				toAppend += '</form>';
 				addContent(pause, toAppend);
+				$(".quizButton").click(function(){
+					/*need to remove Cotent from wrong messages */ 
+
+					var q= document.getElementsByClassName('quiz')[0]; 
+					var children = q.childNodes; 
+					var radios = [];
+					for (var k=2; k<21; k+=3){
+						if (children.length > k + 1){
+							radios.push(children[k]); 
+						}
+					}
+					var found = false; 
+					for (var k=0; k<radios.length-1; k++){
+						if (radios[k].checked){
+							found = true;
+							if (k == corr){
+								var check = document.getElementById(checkbox);
+								$(check).prop('checked', false); 
+								msgW = document.getElementsByClassName('errorMsg')[0]; 
+								$(msgW).removeClass('visible'); 
+								$(msgW).addClass('hidden');
+							       	msgW.innerHTML = '';	
+								msgC = document.getElementsByClassName('correctMsg')[0]; 
+								$(msgC).removeClass('hidden'); 
+								$(msgC).addClass('visible');
+							        msgC.innerHTML = ends[k]; 	
+								msgW = document.getElementsByClassName('noMsg')[0]; 
+								$(msgW).removeClass('visible'); 
+								$(msgW).addClass('hidden'); 
+								var children = document.getElementById(pause).childNodes;
+								var contD = document.getElementById(contDiv); 
+								$(contD).removeClass('hidden'); 
+								$(contD).addClass('visible');
+								for (var l=0; l<children.length; l++){
+									if($(children[l]).hasClass('quiz')){
+										break;
+									}
+								}
+								var formChildren = children[l].childNodes;
+								for (var l=0; l<formChildren.length; l++){
+									if ($(formChildren[l]).hasClass('quizButton')){
+										$(formChildren[l]).addClass('hidden'); 
+										break;
+									}
+								}
+								/*now here: add checkbox that has check's name and add a continue button to pause*/
+							}
+							else{
+								msgW = document.getElementsByClassName('errorMsg')[0]; 
+								$(msgW).removeClass('hidden'); 
+								$(msgW).addClass('visible'); 
+								msgW.innerHTML = ends[k];
+								msgC = document.getElementsByClassName('correctMsg')[0]; 
+								$(msgC).removeClass('visible'); 
+								$(msgC).addClass('hidden'); 
+								msgW = document.getElementsByClassName('noMsg')[0]; 
+								$(msgW).removeClass('visible'); 
+								$(msgW).addClass('hidden'); 
+							}
+							break; 
+						}
+						if (found == false){
+							msgW = document.getElementsByClassName('noMsg')[0]; 
+							$(msgW).removeClass('hidden'); 
+							$(msgW).addClass('visible'); 
+						}
+					}
+					if (found == true){
+						var orgiNumber = mapping[k];
+						var url2 = '/quiz/'+ data['quiz_name'] + '/submit/';
+						$.get(url2, {chosen: orgiNumber})
+							.done(function(){
+							});
+					}
+				});							
 				$('.continueButton').click(function(){
 					/*checkbox: not part of the form but appears with the continue button? */
 					/*why not reacting to click?*/
@@ -345,78 +405,6 @@ function startTheSimulation(){
 					}
 							
 				});  
-				$(".quizButton").click(function(){
-									
-					var q= document.getElementsByClassName('quiz')[0]; 
-					var children = q.childNodes; 
-					var radios = []
-					for (var k=2; k<21; k+=3){
-						if (children.length > k + 1){
-							radios.push(children[k]); 
-						}
-					}
-					var found = false; 
-					for (var k=0; k<radios.length-1; k++){
-						if (radios[k].checked){
-							found = true; 
-							if (k == corr){
-								var check = document.getElementById(checkbox);
-								$(check).prop('checked', false); 
-								msgW = document.getElementsByClassName('errorMsg')[0]; 
-								$(msgW).removeClass('visible'); 
-								$(msgW).addClass('hidden'); 
-								msgC = document.getElementsByClassName('correctMsg')[0]; 
-								$(msgC).removeClass('hidden'); 
-								$(msgC).addClass('visible'); 
-								msgW = document.getElementsByClassName('noMsg')[0]; 
-								$(msgW).removeClass('visible'); 
-								$(msgW).addClass('hidden'); 
-								var cont = document.getElementById(contDiv); 
-								$(cont).addClass('visible'); 
-								$(cont).removeClass('hidden');
-								var addInfo = cont.children[0];
-								addInfo.innerHTML += data['end'];
-								var children = document.getElementById(pause).childNodes;
-								for (var l=0; l<children.length; l++){
-									if($(children[l]).hasClass('quiz')){
-										break;
-									}
-								}
-								var formChildren = children[l].childNodes;
-								for (var l=0; l<formChildren.length; l++){
-									if ($(formChildren[l]).hasClass('quizButton')){
-										$(formChildren[l]).addClass('hidden'); 
-										break;
-									}
-								}
-							}
-							else{
-								msgW = document.getElementsByClassName('errorMsg')[0]; 
-								$(msgW).removeClass('hidden'); 
-								$(msgW).addClass('visible'); 
-								msgC = document.getElementsByClassName('correctMsg')[0]; 
-								$(msgC).removeClass('visible'); 
-								$(msgC).addClass('hidden'); 
-								msgW = document.getElementsByClassName('noMsg')[0]; 
-								$(msgW).removeClass('visible'); 
-								$(msgW).addClass('hidden'); 
-							}
-							break; 
-						}
-						if (found == false){
-							msgW = document.getElementsByClassName('noMsg')[0]; 
-							$(msgW).removeClass('hidden'); 
-							$(msgW).addClass('visible'); 
-						}
-					}
-					if (found == true){
-						var orgiNumber = mapping[k];
-						var url2 = '/quiz/'+ data['quiz_name'] + '/submit/';
-						$.get(url2, {chosen: orgiNumber})
-							.done(function(){
-							});
-					}
-				});							
 
 		}); 
 	}	
@@ -771,7 +759,10 @@ function startTheSimulation(){
 	    
 	  
 	  	$(error).removeClass('hidden'); 
-	  	$(error).addClass('visible');     
+	  	$(error).addClass('visible');    
+	        var buts = document.getElementById('onceButtons'); 
+		$(buts).removeClass('visible'); 
+		$(buts).addClass('hidden'); 	
 	      
       	}
       	else{
@@ -1034,20 +1025,23 @@ function startTheSimulation(){
 							i++; 
 							removeContent('unipolarDetails');
 							addContent('unipolarDetails', 'The hegemon\'s powers are declining!');
-							setTimeout(unipolarAlliances, 4000);
+							setTimeout(unipolarAlliances, 500);
 						}
 					}
 					else{
 						var old = document.getElementById('unipolarDetails0');
 						$(old).removeClass('visible');
 						$(old).addClass('hidden');
-						var q = document.getElementById('unipolarWar');
-						$(q).removeClass('hidden');
-						$(q).addClass('visible');
-						if (unipolarWarVisit == false){
+						if (unipolarWarVisit == false && events[j].flags.firstHegemon == true){
+							var q = document.getElementById('unipolarWar');
+							$(q).removeClass('hidden');
+							$(q).addClass('visible');
 							unipolarWarVisit = true;
 							ajaxGetsQuiz('unipolar_war', 'unipolarWarQuiz', 'unipolarWarCont', displayUniPeace, 'unipolarWarCheck');
 					
+						}
+						else if (events[j].flags.firstHegemon == false){
+							displayUniPeace(); 
 						}
 					}
 				}
@@ -1988,7 +1982,6 @@ function startTheSimulation(){
 		}
           
  		function thinkWar(){
-	 		var visitedAlliance = false;
 	 		if (changed == true){
 		 		changed = false;
 		 		events[j].flags.sorted = false; /*this is changed back to false in case this turn is playd again */
@@ -2119,15 +2112,20 @@ function startTheSimulation(){
 						var pause = document.getElementById('alliancePause'); 
 						$(pause).removeClass('hidden'); 
 						$(pause).addClass('visible'); 
+						var expl = document.getElementById('allianceExpl'); 
+						$(expl).addClass('visible'); 
+						$(expl).removeClass('hidden'); 
 						$('#elaborateAlliance').click(function(){
-							var expl = document.getElementById('allianceExpl');
-							$(expl).removeClass('visible'); 
-							$(expl).addClass('hidden');
-							group_name = 'alliance_questions'
-							ajaxGetsQuiz(group_name, 'allianceQuiz', 'allianceCont', updateAlliances, 'allianceCheck');
-							visitedAlliance = true;
-							if (document.getElementById('allianceKnow').checked){
-								allianceKnow = true;
+							if (visitedAlliance == false){
+								var expl = document.getElementById('allianceExpl');
+								$(expl).removeClass('visible'); 
+								$(expl).addClass('hidden');
+								group_name = 'alliance_questions';
+								ajaxGetsQuiz(group_name, 'allianceQuiz', 'allianceCont', updateAlliances, 'allianceCheck');
+								visitedAlliance = true;
+								if (document.getElementById('allianceKnow').checked){
+									allianceKnow = true;
+								}
 							}
 						});	
 					}

@@ -238,7 +238,7 @@
 	 </div>
 	 
 	 <div class = 'story hidden' id = 'updateExplanation'>
- 		<input type ="button" id = 'powerContinue' class = 'visible continueButton'  value='Continue'>
+ 		<input type ="button" id = 'powerContinue' class = 'visible explButton'  value='Continue'>
 	</div>
 	
 
@@ -277,7 +277,7 @@
 			<br>
 			<input type = 'button' class = 'explButton' id = 'elaborateAlliance' value = 'Continue'>
 			<br>
-			<input type = checkbox id = 'allianceKnow'> <span> I do not need to see this explanation again </span>
+			<input type = 'checkbox' id = 'allianceKnow'> <span class = explCheck> I do not need to see this explanation again </span>
 		</div>
 	 	<div id = 'allianceQuiz'> </div>
 	 	<div id = 'allianceCont' class = 'hidden check'>
@@ -299,7 +299,7 @@
 			<br>
 			<input type = 'button' class = 'explButton' id = 'elaborateThinking' value = 'Continue'>
 			<br>
-			<input type = 'checkbox' id = 'thinkingKnow'> <span> I do not need to see this explanation again </span>
+			<input type = 'checkbox' id = 'thinkingKnow'>  <span class = 'explCheck'> I do not need to see this explanation again </span>
 		</div>
 		<div id= 'bipolarThinkingExpl' class = 'hidden theoryExp'>
 			<p> Because there are no complicated systems of alliances it is easier to balance power in a bipolar world </p>
@@ -307,7 +307,7 @@
 			to war against each other </p>
 			<input type = 'button' class = 'explButton' id = 'elaborateThinkingBipolar' value = 'Continue'>
 			<br>
-			<input type = checkbox id = 'bipolarThinkingKnow'> <span> I do not need to see this explanation again </span>
+			<input type = checkbox id = 'bipolarThinkingKnow' > <span class = 'explCheck'> I do not need to see this explanation again </span>
 		</div>
 	 	<div id = 'thinkingQuiz'> </div>
 	 	<div id = 'thinkingCont' class = 'hidden check'>
@@ -322,14 +322,14 @@
  	<div class = 'story hidden' id = 'bipolarAlliances'>
  		<p> The world will be divided into alliances </p>
 		<div id= 'bipolarExp' class = 'visible theoryExp'>
-			<p> States also balance power in a bipolar world.  </p>
-			<p> However, in a bipolar world there are no complicated systems of alliances because weaker states cannot balance the power of 
+			<p> States seek to  balance the power of other powerful states in a bipolar world.  </p>
+			<p> But in a bipolar world, this does not result in complicated systems of alliances because weaker states cannot balance the power of 
 			the stronger states. </p> 
 			<p> In a bipolar world there exists two blocks of alliances, both made up of a stronger bipolar state, and weaker states that are 
 			in the sphere of influence of the stronger state </p>
 			<input type = 'button' class = 'explButton' id = 'elaborateBipolar' value = 'Continue'>
 			<br>
-			<input type = checkbox id = 'bipolarKnow'> <span> I do not need to see this explanation again </span>
+			<input type = checkbox id = 'bipolarKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
 		</div>
 		<div id = 'bipolarQuiz'> </div>
 		<div id = 'bipolarCont' class = 'hidden check'> 
@@ -352,7 +352,7 @@
 			<br>
 			<input type = 'button' class = 'explButton' id = 'elaborateDisin' value = 'Continue'>
 			<br>
-			<input type = 'checkbox' id = 'disinKnow'> <span> I do not need to see this explanation again </span>
+			<input type = 'checkbox' id = 'disinKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
 		</div>
 		<div id = 'disintegrationQuiz'> </div>
 		<div id = 'disintegrationCont' class = 'hidden check'> 
@@ -372,14 +372,14 @@
 			<p> Unipolar worlds have one powerful hegemonic power that holds a large proportion of the power in the world. </p>
 			<p> The weaker states cannot balance the power of hegemonic power in the world. </p>
 			<br>
-			<input type = 'button' class = 'continueButton' id = 'elaborateUnipolar' value = 'Continue'>
+			<input type = 'button' class = 'explButton' id = 'elaborateUnipolar' value = 'Continue'>
 			<br>
-			<input type = 'checkbox' id = 'unipolarKnow'> <span> I do not need to see this explanation again </span>
+			<input type = 'checkbox' id = 'unipolarKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
 		</div>
 		<div id = 'unipolarCont' class = 'hidden check'> 
 		 	<div class = 'explanation'> </div>
 		 	<div class = 'checks'>
-			 	<input type = 'checkbox' class = 'box' id = 'unipolarCheck'> <span class = bored> Do not show me this quiz again </span> <br>
+			 	<input type = 'checkbox' class = 'box' id = 'unipolarCheck'> <span class = 'bored'> Do not show me this quiz again </span> <br>
 				<input type ="button"  class = 'continueButton'  value='Continue'>
 	        	</div>
 	 	</div>
@@ -417,9 +417,9 @@
 			<p> According to Waltz, international politics throughout history is characterised by recurring wars. </p>
 			<p> Even peaceful unipolar worlds will not last forever, and eventually the hegemon begins to lose its powers	</p>
 			<br>
-			<input type = 'button' class = 'continueButton' id = 'elaborateDecline' value = 'Continue'>
+			<input type = 'button' class = 'explButton' id = 'elaborateDecline' value = 'Continue'>
 			<br>
-			<input type = 'checkbox' id = 'declineKnow'> <span> I do not need to see this explanation again </span>
+			<input type = 'checkbox' class = 'box' id = 'declineKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
 		</div>
 		<div id = 'unipolarPowerQuiz'> </div>
 		<div id = 'unipolarPowerCont' class = 'hidden check'> 
@@ -484,7 +484,7 @@
 			<br>
 			<input type = 'button' class = 'explButton' id = 'elaborateUnipolar' value = 'Continue'>
 			<br>
-			<input type = 'checkbox' id = 'unipolarKnow'> <span> I do not need to see this explanation again </span>
+			<input type = 'checkbox' id = 'unipolarKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
 		</div>
 		<div id = 'powerQuiz'> </div>
 		<div id = 'powerCont' class = 'hidden check'> 
