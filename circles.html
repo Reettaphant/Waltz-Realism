@@ -293,8 +293,8 @@
 	 	<p> States are thinking of going to  war</p>
 		<div id= 'thinkingExpl' class = 'hidden theoryExp'>
 			<p>  In a multipolar world, more powerful alliances can attack weaker alliances. </p>
-			<p>Wars are thus more likely to occur if balancing power was not succesful. </p> <p>There are many reasons why balanacing power could fail. 
-			Because Waltz's theory only observes tendencies in the world, sometimes states might decide not to balance the power of the more
+			<p>Wars are thus more likely to occur if balancing power was not succesful. </p> <p>There are many reasons why balanacing power could fail, states can miscalculate the threat that another state poses, or they can not balance the power of a threatening state in the hopes that anohter state will do so.</p> 
+			<p>Because Waltz's theory only observes tendencies in the world, sometimes states might decide not to balance the power of the more
 			powerful states, but might choose to bandwagon with the more powerful staes. </p>	
 			<br>
 			<input type = 'button' class = 'explButton' id = 'elaborateThinking' value = 'Continue'>
@@ -302,9 +302,8 @@
 			<input type = 'checkbox' id = 'thinkingKnow'>  <span class = 'explCheck'> I do not need to see this explanation again </span>
 		</div>
 		<div id= 'bipolarThinkingExpl' class = 'hidden theoryExp'>
-			<p> Because there are no complicated systems of alliances it is easier to balance power in a bipolar world </p>
-			<p> The two alliances in the world are evenly balanced, and there is no motivation for the big bipolar powers to go 
-			to war against each other </p>
+			<p> Waltz argues that it is easier for states to balance power in a bipolar than in a multipolar world, and this makes bipolar worlds relatively peaceful.</p>
+			<p> Balancing power in a bipolar world is easier because the two bipolar power have no choice but to confront each other, and cannot rely on antther state to balance the power of the other. This leads to the formation of two alliances that are even in power, and have no incentives to go to war with each other. </p>
 			<input type = 'button' class = 'explButton' id = 'elaborateThinkingBipolar' value = 'Continue'>
 			<br>
 			<input type = checkbox id = 'bipolarThinkingKnow' > <span class = 'explCheck'> I do not need to see this explanation again </span>
@@ -385,6 +384,30 @@
 	 	</div>
 	</div>
 
+	<div class = 'story hidden' id = 'interventionOver'>
+		<p> The intervention has now finished and the hegemon has withdrawn its troops.
+	</div>
+ 	<div class = 'story hidden' id = 'interventionStory'>
+		<p> The hegemon is intervening in another state  </p>
+		<div id = 'interventionQuiz'> </div>
+		<div id= 'interventionExpl' class = 'hidden theoryExp'>
+			<p> Although the weaker states are not powerful enough to challenge the hegemons' power in the unipolar world, the world is not completely peaceful </p>
+			<p> The hegemon chooses sometimes to intervene militarily in the affairs of other states </p>
+			<br>
+			<input type = 'button' class = 'explButton' id = 'elaborateIntervention' value = 'Continue'>
+			<br>
+			<input type = 'checkbox' id = 'interventionKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
+		</div>
+		<div id = 'interventionCont' class = 'hidden check'> 
+		 	<div class = 'explanation'> </div>
+		 	<div class = 'checks'>
+			 	<input type = 'checkbox' class = 'box' id = 'interventionCheck'> <span class = 'bored'> Do not show me this quiz again </span> <br>
+				<input type ="button"  class = 'continueButton'  value='Continue'>
+	        	</div>
+	 	</div>
+		<div id= interventionDetails> </div>
+	</div>
+
  	<div id= 'unipolarDetails0' class = 'story hidden'> 
  		<p> The hegemonic world order is being established </p>
  	</div>
@@ -413,14 +436,6 @@
  
  	<div class = 'story hidden' id = 'decliningUnipolar'>
  		<p> The hegemon's powers are declining! </p>
-		<div id= 'declineExpl' class = 'hidden theoryExp'>
-			<p> According to Waltz, international politics throughout history is characterised by recurring wars. </p>
-			<p> Even peaceful unipolar worlds will not last forever, and eventually the hegemon begins to lose its powers	</p>
-			<br>
-			<input type = 'button' class = 'explButton' id = 'elaborateDecline' value = 'Continue'>
-			<br>
-			<input type = 'checkbox' class = 'box' id = 'declineKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
-		</div>
 		<div id = 'unipolarPowerQuiz'> </div>
 		<div id = 'unipolarPowerCont' class = 'hidden check'> 
 		 	<div class = 'explanation'> </div>
@@ -441,6 +456,7 @@
 	<div id = 'multipolarEnd' class = 'story end hidden'> The world is no longer multipolar.  Before clicking to see the next turn, look at the power distributions in the world, and try to determine the new polarity of the world </div>
 	<div id = 'bipolarEnd' class = 'story end hidden'> Before clicking to see the next turn, look at the power distributions in the world, and try to determine the new polarity of the world </div>
 	<div class = 'story hidden' id = 'bipolarWar'>
+		<p> A war is being fought in the bipolar world. </p>
   		<div id= 'bipolarWarDetails' class = 'substory'> </div>
  		<div id= 'bipolarWarDetails2'> </div>
 	</div>
@@ -478,13 +494,14 @@
 
  	<div class = 'story hidden' id = 'updatePowers'>
 		<p> The powers of states are now updating </p>
-		<div id= 'unipolarExpl' class = 'hidden theoryExp'>
-			<p> Unipolar worlds have one powerful hegemonic power that holds a large proportion of the power in the world. </p>
-			<p> The weaker states cannot balance the power of hegemonic power in the world. </p>
+		<div id= 'powerExpl' class = 'hidden theoryExp'>
+			<p> Joining an alliances is not the only way in which a state can improve its standing in the world, this can happen in other ways as well</p>
+			<p> Increases in economic resources, population growth, technological innovation or the existence of natural resources can all be translated into military power. This means that a state's power can also grow during peaceful times. </p>
+			<p> To simplify the factors that contribute to the growth of a state's power, in this simulation the probability that a state's powers will grow is calculated using to factors: the states territorial and intellectual advantage. You can find out what these values are for a state by hovering over that state with your mouse.
 			<br>
-			<input type = 'button' class = 'explButton' id = 'elaborateUnipolar' value = 'Continue'>
+			<input type = 'button' class = 'explButton elaboratePower'  value = 'Continue'>
 			<br>
-			<input type = 'checkbox' id = 'unipolarKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
+			<input type = 'checkbox' id = 'powerKnow'> <span class = 'powerCheck'> I do not need to see this explanation again </span>
 		</div>
 		<div id = 'powerQuiz'> </div>
 		<div id = 'powerCont' class = 'hidden check'> 
@@ -496,12 +513,54 @@
 		</div>
 	</div>
 
+ 	<div class = 'story hidden' id = 'updateBipolarPowers'>
+		<p> The powers of states are now updating </p>
+		<div id= 'bipolarPowerExpl' class = 'hidden theoryExp'>
+			<p> The two bipolar powers will both try to gain as much power as possible. They do this because they do not want the other to grow too powerful.</p>
+			<p> The bipolar powers do not have to engage in conflicts to gain this power, but internal factors such as economic growth and innovation can contribute to the growth in a state's power during peaceuful times. </p>
+			<br>
+			<input type = 'button' class = 'explButton elaboratePower' value = 'Continue'>
+			<br>
+			<input type = 'checkbox' id = 'bipolarPowerKnow'> <span class = 'powerCheck'> I do not need to see this explanation again </span>
+		</div>
+		<div id = 'bipolarPowerQuiz'> </div>
+		<div id = 'bipolarPowerCont' class = 'hidden check'> 
+		 	<div class = 'explanation'> </div>
+		 	<div class = 'checks'>
+			 	<input type = 'checkbox' class = 'box' id = 'bipolarPowerCheck'> <span class = bored> Do not show me this quiz again </span> <br>
+				<input type ="button"  class = 'continueButton'  value='Continue'>
+			</div>
+		</div>
+	</div>
+ 	<div class = 'story hidden' id = 'updateUnipolarPowers'>
+		<p> The powers of states are now updating </p>
+		<div id= 'unipolarPowerExpl' class = 'hidden theoryExp'>
+			<p> The weaker states in a unipolar world can slowly begin to gain power.</p>
+			<p> This can happen through, for example, population growth, economic growth and technological innovation.</p>
+			<p> In this simulation, the probability of a state gaining power is calculated using two numbers, the state's intellectual and the state's territorial advantage. You can see these scores for each state by hovering on top of that states. </p>
+			<br>
+			<input type = 'button' class = 'explButton elaboratePower'  value = 'Continue'>
+			<br>
+			<input type = 'checkbox' id = 'unipolarPowerKnow'> <span class = 'powerCheck'> I do not need to see this explanation again </span>
+		</div>
+		<div id = 'unipolarUpdateQuiz'> </div>
+		<div id = 'unipolarUpdateCont' class = 'hidden check'> 
+		 	<div class = 'explanation'> </div>
+		 	<div class = 'checks'>
+			 	<input type = 'checkbox' class = 'box' id = 'unipolarUpdateCheck'> <span class = bored> Do not show me this quiz again </span> <br>
+				<input type ="button"  class = 'continueButton'  value='Continue'>
+			</div>
+		</div>
+	</div>
 
  	<div class = 'story hidden' id = 'updatingPowers'>
 		<p> The powers of states are now updating </p>
  		<div id= 'powerDetails' class = 'substory'> </div>
 	</div>
-
+	
+	<div class = 'story hidden' id = 'noMoreBipolar'>
+		<p> The world is no longer bipolar. </p>
+	</div>
  	<div class = 'story hidden' id = 'peaceful'>
  		<p> Balancing power was succesful and there was no war this time </p>
  		<div id= 'peaceDetails' class = 'substory'> </div>
@@ -519,6 +578,15 @@
  
 	<div class = 'story hidden' id = 'systemicWar'>
  		<p> War is escalating into a systemic war </p>
+		<div id= 'escalationExpl' class = 'hidden theoryExp'>
+			<p> Sometimes wars in a multipolar world can escalate into systemic wars. Systemic wars are wars that involve all or almost all of the states in the system. </p>
+			<p> Wars can escalate because there are large alliances in the world, and if two alliances go to war with each other, this means that all, or almost all, states will be fighting each other </p>.
+			<p> Wars can also escalate because other alliances in the world decide that it is in their interests to join the war. </p>
+			<br>
+			<input type = 'button' class = 'explButton' id = 'elaborateEscalation' value = 'Continue'>
+			<br>
+			<input type = 'checkbox' id = 'escalationKnow'> <span class = 'escalationCheck'> I do not need to see this explanation again </span>
+		</div>
 	 	<div id = 'escalationQuiz'> </div>
 	 	<div id = 'escalationCont' class = 'hidden check'>
 		 	<div class = 'explanation'> </div>

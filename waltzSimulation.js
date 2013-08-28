@@ -68,14 +68,16 @@
 	 	this.updatedPower = false;
 	 	this.spheres = [[],[]];
 	 	this.hegemon = 0; 
-	 	this.decliningHegemon = false; 
+	 	this.challenger  =0; 
+		this.decliningHegemon = false; 
 	 	this.firstHegemon = false; 
 	 	this.perfectBalancing = false;
 	 	this.scaled = false; 
 	 	this.worldWar = false; 
 	 	this.bipolarChange = false; 
 	 	this.unipolarChange = false; 
-	        this.multipolarCounter = 0;	
+	        this.multipolarCounter = 0;
+		this.bipState = 0; 	
      }
      
      World.prototype = {
@@ -108,14 +110,15 @@
     		}
 		},
 		
-    	update: function(){
+
+	update: function(){
 	    	addContent('updating world'); 
 	    	if (h>0){
 		    	addContent('with polarity ' + 	this.polarity[this.polarity.length-1] + ' and with history ' + this.worldHistory[this.worldHistory.length-1]); 
 	    	}
 	    	this.updatedPower = false; 
 	    	this.scaled = false; 
-	    	if (this.polarity[this.polarity.length-1] != 'bipolar' && this.worldHistory[this.worldHistory.length-1] == 'peaceful' && h != 0){
+	    	if (this.polarity[this.polarity.length-1] == 'multipolar' && this.worldHistory[this.worldHistory.length-1] == 'peaceful' && h != 0){
 		    	addContent('now assessing world update'); 
 			for (var k=0; k < world.states.length; k++){
 				var current = world.states[k]; 
@@ -144,7 +147,6 @@
 				}
 				
 			    }
-		    	}
 			for (var k=0; k<world.states.length; k++){
 				var current = world.states[k]; 
 				if (current.decliningHegemon == true && this.worldHistory[this.worldHistory.lenght-1] != 'systemic change' && this.polarity == 'multipolar'){
@@ -152,6 +154,50 @@
 					current.noWin = true;
 				}
 			}
+		    	}
+			if (this.polarity[this.polarity.length-1] == 'unipolar' && this.polarity.length != 1){
+				this.updatedPower = true; 
+				var k; 
+				var greatestProb = 0; 
+				var challenger; 
+				for (k=0; k<this.states.length; k++){
+					if (this.states[k].label != this.hegemon){
+						var prob = this.states[k].territory + this.states[k].innovation; 
+						if (prob > greatestProb){
+							greatestProb = prob;
+							challenger = this.states[k]; 
+						}
+					}
+				}
+				this.challenger = challenger.label;
+				if (challenger.power < 4){
+					challenger.addPower(7); 
+				}
+				else{
+					challenger.addPower(Math.floor(challenger.power * 0.75)+1);
+				for (k=0; k<this.states.length; k++){
+					if (this.states[k].label != this.hegemon && this.states[k] != this.challenger){
+						var prob = this.states[k].getProbability(); 
+						if (prob > 2*Math.random()){
+								this.states[k].addPower(1); 
+							}
+						}
+						else if (prob > Math.random()){
+							this.states[k].addPower(Math.round(0.10 * this.states[k].power)); 
+							this.updatedPower = true;
+						}	
+						
+					}
+				}	
+
+			}
+			if (this.polarity[this.polarity.length -1] == 'bipolar' && this.polarity[this.polarity.length -2] == 'bipolar'){
+				this.updatedPower = true;
+				this.states.sort(stateSort);
+			       	this.states[0].addPower(Math.round(0.10* this.states[0].power));
+				this.states[1].addPower(Math.round(0.10*this.states[1].power));	
+			}
+
 		
 		
     		},
@@ -170,7 +216,7 @@
 		setPolarity: function(){
 			function assessPolarity(){
 				addContent('assessing polarity'); 
-				if (strongest.power >= totalPower * 0.55 && (strongest.power - secondStrongest.power >= 0.3 * totalPower) ){
+				if (strongest.power >= totalPower * 0.50 && (strongest.power - secondStrongest.power >= 0.3 * totalPower) ){
 						hegemon = strongest.label;
 						return 'unipolar';
 				}
@@ -232,7 +278,7 @@
 					coalitionNumber =3; 
 				}
 				else{
-					coalitionNumber = (Math.floor((states.length-1)/3) + 2); 
+					coalitionNumber = (Math.floor((states.length-1)/3) + 1); 
 				}
 				for (var j=0; j<coalitionNumber; j++){
 					var coal = new Coalition([new State(0, 'dummy', 0, 0)]);
@@ -439,6 +485,31 @@
 	
 	War.prototype = {
 		calculateWar: function(){
+			function calculateUnipolarWar(){
+				/*need to make sure that states and hege is defined 
+				 * also check if state labels start from 1 or from 0 and 
+				 * make appropriate adjustments*/
+				var k; 
+				var currentHege;
+				for (k=0; k<states.length; k++){
+					if (states[k].label == hegemon){
+						state[k] = currentHege;
+					}
+				}
+				var randNum; 
+				
+				while (true){
+					randNum = Math.floor(random.random() * states.length); 
+					if (randNum !=hegemon){
+						break;		
+					}
+				}
+				var defender = states[randNum]; 
+				war = [[currentHege], defender]; 
+				return war; 
+				
+
+			}
 			function calculateMultipolarWar(){
 				var isWar = false; 
 				addContent('calculating multipolar war'); 
@@ -489,16 +560,17 @@
 							break; 
 						}
 					}
-					var found = false;
+					var notWar = 0;
 					if(wars != 0){
 						for (var k =0; k<coalitionCounter.length; k++){
 							if	(coalitionCounter[k].atWar == false){
 									notInWar.push(coalitionCounter[k]);	
-									found = true; 
+									notWar += 1; 
 							}
 						}
 					
-						if (found == false){
+						if ((coalitionCounter.lenght <=3 && notWar == 0) || (coalitionCounter.length > 3 && notWar <2)){
+							alert('escalate because all fighting'); 
 							wars[2]=true;
 							worldWar = true; 
 							addContent('escalated into systemic becasue everyone was fighting'); 
@@ -565,79 +637,65 @@
 			if (bipolarCounter == 0){
 				return false;
 			}
-			else if ((x < 0.2 || bipolarCounter == 1) && spheres[0].length > 1 && spheres[1].length > 1){/*changed from 0.2 */ 
+			else if (((bipolarCounter == 2 && x<0.5) || bipolarCounter == 1 ) && spheres[0].length > 1 && spheres[1].length > 1){ 
 				bipolarWar = true; 
 				var sph1=[]; 
 				var sph2=[]; 
 				var power1 = spheres[0][0]; 
 				var power2 = spheres[1][0];
-				for (var k=1; k<spheres[0].length; k++){
-					sph1.push(spheres[0][k]); 
-				}
-				for (var k=1; k<spheres[1].length; k++){
-					sph2.push(spheres[1][k]); 
-				}	
-				var sph1Power = 0; 
-				var sph2Power = 0; 
 				for (var k=0; k<spheres[0].length; k++){
-					sph1Power += spheres[0][k].power; 	
+					sph1.push(spheres[0][k]);
 				}
 				for (var k=0; k<spheres[1].length; k++){
-					sph2Power += spheres[1][k].power; 	
+					sph2.push(spheres[1][k]); 
 				}
-				var num1 = Math.floor(Math.random() * sph1.length);
-				var num2 = Math.floor(Math.random() * sph2.length)
-				var state1 = sph1[num1]; 
-				var state2 = sph2[num2]; 
-				limitedWar = [[power1.label, state1.label], [power2.label, state2.label]]; 
-				if (state1.power >= state2.power && sph1.power >= sph2.power){
-					state1Won = true; 	
+				while (true){
+					var num = Math.floor(Math.random() * (states.length));
+					bipState = states[num]; 
+					var found = false; 
+					for (var k=0; k<sph1.length; k++){
+						if (sph1[k] == bipState){
+							found = true
+						}
+					}
+					if (found == false){
+						for (var k=0; k<sph2.length; k++){
+							if (sph2[k] == bipState){
+								found = true; 
+							}
+						}
+					}
+					if (found == false){	
+						break;
+					}					
 				}
-				else if (state2.power >= state1.power && sph2.power >= sph1.power){
-					State1Won = false; 
-				}
-				else if (Math.random() < 0.5){
-					State1Won = true; 	
-				}
+				limitedWar = [[power1.label, power2.label], [bipState.label]];
+				if (Math.random()<0.5){
+					/*need to push the state to a sphere, do this in animation as well */
+					state1Won = true; 
+				}	
 				else{
 					State1Won = false; 	
 				}
-                if (state1Won == true){
-	                power1.addPower(Math.round(0.05 * power1.power)); 
-	                state1.addPower(Math.round(0.1*state1.power)); 
-	            	power2.addPower(Math.round(-0.02 * power2.power)); 
-	            	changedStates.push([state1.power, parseInt(state1.label)]);
-	            	changedStates.push([power1.power, parseInt(power1.label)]); 
-	            	changedStates.push([power2.power, parseInt(power2.label)]);
-	            	if (state2.power >= 2){
-		            	state2.addPower(Math.round(-0.2 * state2.power()));
-		            	changedStates.push([state2.power, parseInt(state2.label)]);  
-	            	}
-		            else{
-			         	changedStates.push([state1.power, parseInt(state1.label)]);
-		            }	
-		            return true; 	
+                		if (state1Won == true){
+	                		power1.addPower(Math.round(0.05 * power1.power)); 
+	            			power2.addPower(Math.round(-0.02 * power2.power)); 
+	            			changedStates.push([power1.power, parseInt(power1.label)]); 
+	            			changedStates.push([power2.power, parseInt(power2.label)]);
+		    			return true; 	
 		            	
-	            	} 
-	            else{
-	            	power1.addPower(Math.round(-0.02 * power1.power));
-	            	changedStates.push([state2.power, parseInt(state2.label)]);
-	            	changedStates.push([power2.power, parseInt(power2.label)]);
-	            	changedStates.push([power1.power, parseInt(power1.label)]); 
-	            	if (state1.power >= 2){
-		            	state1.addPower(Math.round(-0.2 * state1.power)); 
-		            	changedStates.push([state1.power, parseInt(state1.label)]);
-	            	} 
-		            else{
-			         	changedStates.push([state1.power, parseInt(state1.label)]);
-		            }	
-		            power2.addPower(Math.round(0.05 * power2.power)); 
-	            	state2.addPower(Math.round(0.1*state2.power)); 
-		            return true; 	
+	           		} 
+
+	            		else{
+					power1.addPower(Math.round(-0.02 * power1.power));
+					power2.addPower(Math.round(0.05 * power2.power)); 
+					changedStates.push([power2.power, parseInt(power2.label)]);
+					changedStates.push([power1.power, parseInt(power1.label)]); 
+				    	return true; 	
 		            	
 	            	}
             	}
-	            return false;  
+	
             }
 		if (this.world.polarity[this.world.polarity.length -1] == 'multipolar'){
 			var wars =0; 
@@ -667,14 +725,12 @@
 			var age = this.world.polarity.length;
 			var changedStates = this.changedStates; 
 			if (this.world.polarity[age -1] == 'unipolar'){
-				if (age >=4){
-					if(this.world.polarity[age-4]== 'unipolar' && this.world.polarity[age-3]== 'unipolar' && this.world.polarity[age-2] == 'unipolar' && this.world.polarity[age-1] == 'unipolar'){
-						if (Math.random() < 0.95){
-							this.world.states[0].addPower(Math.round(-1 * this.world.states[0].power/4)); 
-							this.changedStates.push([this.world.states[0].power, parseInt(this.world.states[0].label)]);
-							this.world.states[0].decliningHegemon= true;	
-							this.world.decliningHegemon = true; 
-						}	
+				if (age >=3){
+					if(this.world.polarity[age-3] == 'unipolar' && this.world.polarity[age-2] == 'unipolar' && this.world.polarity[age-1] == 'unipolar'){
+						this.world.states[0].addPower(Math.round(-1 * this.world.states[0].power/4)); 
+						this.changedStates.push([this.world.states[0].power, parseInt(this.world.states[0].label)]);
+						this.world.states[0].decliningHegemon= true;	
+						this.world.decliningHegemon = true; 
 					}
 				}	
 				if (this.world.states[0].power > 0.5 * this.world.getTotalPower()){
@@ -691,24 +747,37 @@
 					addContent('now assessing whether bipolar decline because age was big enough'); 
 					if(this.world.polarity[age-4]== 'bipolar' && this.world.polarity[age-3]== 'bipolar' &&  this.world.polarity[age-2]== 'bipolar' &&  this.world.polarity[age-1]== 'bipolar'){
 						addContent('polarities bipolar, now assessing decline'); 
-						var decCounter = 0; 
-						for (var k =0; k<2; k++){
-							var prob = Math.random()
-							if (prob < 0.4){
-								decCounter += 1;  
-								changed = true; 
-								this.world.states[k].addPower(Math.round(-1*this.world.states[k].power * (5/6))); 
-								this.changedStates.push([this.world.states[k].power, parseInt(this.world.states[k].label)]); 
-								if (this.world.states[k].power != 0){
-									if (Math.random() < 1 && this.world.states.length < 15){ 
-										var label = getStateName(this.world.states); 
-										this.changedStates.push([Math.round(this.world.states[k].power * 0.8), parseInt(label)]);  
-										addContent('pushed a new state from bipolar disintegration, with power: ' + Math.round(this.world.states[k].power * 0.2) + ' and with label ' + label); 
-										this.world.states.push(new State(Math.round(this.world.states[k].power * 0.8), label, this.world.states[k].territory, this.world.states[k].innovation));
-									}
-								}	
-							} 	
-						}	
+						var decCounter = 0;
+					       	var prob; 	
+						if (previously == 'unipolar'){
+							prob = 1;
+						}
+						else if (previously == 'multipolar'){
+							prob =2
+						}
+						else{	
+							if (Math.random() < 0.5){
+								prob = 1; 		
+							}
+							else{
+								prob = 2
+							}
+						}
+						for (var k=0; k < prob; k++){
+							decCounter += 1;  
+							changed = true; 
+							this.world.states[k].addPower(Math.round(-1*this.world.states[k].power * (5/6))); 
+							this.changedStates.push([this.world.states[k].power, parseInt(this.world.states[k].label)]); 
+							if (this.world.states[k].power != 0){
+								if (Math.random() < 1 && this.world.states.length < 15){ 
+									var label = getStateName(this.world.states); 
+									this.changedStates.push([Math.round(this.world.states[k].power * 0.8), parseInt(label)]);  
+									addContent('pushed a new state from bipolar disintegration, with power: ' + Math.round(this.world.states[k].power * 0.2) + ' and with label ' + label); 
+									this.world.states.push(new State(Math.round(this.world.states[k].power * 0.8), label, this.world.states[k].territory, this.world.states[k].innovation));
+								}
+							}	
+						} 	
+						
 					}
 				}
 				if (changed == true){
@@ -722,13 +791,22 @@
 				}
 				else{
 					var state1Won; 
-					spheres = this.world.spheres; 
-					var bipWar = calculateBipolarWar(); 
+					var bipState; 
+					var spheres = this.world.spheres;
+				        var states = this.world.states; 	
+					var bipWar = calculateBipolarWar();
+				       	this.world.bipState = bipState; 	
 					if (bipWar == true){
 						this.limitedWar = limitedWar;
 						this.world.worldHistory.push('bipolar war'); 
 						if(state1Won == true){
+							alert('pushed ' + bipState.label);
+							this.world.spheres[0].push(bipState); 
 							this.didAttackerWin = true; 	
+						}
+						else{
+							alert('pushed ' + bipState.label); 
+							this.world.spheres[1].push(bipState); 
 						}
 					}
 					else{
@@ -977,7 +1055,6 @@
 				var sphere2 = [secondStrongest]; 
 				var sphere2Power = secondStrongest.power; 
 				var sphere1Power =  strongest.power; 
-				halfPower = Math.round(totalPower/2); 
 				for (var k =0; k<coalitions.length; k++){
 					for (var j=0; j<coalitions[k].length; j++){
 						if (coalitions[k][j]== strongest){
@@ -988,13 +1065,11 @@
 						}
 					}	
 				}
+				states.sort(stateSort); 
 				if (strongestCoal == secondStrongestCoal){
-					for (var k=0; k<states.length; k++){
-						
+					for (var k=2; k<states.length-3; k++){
 						var state = states[k]; 
-						if(state != strongest && state != secondStrongest){
-							addContent('now looking at state ' + state.label + 'and power if added  to sph2 is ' + state.power+'+'+sphere2Power); 
-							if (sphere2Power + state.power <= halfPower){
+							if ((sphere2.length < (states.length-3)/2)){
 								sphere2.push(state); 
 								sphere2Power += state.power; 	
 								addContent('added state to sph2'); 
@@ -1005,6 +1080,7 @@
 						}	
 					}	
 					return [sphere1, sphere2]; 		
+				
 				}
 				else{
 					for (var k=0; k<secondStrongestCoal.length; k++){
@@ -1052,22 +1128,25 @@
 			}
 		}
 	
-	}
+	
 		
 		function unipolarChange(){
 			totalPower = strongest.power; 
 			for (var k=0; k<numOfStates; k++){
 				if (states[k] != strongest){
 					var decliningState = states[k]; 
-					if (decliningState.power >=3){
-					decliningState.addPower(Math.round(decliningState.power * -0.2));
+					if (decliningState.power >=5){
+					decliningState.addPower(Math.round(decliningState.power * -0.7));
+					}
+					else{
+						decliningState.power = 1; 
 					}
 					changedStates.push([decliningState.power, parseInt(decliningState.label)]); 
 					totalPower += decliningState.power; 
 				}
 			}	
 			
-			var powerNeeded = Math.round((5/2) * (0.5 * totalPower * 2 - strongest.power)); 
+			var powerNeeded = Math.round((5/2) * (0.6 * totalPower * 2 - strongest.power)); 
 			if (strongest.power < powerNeeded){
 				strongest.addPower(powerNeeded); 	
 				changedStates.push([strongest.power, parseInt(strongest.label)]); 
@@ -1231,7 +1310,8 @@
 		  this.flags = {'limitedChange' : false, 'skipScaling' : false, 'didAttackerWin' : false, 'perfectBalancing' : false, 'powersUpdated' : false, 'decliningHegemon' : false, 'scaledDown' : false, 'firstHegemon' : false, 'worldWar' : false, 'sorted' : false}
 		  this.endPolarity = ''
 		  this.spheres = []
-		  this.hegemon = 0; 
+		  this.hegemon = 0;
+		  this.meddled = NaN; 
 	  }
     
 	 if (continuationOfOld == false){
@@ -1280,7 +1360,7 @@
  		}
 	 	world.update(); 
 	 	if (world.updatedPower == true){
-		 	world.updatedPower = false; 
+		 	world.updatedPower = false;
 		 	turn.flags.powersUpdated = true; 	
 	 	}
 		
@@ -1296,6 +1376,7 @@
 	 	turn.polarity = world.polarity[world.polarity.length - 1];
 	 	if (turn.polarity == 'unipolar' && h == 0){
 		 	turn.flags.firstHegemon = true; 
+
 	 	}
 	 	else if (h>0){
 		 	if (events[h-1].polarity != 'unipolar'){
@@ -1308,28 +1389,35 @@
 	 	
 	 
 	 	if (turn.polarity == 'bipolar'){
-		 	function sortIntoSpheres(){ 
-			 	world.states.sort(stateSort); 
+		 	function sortIntoSpheres(){
+			 	world.states.sort(stateSort);
+			        var stateNum = (world.states.length-3)/2;	
 				var str1 = world.states[0];
 				var str2 = world.states[1]; 
-				var pwr1 = str1.power; 
 				var sphs = [[str1.label], [str2.label]];
 				world.spheres = [[str1], [str2]]; 
-				var half = Math.round(world.getTotalPower()/2); 
-				for (var k=2; k< world.states.length; k++){
-					if (pwr1 < half){
-						sphs[0].push(world.states[k].label); 
-						
-						world.spheres[0].push(world.states[k]); 
-						pwr1 += world.states[k].power; 
+				for (var k=2; k< world.states.length-3; k++){
+					if (Math.random() <= 0.5){
+					       	if (sphs[0].length < stateNum){
+							sphs[0].push(world.states[k].label); 
+							world.spheres[0].push(world.states[k]); 
+						}
+						else{
+							sphs[1].push(world.states[k].label); 
+							world.spheres[1].push(world.states[k]); 	
+						}
 					}
 					else{
-						sphs[1].push(world.states[k].label); 
-						
-						world.spheres[1].push(world.states[k]); 	
+						if (sphs[1].length < stateNum){
+							sphs[1].push(world.states[k].label); 
+							world.spheres[1].push(world.states[k]); 
+						}
+						else{
+							sphs[0].push(world.states[k].label); 
+							world.spheres[0].push(world.states[k]); 
+						}	
 					}
 				}
-				
 				
 				return sphs; 
 		 	};
@@ -1338,30 +1426,30 @@
 				turn.spheres = sortIntoSpheres(); 	
 				turn.flags.sorted = false; 
 	 		}
-	 		else if (events[h-1].flags.limitedChange == true){
+	 		else if (events[h-1].flags.limitedChange == true || events[h-1].polarity == 'unipolar'){
 				turn.spheres = sortIntoSpheres(); 	
 				turn.flags.sorted = false; 
 	 		}
 	 		else{
-		 		if (events[h-1].polarity != 'bipolar'){
-		 			var spheres1 = []; 
-		 			var spheres2 =[]; 
-		 			for (var k=0; k< world.spheres[0].length; k++){
-			 			spheres1.push(world.spheres[0][k].label); 	
-		 			}
-		 			for (var k=0; k< world.spheres[1].length; k++){
-			 			spheres2.push(world.spheres[1][k].label); 	
-		 			}
-		 			turn.spheres = [spheres1, spheres2]; 
-		 			turn.flags.sorted = false; 
-	 			}
-	 		else{
-		 		turn.flags.sorted= true; 
-		 		turn.spheres = events[h-1].spheres; 	
-	 		}
- 		}
-	}
-	 	
+				var spheres1 = []; 
+				var spheres2 =[]; 
+				for (var k=0; k< world.spheres[0].length; k++){
+					spheres1.push(world.spheres[0][k].label); 	
+				}
+				for (var k=0; k< world.spheres[1].length; k++){
+					spheres2.push(world.spheres[1][k].label); 	
+				}
+				turn.spheres = [spheres1, spheres2]; 
+			}
+			if (world.polarity[world.polarity.length-2] != 'bipolar'){
+				alert('setting flags.sorted to false'); 
+				turn.flags.sorted = false; 
+			}
+			else{
+				turn.flags.sorted = true;
+			}
+		}
+	
 	 	if (turn.polarity == 'unipolar'){
 		 	if (h == 0){
 			 	turn.hegemon = world.hegemon; 
@@ -1424,6 +1512,14 @@
      	else if (world.worldHistory[h] == 'bipolar war'){
 	    	turn.flags.didAttackerWin = testWar.didAttackerWin; 
      	}
+	if (world.polarity[world.polarity.length-1] == 'bipolar' && turn.war != 0){
+		if (testWar.didAttackerWin == true){
+			turn.spheres[0].push(world.bipState); 
+		}	
+		else{
+			turn.spheres[1].push(world.bipState); 
+		}
+	}
      	testWar.updateWorld(); 
      	turn.changedStates = testWar.changedStates.slice(); 
      	addContent('changed states : '); 
@@ -1433,10 +1529,18 @@
      	turn.hegemon = world.hegemon; 
  
 	if (world.decliningHegemon == true){
-		alert('setting dec heg to true');
 		world.decliningHegemon = false;
-		turn.flags.decliningHegemon = true; 	
+		turn.flags.decliningHegemon = true;
+		var randNum; 
+		while (true){
+			randNum = Math.floor(Math.random() * (world.states.length-1) + 1); 
+			if (randNum !=world.hegemon && randNum != world.challenger){
+				break;		
+			}
+		}
+		turn.meddled = randNum;  	
 	}
+
 	    if (turn.polarity == 'multipolar' || (turn.polarity == 'bipolar' && world.worldHistory[world.worldHistory.length-1] == 'systemic change')|| (turn.polarity == 'unipolar' && turn.flags.decliningHegemon == true)){
      		world.setPolarity(); 
      		turn.endPolarity = world.polarity[world.polarity.length-1];
