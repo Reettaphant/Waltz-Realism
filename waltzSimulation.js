@@ -1,4 +1,4 @@
-
+/*Copyright Reetta Vaahtoranta. All rights reserved */
  
  function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorld, lastEvent, previously, bipolarCounter){
 	 
@@ -76,7 +76,8 @@
 	 	this.worldWar = false; 
 	 	this.bipolarChange = false; 
 	 	this.unipolarChange = false; 
-	        this.multipolarCounter = 0;
+	        this.buckPass = false; 
+		this.multipolarCounter = 0;
 		this.bipState = 0; 	
      }
      
@@ -155,7 +156,7 @@
 				}
 			}
 		    	}
-			if (this.polarity[this.polarity.length-1] == 'unipolar' && this.polarity.length != 1){
+			if (this.polarity[this.polarity.length-1] == 'unipolar' && this.polarity[this.polarity.length-2] == 'unipolar'){
 				this.updatedPower = true; 
 				var k; 
 				var greatestProb = 0; 
@@ -196,6 +197,12 @@
 				this.states.sort(stateSort);
 			       	this.states[0].addPower(Math.round(0.10* this.states[0].power));
 				this.states[1].addPower(Math.round(0.10*this.states[1].power));	
+				for (var k=0; k<world.states.length; k++){
+					if (world.states[k].decliningHegemon == true){
+						world.states[k].decliningHegemon = false;
+					        worls.decliningHegemin = false; 	
+					}
+				}	
 			}
 
 		
@@ -278,7 +285,7 @@
 					coalitionNumber =3; 
 				}
 				else{
-					coalitionNumber = (Math.floor((states.length-1)/3) + 1); 
+					coalitionNumber = (Math.round((states.length-1)/3)+2); 
 				}
 				for (var j=0; j<coalitionNumber; j++){
 					var coal = new Coalition([new State(0, 'dummy', 0, 0)]);
@@ -420,8 +427,18 @@
 					this.coalitions = coalitions; 
 					addContent('length of coalitions now ' + this.coalitions.length); 
 					for (var k=0; k<coalitions.length; k++){
+							if (coalitions[k].states.length == 1){
+								alert('there is a coalition of only one state with power ' + coalitions[k].power);
+								var without = (this.getTotalPower() - coalitions[k].power)/(coalitions.length-1);
+							        alert('ave coal power withotu ' + without);
+								if (without > coalitions[k].power+3){
+									this.buckPass = [k+1, coalitions[k].states[0].label-1];
+									alert('buckPass for coalition ' + this.buckPass);
+								}
+							}
 							var stateLabel = [];
 							for (var j=0; j<coalitions[k].states.length; j++){
+
 								stateLabel.push(coalitions[k].states[j].label); 
 							}
 							this.animCoalitions.push(stateLabel); 
@@ -524,7 +541,15 @@
 					coalitions.splice[coalitions.length-1, 1]; 
 				}
 				
-				if (world.perfectBalancing == false){
+				if (world.perfectBalancing == false && multipolarCounter != 0){
+					var prob;
+					if (multipolarCounter < 3){
+						prob = 0.5;
+					}
+					else{
+						prob = 0.95;
+					}
+
 					for (var k=0; k<coalitions.length; k++){
 						var num = Math.floor(Math.random() * coalitions.length);
 						currentCoalition = coalitions[num];
@@ -537,7 +562,7 @@
 								var powerDifference = attackPower - defencePower; 
 								if (powerDifference >= 0){
 									var prob = (0.25 + (2*powerDifference)/(defencePower+attackPower));
-                           			if (Math.random() < 0.50 + (2*powerDifference)/(defencePower+attackPower)){ 
+                           			if (Math.random() < prob + (2*powerDifference)/(defencePower+attackPower)){ 
 	                           			isWar = true; 
 	                           			wars=[[currentCoalition], [testCoal], false]; 
 	                           			currentCoalition.atWar = true; 
@@ -570,7 +595,6 @@
 						}
 					
 						if ((coalitionCounter.lenght <=3 && notWar == 0) || (coalitionCounter.length > 3 && notWar <2)){
-							alert('escalate because all fighting'); 
 							wars[2]=true;
 							worldWar = true; 
 							addContent('escalated into systemic becasue everyone was fighting'); 
@@ -578,7 +602,7 @@
 						}
 						else{
 							var escProb = Math.random();
-							if ((escProb<0.25 && multipolarCounter != 0)|| multipolarCounter >= 3){ /*changed from 0,25*/
+							if ((escProb<0.25 )|| multipolarCounter >= 3){ /*changed from 0,25*/
 								addContent('escalated into systemic because other states joined'); 
 								wars[2]=true; 
 								worldWar = true; 
@@ -727,7 +751,7 @@
 			if (this.world.polarity[age -1] == 'unipolar'){
 				if (age >=3){
 					if(this.world.polarity[age-3] == 'unipolar' && this.world.polarity[age-2] == 'unipolar' && this.world.polarity[age-1] == 'unipolar'){
-						this.world.states[0].addPower(Math.round(-1 * this.world.states[0].power/4)); 
+						this.world.states[0].addPower(Math.round(-1 * this.world.states[0].power/(3.5))); 
 						this.changedStates.push([this.world.states[0].power, parseInt(this.world.states[0].label)]);
 						this.world.states[0].decliningHegemon= true;	
 						this.world.decliningHegemon = true; 
@@ -748,12 +772,13 @@
 					if(this.world.polarity[age-4]== 'bipolar' && this.world.polarity[age-3]== 'bipolar' &&  this.world.polarity[age-2]== 'bipolar' &&  this.world.polarity[age-1]== 'bipolar'){
 						addContent('polarities bipolar, now assessing decline'); 
 						var decCounter = 0;
-					       	var prob; 	
+					       	var prob;
+						/*these probs the other way round when finished debugging*/	
 						if (previously == 'unipolar'){
-							prob = 1;
+							prob = 2;
 						}
 						else if (previously == 'multipolar'){
-							prob =2
+							prob =1
 						}
 						else{	
 							if (Math.random() < 0.5){
@@ -769,7 +794,7 @@
 							this.world.states[k].addPower(Math.round(-1*this.world.states[k].power * (5/6))); 
 							this.changedStates.push([this.world.states[k].power, parseInt(this.world.states[k].label)]); 
 							if (this.world.states[k].power != 0){
-								if (Math.random() < 1 && this.world.states.length < 15){ 
+								if (Math.random() < 0.5 && this.world.states.length < 15){ 
 									var label = getStateName(this.world.states); 
 									this.changedStates.push([Math.round(this.world.states[k].power * 0.8), parseInt(label)]);  
 									addContent('pushed a new state from bipolar disintegration, with power: ' + Math.round(this.world.states[k].power * 0.2) + ' and with label ' + label); 
@@ -800,12 +825,10 @@
 						this.limitedWar = limitedWar;
 						this.world.worldHistory.push('bipolar war'); 
 						if(state1Won == true){
-							alert('pushed ' + bipState.label);
 							this.world.spheres[0].push(bipState); 
 							this.didAttackerWin = true; 	
 						}
 						else{
-							alert('pushed ' + bipState.label); 
 							this.world.spheres[1].push(bipState); 
 						}
 					}
@@ -1067,7 +1090,7 @@
 				}
 				states.sort(stateSort); 
 				if (strongestCoal == secondStrongestCoal){
-					for (var k=2; k<states.length-3; k++){
+					for (var k=2; k<states.length-2; k++){
 						var state = states[k]; 
 							if ((sphere2.length < (states.length-3)/2)){
 								sphere2.push(state); 
@@ -1307,7 +1330,7 @@
 		  this.alliances = [];
 		  this.escalation = [];
 		  this.changedStates = [[0]];
-		  this.flags = {'limitedChange' : false, 'skipScaling' : false, 'didAttackerWin' : false, 'perfectBalancing' : false, 'powersUpdated' : false, 'decliningHegemon' : false, 'scaledDown' : false, 'firstHegemon' : false, 'worldWar' : false, 'sorted' : false}
+		  this.flags = {'limitedChange' : false, 'skipScaling' : false, 'didAttackerWin' : false, 'perfectBalancing' : false, 'powersUpdated' : false, 'decliningHegemon' : false, 'scaledDown' : false, 'firstHegemon' : false, 'worldWar' : false, 'sorted' : false, 'buckPass' : false}
 		  this.endPolarity = ''
 		  this.spheres = []
 		  this.hegemon = 0;
@@ -1396,7 +1419,7 @@
 				var str2 = world.states[1]; 
 				var sphs = [[str1.label], [str2.label]];
 				world.spheres = [[str1], [str2]]; 
-				for (var k=2; k< world.states.length-3; k++){
+				for (var k=2; k< world.states.length-2; k++){
 					if (Math.random() <= 0.5){
 					       	if (sphs[0].length < stateNum){
 							sphs[0].push(world.states[k].label); 
@@ -1442,7 +1465,6 @@
 				turn.spheres = [spheres1, spheres2]; 
 			}
 			if (world.polarity[world.polarity.length-2] != 'bipolar'){
-				alert('setting flags.sorted to false'); 
 				turn.flags.sorted = false; 
 			}
 			else{
@@ -1473,6 +1495,12 @@
      	if (world.perfectBalancing == true){
 		 	turn.flags.perfectBalancing = true; 	
 	 	}
+	if (world.buckPass == true){
+		turn.flags.buckPass = world.buckPass;
+	       	alert('and now for turn ' + turn.flags.buckPass); 	
+		world.buckPass = false; 
+		alert('buckpassing'); 
+	}
 	 	
 		addContent('now unpacking alliances in the world');
      	for (k=0; k < world.coalitions.length; k++){
@@ -1557,11 +1585,10 @@
 		    	turn.flags.sorted = false; 
     		}
      	}
-     	if (turn.endPolariy != turn.polarity && turn.polarity == 'multipolar'){
+     	if ((turn.endPolarity != turn.polarity) && turn.polarity == 'multipolar'){
 		world.multipolarCounter = 0;
 	}	
      	if (turn.endPolarity == turn.polarity && turn.polarity == 'multipolar'){
-
 		world.multipolarCounter +=1;
 	}	
     	events.push(turn); 
@@ -1573,6 +1600,14 @@
 	if (continuationOfOld == true){
 		events.splice(0, 1);	
 	}
+	var terrIntel=[];
+	for (var k=0; k<16; k++){
+		terrIntel.push('empty');
+	}
+	for (var k=0; k<world.states.length; k++){
+		terrIntel[parseInt(world.states[k].label)-1]=[world.states[k].territory, world.states[k].innovation]; 
+	}
+	events.push(terrIntel); 
    	return events; 
 	}
   

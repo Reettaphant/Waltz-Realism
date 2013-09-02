@@ -1,5 +1,4 @@
-/* java script will add and remove class names of things and css will change colour*/
-
+/*Copyright Reetta Vaahtoranta. All rights reserved */
 
 body{
  font-size: 100%;	
@@ -431,7 +430,7 @@ div.check{
 	   right: -5.20%; 
 	   }
 div.end{
-	padding: 0.8em;
+	padding: 0.5em;
 }	
 .story{
 	padding: 0.1px;
