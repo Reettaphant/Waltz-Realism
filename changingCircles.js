@@ -1,5 +1,9 @@
-/* Copyright Reetta Vaahtoranta. All rights reserved. */ 
+/* Copyright Reetta Vaahtoranta. All rights reserved. */
+
 /*
+ * 
+ *still need to change  wording for offensive defence quiz
+ * remember to change alliance numbers back to reasonle 
  * buck passing - integrate this in as well, it is already happening
  * why some intel terr labels in letters? 
  * multipolar update Q&A made better 
@@ -1237,7 +1241,7 @@ function startTheSimulation(){
 			}
 			else{
 				k=0;
-				previously = bipolar; 
+				previously = 'bipolar'; 
 				setTimeout(toNewTurn, 2000); 	
 			}
 	        }
@@ -1724,6 +1728,7 @@ function startTheSimulation(){
 		   	}	
 			
 	function toNewTurn(){
+		buckPassVisit = false; 
 		disinVisit = false; 
 		thinkingWarVisit = false; 
 		visitedWar = false;
@@ -2238,10 +2243,30 @@ function startTheSimulation(){
       			}
 		}
       	
-		
+	
+		function buckPassing(){
+			hideStories();
+			var story = document.getElementById('buckPass'); 
+			$(story).removeClass('hidden'); 
+			$(story).addClass('visible'); 
+			if (buckPassVisit == false){
+				buckPassVisit = true; 
+				ajaxGetsQuiz('buckpass_questions', 'buckPassQuiz', 'buckPassCont', thinkWar, 'buckPassCheck'); 
+			}
+
+		}	
 		function updateAlliances(){
 	    		function evaluateAlliances(){
-				if (events[j].flags.buckPass == false || events[j].flags.buckPass[0] != m+1){	
+				var found = false;
+				if (events[j].flags.buckPass != false){
+					var k; 
+					for (var k=0; k< events[j].flags.buckPass.length; k++){
+						if (events[j].flags.buckPass[k] == m+1){
+							found = true;
+						}
+					}
+				}
+				if (found == false){
 					var stateNumber = events[j].alliances[m][n];
 					var alliance = m+1;
 					var info = events[j].statesAfterUpdate[stateNumber-1];  
@@ -2264,7 +2289,9 @@ function startTheSimulation(){
 					}	
 					var num = parseInt(stateNumber)+65-1;
 					addContent('desc' + alliance, 'State ' + String.fromCharCode(65+parseInt(stateNumber)-1) + ' joins ' + getAllianceColour(alliance) + ' Alliance'); 		 
-				}	
+			
+				}
+				
 	       			if (n < events[j].alliances[m].length - 1){
 		       			n++;
 		       			setTimeout(evaluateAlliances, 3000);
@@ -2277,7 +2304,12 @@ function startTheSimulation(){
 		       			}
 		       			else{
 	       					i=0; 
-	       					setTimeout(thinkWar, 3000);
+						if (events[j].flags.buckPass != false){
+							setTimeout(buckPassing, 3000); 
+						}
+						else{
+	       						setTimeout(thinkWar, 3000);
+						}
 	       					
        					}
    				}
@@ -2748,6 +2780,7 @@ function startTheSimulation(){
 		var changed = false; 
 		var visited = false; 
 		/*for pause stories */
+		var buckPassVisit = false; 
 		var disinVisit = false; 
 		var noPowerVisit = false; 	
 		var visitedAlliance = false;
