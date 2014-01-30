@@ -285,7 +285,7 @@
 					coalitionNumber =3; 
 				}
 				else{
-					coalitionNumber = (Math.round((states.length-1)/3)+2); 
+					coalitionNumber = (Math.round((states.length-1)/3)+1); 
 				}
 				for (var j=0; j<coalitionNumber; j++){
 					var coal = new Coalition([new State(0, 'dummy', 0, 0)]);
@@ -309,8 +309,8 @@
 						oldCoalitionNumber = undefined; 
 						if (events[h-1].statesAfterUpdate[parseInt(currentState.label-1)].length == 2 && events[h-1].polarity == 'multipolar'){
 							oldCoalitionNumber = events[h-1].statesAfterUpdate[parseInt(currentState.label-1)][1]-1;
-							addContent('oldCoalitionNumber was set to ' + oldCoalitionNumber + ' with h being ' + h); 
-							if (coalitions.length > oldCoalitionNumber){
+							addContent('oldCoalitionNumber was set to ' + oldCoalitionNumber + ' with h being ' + h);
+							if (coalitions.length > oldCoalitionNumber && coalitions[oldCoalitionNumber] != undefined){
 								if (coalitions[oldCoalitionNumber].states.length == 1){
 									coalitions[oldCoalitionNumber].addState(currentState); 
 									var addingCoalition = coalitions[oldCoalitionNumber]; 
@@ -339,7 +339,7 @@
 						addingCoalition = smallestCoalition; 
 					}
 					
-					if (oldCoalitions != 0 && oldCoalitionNumber != undefined){
+					if (oldCoalitions != 0 && oldCoalitionNumber != undefined && oldCoalitions[oldCoalitionNumber] != undefined){
 						addContent('now searching for old coalitions and oldCoalitionsNumber is ' + oldCoalitionNumber); 
 						if (oldCoalitionNumber < oldCoalitions.length){
 							for (var n=0; n< oldCoalitions[oldCoalitionNumber].states.length; n++){
@@ -423,19 +423,27 @@
 					}
 				}
 				else{
-					multipolarAlliances(); 	
+					multipolarAlliances(); 
+					var buckPass = [];	
 					this.coalitions = coalitions; 
 					addContent('length of coalitions now ' + this.coalitions.length); 
 					for (var k=0; k<coalitions.length; k++){
-							if (coalitions[k].states.length == 1){
-								alert('there is a coalition of only one state with power ' + coalitions[k].power);
-								var without = (this.getTotalPower() - coalitions[k].power)/(coalitions.length-1);
-							        alert('ave coal power withotu ' + without);
-								if (without > coalitions[k].power+3){
-									this.buckPass = [k+1, coalitions[k].states[0].label-1];
-									alert('buckPass for coalition ' + this.buckPass);
-								}
+						if (coalitions[k].states.length == 1){
+							var without = (this.getTotalPower() - coalitions[k].power)/(coalitions.length-1);
+							if (without > coalitions[k].power+3){
+								buckPass.push(k+1);
+								this.coalitions.splice(k, 1); 
 							}
+							else{
+								var stateLabel = [];
+								for (var j=0; j<coalitions[k].states.length; j++){
+
+									stateLabel.push(coalitions[k].states[j].label); 
+								}
+								this.animCoalitions.push(stateLabel); 
+							}
+						}
+						else{
 							var stateLabel = [];
 							for (var j=0; j<coalitions[k].states.length; j++){
 
@@ -443,9 +451,14 @@
 							}
 							this.animCoalitions.push(stateLabel); 
 						}
+					
+					}
+					if (buckPass != []){
+						this.buckPass = buckPass; 
 					}
 				}
-			}, 
+			}
+		}, 
 			
 	perfectBalance: function(){
 			this.perfectBalancing = false; 	
@@ -537,9 +550,6 @@
 				
 				var smallestCoalition = coalitions[coalitions.length-1];
 				var secondSmallestCoalition = coalitions[coalitions.length -2];
-				if (smallestCoalition.power <= (2/3) * secondSmallestCoalition.power && smallestCoalition.states.length == 1 && coalitions.length >=3){
-					coalitions.splice[coalitions.length-1, 1]; 
-				}
 				
 				if (world.perfectBalancing == false && multipolarCounter != 0){
 					var prob;
@@ -1495,11 +1505,9 @@
      	if (world.perfectBalancing == true){
 		 	turn.flags.perfectBalancing = true; 	
 	 	}
-	if (world.buckPass == true){
+	if (world.buckPass != false){
 		turn.flags.buckPass = world.buckPass;
-	       	alert('and now for turn ' + turn.flags.buckPass); 	
 		world.buckPass = false; 
-		alert('buckpassing'); 
 	}
 	 	
 		addContent('now unpacking alliances in the world');
