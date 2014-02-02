@@ -1,6 +1,11 @@
 /* Copyright Reetta Vaahtoranta. All rights reserved. */
-/*now does not work in random selection of powers
- * also bipolar wars do not work*/
+/*
+ * ===
+ * regex
+ * some functions too long
+ * identation 
+ * comments
+ * */
 
 $(document).ready(function(){
 	var num = 0;
@@ -17,9 +22,6 @@ $(document).ready(function(){
 	var previously = 'default';
 	var bipolarCounter = 0; 	
 	
-	/*$(function(){
-		$("#powerButton").click(startTheSimulation);
-  	});*/
   	
 	function generateParameterForm(){
 		$('#stateNumbers').removeClass('visible').addClass('hidden'); 
@@ -67,40 +69,32 @@ $(document).ready(function(){
  		button=$('#powerButton'); 
 		$(button).removeClass('hidden').addClass('visible'); 
 	  	manual = true; 
+		$(function(){
+			$("#powerButton").click(startTheSimulation);
+  		});
   	}
 	$(function(){
-	
 		$("#advancedButton1").click(function(){
-			var button1 = $('#advancedButton1'); 
-			$(button1).removeClass('visible').addClass('hidden'); 
-			var button2 = $('#advancedButton2'); 
-			$(button2).removeClass('hidden').addClass('visible'); 
-			var advanced = $('#advancedOptions'); 
-			$(advanced).removeClass('hidden').addClass('visible'); 
+			var button1 = $('#advancedButton1').removeClass('visible').addClass('hidden'); 
+			var button2 = $('#advancedButton2').removeClass('hidden').addClass('visible'); 
+			var advanced = $('#advancedOptions').removeClass('hidden').addClass('visible'); 
 		}); 
 		$("#advancedButton2").click(function(){
-			var button2 = $('#advancedButton2'); 
-			$(button2).removeClass('visible').addClass('hidden'); 
-			var button1 = $('#advancedButton1'); 
-			$(button1).removeClass('hidden').addClass('visible'); 
-			var advanced = $('#advancedOptions'); 
-			$(advanced).removeClass('visible').addClass('hidden'); 
+			var button2 = $('#advancedButton2').removeClass('visible').addClass('hidden'); 
+			var button1 = $('#advancedButton1').removeClass('hidden').addClass('visible'); 
+			var advanced = $('#advancedOptions').removeClass('visible').addClass('hidden'); 
 		}); 
 	
 		onlyOnce = true; 	
 		$("#buttonForStates").click(function(){
 			$("#turnErrorButton").click(function(){
-				var error = $('#firstFormTurnError'); 
-				$('#stateNumbers').removeClass('hidden'); 
-				$('#stateNumbers').addClass('visible'); 
-				$(error).removeClass('visible').addClass('hidden');
+				$('#stateNumbers').removeClass('hidden').addClass('visible'); 
+				$('#firstFormTurnError').removeClass('visible').addClass('hidden');
 			});
 			
 			$("#checkErrorButton").click(function(){
-				var error = $('#checkError'); 
-				$('#stateNumbers').removeClass('hidden'); 
-				$('#stateNumbers').addClass('visible'); 
-				$(error).removeClass('visible').addClass('hidden');
+				$('#stateNumbers').removeClass('hidden').addClass('visible'); 
+				$('#checkError').removeClass('visible').addClass('hidden');
 			});
 			
 			num = ($("#numberOfStates").val());
@@ -108,8 +102,8 @@ $(document).ready(function(){
 				num = Math.round(Math.random()*5)+5;
 			}
 			numOfTurns = 1; 	
-			$('#stateNumbers').removeClass('visible').addClass('hidden'); 
-			if (!$("input[name='initialiseStates'][value='multipolar']").prop('checked') && !$($("input[name='initialiseStates'][value='biplar']").prop('checked') && !$("input[name='initialiseStates'][value='unipolar']").prop('checked'))){
+			$('#stateNumbers').removeClass('visible').addClass('hidden');
+			if (!$("input[name='initialiseStates'][value='multipolar']").prop('checked') && !$("input[name='initialiseStates'][value='biplar']").prop('checked') && !$("input[name='initialiseStates'][value='unipolar']").prop('checked') && !$("input[name='initialiseStates'][value='automatic']").prop('checked')){
 				var lotteryNumber = Math.random();
 				if (lotteryNumber < 0.333){
 					automaticUni = true;	
@@ -278,21 +272,8 @@ $(document).ready(function(){
 									$(msgC).removeClass('hidden').addClass('visible');
 									$(msgC).append(ends[k]); 	
 									$($('.noMsg')[0]).removeClass('visible').addClass('hidden'); 
-									$($($($('#'+pause).contents('.quiz')[0]).contents('.quizButton'))[0]).addClass('hidden');
+									$('#'+pause).find('.quiz').find('.quizButton').addClass('hidden');
 									$('#'+contDiv).removeClass('hidden').addClass('visible');
-									/*for (var l=0; l<children.length; l++){
-										if($(children[l]).hasClass('quiz')){
-											break;
-										}
-									}
-									var formChildren = children[l].childNodes;
-									for (var l=0; l<formChildren.length; l++){
-										if ($(formChildren[l]).hasClass('quizButton')){
-											$(formChildren[l]).addClass('hidden'); 
-											break;
-										}
-									}
-									*/
 								}
 								else{
 									msgW = $('.errorMsg')[0]; 
@@ -341,15 +322,12 @@ $(document).ready(function(){
 		}	
 
 	$('.state').hover(function(){
-		var powerDe = this.getElementsByClassName('powerDesc')[0]; 
-		$(powerDe).removeClass('hidden'); 
-		$(powerDe).addClass('visible'); 
+		$(this).find('.powerDesc').removeClass('hidden').addClass('visible'); 
 		},
 		function(){
-			var powerDe = this.getElementsByClassName('powerDesc')[0]; 
-			$(powerDe).removeClass('visible'); 
-			$(powerDe).addClass('hidden'); 
-			});
+			$(this).find('.powerDesc').removeClass('visible').addClass('hidden'); 
+		});
+
 	var powersOfStates=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 	var frame = $('#stateFrame'); 
 	var storyFrame = $('#storyFrame'); 
@@ -673,15 +651,15 @@ $(document).ready(function(){
 		       	$('#interventionOver').removeClass('hidden').addClass('visible');
 			var hege = states[(((events[j].hegemon-1)%4)*4 + Math.floor((events[j].hegemon-1)/4))]; 
 			var medd =  states[(((events[j].meddled-1)%4)*4 + Math.floor((events[j].meddled-1)/4))];
-			$($(hege).children('.attackImage')[0]).removeClass('visible').addClass('hidden');
-			$($(medd).children('.defenderImage')[0]).removeClass('visible').addClass('hidden');
+			$(hege).find('.attackImage').removeClass('visible').addClass('hidden');
+			$(medd).find('.defenderImage').removeClass('visible').addClass('hidden');
 			setTimeout(unipolarAlliances,4000); 	
 		}
 		function addWarPictures(){
 			var hege = states[(((events[j].hegemon-1)%4)*4 + Math.floor((events[j].hegemon-1)/4))]; 
 			var medd =  states[(((events[j].meddled-1)%4)*4 + Math.floor((events[j].meddled-1)/4))];
-			$($(hege).children('.attackImage')[0]).removeClass('hidden').addClass('visible');
-			$($(medd).children('.defenderImage')[0]).removeClass('hidden').addClass('visible');
+			$(hege).find('.attackImage').removeClass('hidden').addClass('visible');
+			$(medd).find('.defenderImage').removeClass('hidden').addClass('visible');
 			addContent('interventionDetails', 'The hegemon is intevening in the affairs of state ' + String.fromCharCode(64+parseInt(events[j].meddled))); 	
 			setTimeout(interventionOver, 5000); 	
 		}
@@ -695,7 +673,7 @@ $(document).ready(function(){
 				$('#interventionExpl').removeClass('hidden').addClass('visible'); 
 				$('#elaborateIntervention').click(function(){
 					$('#interventionExpl').removeClass('visible').addClass('hidden'); 
-					if ($('#interventionKnow').prop('checked', true)){
+					if ($('#interventionKnow').prop('checked')){
 						interventionKnow = true; 
 					}	
 					if (interventionVisit == false){
@@ -760,7 +738,7 @@ $(document).ready(function(){
 							$('#unipolarExpl').removeClass('hidden').addClass('visible'); 
 							$('#elaborateUnipolar').click(function(){
 								$('#unipolarExpl').removeClass('visible').addClass('hidden'); 
-							        if ($('#unipolarKnow').prop('checked', true)){
+							        if ($('#unipolarKnow').prop('checked')){
 									unipolarKnow = true; 
 								}	
 								if (unipolarVisit == false){
@@ -916,7 +894,7 @@ $(document).ready(function(){
 					$('#disinExpl').removeClass('hidden').addClass('visible'); 
 					$('#elaborateDisin').click(function(){
 						$('#disinExpl').removeClass('visible').addClass('hidden'); 
-						if ($('#disinKnow').prop('checked', true)){
+						if ($('#disinKnow').prop('checked')){
 							disinKnow = true;
 						}	
 						if (disinVisit == false){
@@ -1018,13 +996,13 @@ $(document).ready(function(){
 					}
 				}
 			    	$(changing).removeClass('alliance0').addClass('sphere2');
-		    	} 
-			$($(winner).children('.attackImage')[0]).removeClass('visible').addClass('hidden');
-			$($(winner).children('.winnerImage')[0]).removeClass('hidden').addClass('visible');
-			$($(loser).children('.attackImage')[0]).removeClass('visible').addClass('hidden');
-			$($(loser).children('.loserImage')[0]).removeClass('hidden').addClass('visible');
+		    	}
+			$(winner).find('.attackImage').removeClass('visible').addClass('hidden');
+			$(winner).find('.winnerImage').removeClass('hidden').addClass('visible');
+			$(loser).find('.attackImage').removeClass('visible').addClass('hidden');
+			$(loser).find('.loserImage').removeClass('hidden').addClass('visible');
 			$(changing).removeClass('defender');
-		        $($(changing).children('defenderImage')[0]).removeClass('visible').addClass('hidden');	
+		        $(changing).find('.defenderImage').removeClass('visible').addClass('hidden');	
 		       	setTimeout(bipolarOutcomes, 3000);       
             	}
 	        else{ 
@@ -1047,8 +1025,8 @@ $(document).ready(function(){
 		       	else{
 			       $(state).addClass('sphere1');   
 		       	}
-			$($(state).children('.winnerImage')[0]).removeClass('visible').addClass('hidden');
-			$($(state).children('.loserImage')[0]).removeClass('visible').addClass('hidden');
+			$(state).find('.winnerImage').removeClass('visible').addClass('hidden');
+			$(state).find('.loserImage').removeClass('visible').addClass('hidden');
 		    	if (i < events[j].changedStates.length-1){
 			 		i++; 
 			 		setTimeout(bipolarOutcomes, 3000);    
@@ -1075,13 +1053,13 @@ $(document).ready(function(){
 					var k = events[j].war[0][a] -1;
 					var attacker = states[((k%4)*4 + Math.floor(k/4))];
 					$(attacker).addClass('attacker');
-					$($(attacker).children('.attackImage')[0]).removeClass('hidden').addClass('visible');
+					$(attacker).find('.attackImage').removeClass('hidden').addClass('visible');
 					
 				}
 				var l =  events[j].war[1][0] -1;
 				var defender = states[((l%4)*4 + Math.floor(l/4))];
 				$(defender).addClass('defender');
-				$($(defender).children('.defenderImage')[0]).removeClass('hidden').addClass('visible');
+				$(defender).find('.defenderImage').removeClass('hidden').addClass('visible');
 				var string = 'The war is being fought in state ' + String.fromCharCode(64+parseInt(events[j].war[1][0]));
 				addContent('bipolarWarDetails', string);   
 				setTimeout(bipolarOutcomes, 3000); 
@@ -1108,7 +1086,7 @@ $(document).ready(function(){
 					$('#bipolarExp').removeClass('hidden').addClass('visible'); 
 					$('#elaborateBipolar').click(function(){
 						$('#bipolarExp').removeClass('visible').addClass('hidden');
-					        if ($('#bipolarKnow').prop('checked', true)){
+					        if ($('#bipolarKnow').prop('checked')){
 							bipolarKnow = true; 
 						}	
 						if (bipolarVisit == false){
@@ -1261,8 +1239,7 @@ $(document).ready(function(){
 			/*mkae sure that this is working*/
 			var children = $('#onceButtons').children();
 		     	for (var k= 0; k< children.length - 1; k++){
-				$(children[k]).removeClass('active'); 
-			     	$(children[k]).addClass('passive'); 
+				$(children[k]).removeClass('active').addClass('passive'); 
 		     	}			
 			if (events[j+1].polarity == 'multipolar'){
 				$('#newTurnMulti').removeClass('hidden').addClass('visible');
@@ -1324,8 +1301,7 @@ $(document).ready(function(){
 	
 		var children = $('#onceButtons').children();
 		for (var k= 0; k< children.length - 1; k++){
-			$(children[k]).removeClass('passive'); 
-			$(children[k]).addClass('active');     		
+			$(children[k]).removeClass('passive').addClass('active');     		
 		}
 	}
  	
@@ -1363,8 +1339,8 @@ $(document).ready(function(){
 		}	
 		function outcomes(){
 			function addStories(state, stateNumber, power){
-				var chil = $($(state).children('.loserImage')[0]).removeClass('visible').addClass('hidden');
-				var chil = $($(state).children('.winnerImage')[0]).removeClass('visible').addClass('hidden');
+				var chil = $(state).find('.loserImage').removeClass('visible').addClass('hidden');
+				var chil = $(state).find('.winnerImage').removeClass('visible').addClass('hidden');
 				extra = '';
 				disappear = false;
 				if (events[j].statesAfterUpdate[stateNumber-1] == 0){
@@ -1419,11 +1395,11 @@ $(document).ready(function(){
 				var losers;
 				var oldDefenders = $('.defender');
 				for (var m=0; m<oldDefenders.length; m++){
-					$($(oldDefenders[m]).children('.defenderImage')[0]).removeClass('visible').addClass('hidden');
+					$(oldDefenders[m]).find('.defenderImage').removeClass('visible').addClass('hidden');
 				}
 				var oldAttackers = $('.attacker'); 
 				for (var m=0; m<oldAttackers.length; m++){
-					$($(oldAttackers[m]).children('.attackImage')[0]).removeClass('visible').addClass('hidden');
+					$(oldAttackers[m]).find('.attackImage').removeClass('visible').addClass('hidden');
 				}
 				i++;
 				if (events[j].flags.didAttackerWin == true){
@@ -1439,13 +1415,13 @@ $(document).ready(function(){
 		        	for (var n = 0; n< winners.length; n++){
 			        	state= winners[n];
 			         	$(state).addClass('winner');   
-					$($(state).children('.winnerImage')[0]).removeClass('hidden').addClass('visible');
+					$(state).find('.winnerImage').removeClass('hidden').addClass('visible');
 			   	}
 			   		
 			   	for (var n=0; n<losers.length; n++){
 					state=losers[n];
 				   	$(state).addClass('loser'); 	
-					$($(state).children('.loserImage')[0]).removeClass('hidden').addClass('visible');
+					$(state).find('.loserImage').removeClass('hidden').addClass('visible');
 			   	}
 			    	i++; 
 		        	setTimeout(outcomes, 1500); 		   	
@@ -1507,7 +1483,7 @@ $(document).ready(function(){
 						$('#escalationExpl').removeClass('hidden').addClass('visible'); 
 						$('#elaborateEscalation').click(function(){
 							$('#escalationExpl').removeClass('visible').addClass('hidden'); 
-							if ($('#escalationKnow').prop('checked', true)){
+							if ($('#escalationKnow').prop('checked')){
 								escalationKnow = true; 
 							}	
 							if (escalationVisit == false){
@@ -1668,7 +1644,7 @@ $(document).ready(function(){
 						$('#thinkingExpl').removeClass('hidden').addClass('visible'); 
 						$('#elaborateThinking').click(function(){
 							$('#thinkingExpl').removeClass('visible').addClass('hidden');
-							if ($('#thinkingKnow').prop('checked', true)){
+							if ($('#thinkingKnow').prop('checked')){
 								thinkingKnow = true; 
 							}
 							if (thinkingWarVisit == false){
@@ -1691,7 +1667,7 @@ $(document).ready(function(){
 						$('#bipolarThinkingExpl').removeClass('hidden').addClass('visible'); 
 						$('#elaborateThinkingBipolar').click(function(){
 							$('#bipolarThinkingExpl').removeClass('visible').addClass('hidden'); 
-							if ($('#bipolarThinkingKnow').prop('checked', true)){
+							if ($('#bipolarThinkingKnow').prop('checked')){
 								bipolarThinkingKnow = true; 
 							}
 							if (thinkingWarVisit == false){
@@ -1810,7 +1786,7 @@ $(document).ready(function(){
 								group_name = 'alliance_questions';
 								ajaxGetsQuiz(group_name, 'allianceQuiz', 'allianceCont', updateAlliances, 'allianceCheck');
 								visitedAlliance = true;
-								if ($('#allianceKnow').prop('checked', true)){
+								if ($('#allianceKnow').prop('checked')){
 									allianceKnow = true;
 								}
 							}
@@ -1889,19 +1865,19 @@ $(document).ready(function(){
 							var polarity = events[j].polarity; 
 							if (polarity == 'multipolar'){
 								var expl = $('#powerExpl');
-								if ($('#powerKnow').prop('checked', true)){
+								if ($('#powerKnow').prop('checked')){
 									powerKnow = true; 
 								}	
 							}
 							else if (polarity == 'bipolar'){
 								var expl = $('#bipolarPowerExpl'); 
-								if ($('#bipolarPowerKnow').prop('checked', true)){
+								if ($('#bipolarPowerKnow').prop('checked')){
 									bipolarPowerKnow = true; 
 								}	
 							}
 							else{
 								var expl = $('#unipolarPowerExpl'); 
-								if ($('#unipolarPowerKnow').prop('checked', true)){
+								if ($('#unipolarPowerKnow').prop('checked')){
 									unipolarUpdateKnow = true; 
 								}	
 							}
@@ -2113,9 +2089,6 @@ $(document).ready(function(){
 				ajaxGetsQuiz('scaling_questions', 'scalingQuiz', 'scalingCont', scaling, 'scalingCheck');
 			}
 			else{
-				/*why is this here? if (i==0){
-					var alliance; 
-				}*/
 				if (events[j].statesAfterUpdate[i].length == 2){
 					if (events[j].polarity == 'multipolar'){
 						if (j> 0){
