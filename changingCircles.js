@@ -5,6 +5,9 @@
  * some functions too long
  * identation 
  * comments
+ * multipolar defender images not working
+ * a function for displaying explanations
+ * utilities file
  * */
 
 $(document).ready(function(){
@@ -22,7 +25,6 @@ $(document).ready(function(){
 	var previously = 'default';
 	var bipolarCounter = 0; 	
 	
-  	
 	function generateParameterForm(){
 		$('#stateNumbers').removeClass('visible').addClass('hidden'); 
 		var stateDetails = $('#statePowers'); 
@@ -164,6 +166,15 @@ $(document).ready(function(){
 		}
 	}
 
+	function removeWithRegex(div, pattern){
+		/*removes all classes matching a given pattern from a given div*/
+		var classes = $(div).attr('class').split(' ');
+		for (var k=0; k<classes.length; k++){
+			if (classes[k].match(pattern)){
+				$(div).removeClass(classes[k]);
+			}
+		}	
+	}
 	function removeContent(div) {
 
 		$('#'+div).empty().append('<br>');
@@ -492,7 +503,6 @@ $(document).ready(function(){
 	      
       	}
       	else{
-	    
 		function addPower(state, power, label){
 			if (terrIntel != undefined){
 				var terr = terrIntel[label][0]; 
@@ -506,7 +516,9 @@ $(document).ready(function(){
 	       		powerDiv.innerHTML = 'Power: '+ power + '<br>';
 			powerDiv.innerHTML += 'Intellect: ' + intel+ '<br>';
 			powerDiv.innerHTML += 'Territory: ' + terr + '<br>';
-	   		if (power < 60){
+			
+			removeWithRegex(state, /^power/);
+			if (power < 60){
        				$(state).addClass('power' +power);
    		    }
    		    	else{
@@ -534,7 +546,6 @@ $(document).ready(function(){
 	        	var state = states[((stateNumber%4)*4 + Math.floor(stateNumber/4))];
 			if (events[turnNumber].statesAfterUpdate[stateNumber].length == 2){
 				var power = events[turnNumber].statesAfterScaling[stateNumber][0]; 
-				$(state).removeClass(); 
 				if (events[turnNumber].polarity == 'multipolar'){
 					if (turnNumber> 0){
 						if(events[turnNumber-1].polarity == 'multipolar'){
@@ -596,17 +607,13 @@ $(document).ready(function(){
 						alliance = 'alliance0'; 	
 					}	
 				}
-       				$(state).addClass('visible');
-				$(state).addClass('state'); 
+				removeWithRegex(state, /^alliance|^sphere/);
      				$(state).addClass(alliance); 
        				addPower(state, power, stateNumber);
 			}
     		else{
-	    		$(state).removeClass(); 
-		    	$(state).addClass('state'); 
-		    	$(state).addClass('alliance0'); 
-		    	$(state).addClass('hidden'); 
-	    		$(state).addClass('hidden');  	
+			removeWithRegex(state, /^alliance|^sphere/); 
+		    	$(state).addClass('hidden').removeClass('visible').addClass('alliance0'); 
     		}
 	}
     
@@ -805,14 +812,13 @@ $(document).ready(function(){
 					}
 					var k = events[j].hegemon; 
 					var state = states[(((k-1)%4)*4 + Math.floor((k-1)/4))]; 
-					$(state).removeClass(); 
+					removeWithRegex(state, /^alliance|^sphere/);
 					if (events[j].endPolarity != 'unipolar'){
 						$(state).addClass('alliance0');
 					}
 					else{
 						$(state).addClass('alliance100');
 					}
-					$(state).addClass('state').addClass('visible');
 					addPower(state, events[j].changedStates[1][0], k-1);
 					i=0
 					if (events[j].endPolarity != 'unipolar'){
@@ -912,9 +918,7 @@ $(document).ready(function(){
 			state = states[((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4)]; 
 			if (events[j].statesAfterUpdate[stateNumber-1] != 0){
 				if (power != 0){
-					$(state).removeClass(); 
-					$(state).addClass('visible'); 
-					$(state).addClass('state');
+					removeWithRegex(state, /^alliance|^sphere/);
 					var sphere1 = false; 
 					for (var k=0; k< events[j].spheres[0].length; k++){
 						if (stateNumber == events[j].spheres[0][k]){
@@ -932,16 +936,15 @@ $(document).ready(function(){
 					
 				}
 				else{
-					$(state).removeClass('visible');
-					$(state).addClass('hidden');  	
+					$(state).removeClass('visible').addClass('hidden');  	
 					addContent('bipolarSystemDetails', 'State ' +  String.fromCharCode(65+parseInt(stateNumber)-1)+ ' has disappeared from the world.');
 				}
 			}
 			else{
-				$(state).removeClass();
-				$(state).addClass('state'); 
+				removeWithRegex(state, /^alliance|^sphere/);
+				/*$(state).addClass('state');*/ 
 				$(state).addClass('alliance0'); 
-				$(state).addClass('visible');
+				/*$(state).addClass('visible');*/
 				addPower(state, power, stateNumber-1);
 				addContent('bipolarSystemDetails', 'A new state ' +  String.fromCharCode(65+parseInt(stateNumber)-1)+' with power ' + power +' was created from disintegration of the bipolar power ');
 			}
@@ -1015,9 +1018,10 @@ $(document).ready(function(){
 		       	if ($(state).hasClass('sphere1')){
 				blue = true;
 			}
-			$(state).removeClass(); 
-		       	$(state).addClass('state');
-		       	$(state).addClass('visible'); 
+			removeWithRegex(state, /^alliance|^sphere/);
+		       	/*
+			$(state).addClass('state');
+		       	$(state).addClass('visible'); */
 		       	addPower(state, power, stateNumber-1); 
 		       	if (blue == false){
 			    	$(state).addClass('sphere2'); 
@@ -1325,11 +1329,9 @@ $(document).ready(function(){
 						if (found == false){
 							if (events[j].statesAfterUpdate[k].length == 2){
 								var state = states[(k%4)*4 + Math.floor(k/4)];
-								$(state).removeClass();
-								$(state).addClass('state');
-								$(state).addClass('alliance0')
-								$(state).addClass('visible');
-								$(state).addClass('power' + events[j].statesAfterUpdate[k][0]);  
+								removeWithRegex(state, /^alliance|^sphere/);
+								$(state).addClass('alliance0');
+								addPower(state, events[j].statesAfterUpdate[k][0]);  
 							}
 						}	
 					}
@@ -1375,10 +1377,8 @@ $(document).ready(function(){
 					}
 					if (disappear == true){
 						addContent('afterWarDetails', 'State ' + String.fromCharCode(64+parseInt(stateNumber)) +' was destroyed during the war and will disappear from the world.'); 
-						$(state).removeClass(); 
-						$(state).addClass('state'); 
+						removeWithRegext(statei, /^alliance|^sphere/); 
 						$(state).addClass('alliance0'); 
-						$(state).addClass('hidden'); 
 					}
 					else{	
 						addContent('afterWarDetails', 'State ' + String.fromCharCode(64+parseInt(stateNumber)) +' has power ' + power + '.' + extra); 
@@ -1430,9 +1430,7 @@ $(document).ready(function(){
 				power = events[j].changedStates[i-1][0];
 				stateNumber = events[j].changedStates[i-1][1];
 				var state =  states[(((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4))];
-				$(state).removeClass();    	
-				$(state).addClass('visible');
-				$(state).addClass('state'); 
+				removeWithRegex(state, /^alliance|^sphere/);    	
 				addPower(state, power, stateNumber-1); 
 				addStories(state, stateNumber, power); 
 				if (events[j].flags.worldWar == true || events[j].flags.limitedChange == true){
@@ -1716,10 +1714,8 @@ $(document).ready(function(){
 					var alliance = m+1;
 					var info = events[j].statesAfterUpdate[stateNumber-1];  
 					power=info[0];
-					state = states[(((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4))];  
-					$(state).removeClass(); 
-					$(state).addClass('visible');
-					$(state).addClass('state'); 
+					state = states[(((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4))]; 
+					removeWithRegex(state, /^alliance|^sphere/); 
 					$(state).addClass('alliance' + alliance); 
 					addPower(state, power, stateNumber-1);
 					/*removeContent('description');*/
@@ -1953,9 +1949,7 @@ $(document).ready(function(){
 								var info = events[j].statesAfterUpdate[i]; 
 								var power=info[0];
 								state = states[((i%4)*4 + Math.floor(i/4))]; 
-								$(state).removeClass(); 
-								$(state).addClass('visible');
-								$(state).addClass('state'); 
+								removeWithRegex(state, /^alliance|^sphere/); 
 								if (j == 0){
 									$(state).addClass('alliance0'); 
 								}
@@ -2148,9 +2142,7 @@ $(document).ready(function(){
 					}
 					state = states[((i%4)*4 + Math.floor(i/4))];
 					power = events[j].statesAfterScaling[i][0]; 
-					$(state).removeClass(); 
-					$(state).addClass('visible');
-					$(state).addClass('state'); 
+					removeWithRegex(state, /^alliance|^sphere/);
 					$(state).addClass(alliance); 
 					addPower(state, power, i);
 					if (i<15){

@@ -200,7 +200,7 @@
 				for (var k=0; k<world.states.length; k++){
 					if (world.states[k].decliningHegemon == true){
 						world.states[k].decliningHegemon = false;
-					        worls.decliningHegemin = false; 	
+					        world.decliningHegemon = false; 	
 					}
 				}	
 			}
