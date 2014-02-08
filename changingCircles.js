@@ -1,14 +1,14 @@
 /* Copyright Reetta Vaahtoranta. All rights reserved. */
-/*
+/*passing the buck not always working, sometimes only one alliance
  * ===
- * regex
  * some functions too long
  * identation 
  * comments
- * multipolar defender images not working
  * a function for displaying explanations
+ *somewhere in multipolar a winner/ defender image was not removed properly
  * utilities file
- * */
+ * in html file it says elaborate thinking bipolar for elaborate button: this is inconsistent. Edit html file, for now, changes the elaborate thinking control to true */
+ 
 
 $(document).ready(function(){
 	var num = 0;
@@ -175,6 +175,7 @@ $(document).ready(function(){
 			}
 		}	
 	}
+
 	function removeContent(div) {
 
 		$('#'+div).empty().append('<br>');
@@ -196,6 +197,7 @@ $(document).ready(function(){
 		return a[3] - b[3]
 	}
 	function startTheSimulation(){
+
 		function ajaxGetsQuiz(group_name, pause, contDiv, continueFunction, checkbox){
 			var control = false;
 			if (group_name in lastSeenFromGroup){
@@ -296,7 +298,6 @@ $(document).ready(function(){
 								break; 
 							}
 							if (found == false){
-								/*is this right!!*/
 								$($('.noMsg')[0]).removeClass('hidden').addClass('visible'); 
 							}
 						}
@@ -309,7 +310,6 @@ $(document).ready(function(){
 						}
 					});							
 					$('.continueButton').click(function(){
-						/*if not wokring then might be due to this !!*/
 						if (control == false){
 							control = true;
 							if ($('#'+checkbox).prop('checked')){
@@ -331,6 +331,32 @@ $(document).ready(function(){
 
 			}); 
 		}	
+		function displayExplanation(prefix, ajax1, ajax2, ajax3, ajax4, ajax5){
+		/*checks if the relevant explantion has to be shown, shows it if this is needed and then takes the student to the relavant quiz*/	
+			
+			var visitVar = false;
+			if (explControl[prefix+'Know'] == true){
+				if (visitVar == false){
+					visitVar = true;
+					ajaxGetsQuiz(ajax1, ajax2, ajax3, ajax4, ajax5);
+				}
+			}
+			else{
+				$('#'+prefix+'Expl').removeClass('hidden').addClass('visible');
+				var string = '#'+'elaborate'+prefix.slice(0, 1) +prefix.slice(1, prefix.length);
+				$('#'+'elaborate'+prefix.slice(0, 1).toUpperCase()+prefix.slice(1, prefix.length)).click(function(){
+					$('#'+prefix+'Expl').removeClass('visible').addClass('hidden');
+					if ($('#'+prefix+'Know').prop('checked')){
+						explControl[prefix+'Know'] = true;
+					}
+					if (visitVar === false){
+						visitVar = true;
+						ajaxGetsQuiz(ajax1, ajax2, ajax3, ajax4, ajax5);
+					}
+
+				});
+			}
+		}
 
 	$('.state').hover(function(){
 		$(this).find('.powerDesc').removeClass('hidden').addClass('visible'); 
@@ -386,22 +412,8 @@ $(document).ready(function(){
 	
 	}
 	else{
-		var totalInitial = 0;
-		for (var k=0; k<num; k++){
-			var n = k+1; 	
-			var pwr = Math.floor(Math.random() * 15 +1);
-			totalInitial += pwr;
-			var terri = Math.floor(Math.random() * 5 +1);; 
-			var intell = Math.floor(Math.random() * 5 +1);;
-			initialStates.push([pwr, terri, intell, k]);   
-			powersOfStates[k] = pwr;
-		}	
+		function automaticMultipolar(){
 
-		initialStates.sort(initialPowerSort); 
-		var mostInitial = initialStates[0][0];
-		var secondInitial = initialStates[1][0];
-		if (automaticMulti == true){
-      		
 			while (true){
 				initialStates.sort(initialPowerSort); 
 				mostInitial = initialStates[0][0];
@@ -426,10 +438,9 @@ $(document).ready(function(){
 					break;
 				}
 			}
-		}	
-	
-		
-		if (automaticBi == true){  
+		}
+		function automaticBipolar(){
+
 			for (var k=2; k<initialStates.length; k++){
 				if (initialStates[k][0] > 4){
 					totalInitial -= Math.floor(0.6*initialStates[k][0]);
@@ -465,9 +476,10 @@ $(document).ready(function(){
 				secondInitial = initialStates[1][0];
 			        totalInitial += mostInitial + secondInitial; 	
 			}
+			
 		}
-		
-		if (automaticUni == true){
+		function automaticUnipolar(){
+
 			for (var k=1; k<initialStates.length; k++){
 				if (initialStates[k][0] > 8){
 					totalInitial -= Math.floor(0.8*initialStates[k][0]);
@@ -486,6 +498,31 @@ $(document).ready(function(){
 	    			powersOfStates[initialStates[0][3]] = initialStates[0][0];			
 
 			}
+		}
+		var totalInitial = 0;
+		for (var k=0; k<num; k++){
+			var n = k+1; 	
+			var pwr = Math.floor(Math.random() * 15 +1);
+			totalInitial += pwr;
+			var terri = Math.floor(Math.random() * 5 +1);; 
+			var intell = Math.floor(Math.random() * 5 +1);;
+			initialStates.push([pwr, terri, intell, k]);   
+			powersOfStates[k] = pwr;
+		}	
+
+		initialStates.sort(initialPowerSort); 
+		var mostInitial = initialStates[0][0];
+		var secondInitial = initialStates[1][0];
+		if (automaticMulti == true){
+      			automaticMultipolar();
+		}	
+		
+		if (automaticBi == true){ 
+		       automaticBipolar();	
+		}
+		
+		if (automaticUni == true){
+			automaticUnipolar();
 		}
 		initialStates.sort(initialOrderSort); 
 	}
@@ -525,8 +562,6 @@ $(document).ready(function(){
 	   		    $(state).addClass('power60');
    		    }   
         	}	  
-	    	$(storyFrame).removeClass('hidden').addClass('visible'); 	
-      		$(frame).removeClass('hidden').addClass('visible'); 	
       		var states = $('.state'); 
     			for (i=0; i<num; i++){
        				state=states[((i%4)*4 + Math.floor(i/4))];        
@@ -543,84 +578,97 @@ $(document).ready(function(){
           
         
         	function initialiseStateBeforeTurn(turnNumber, stateNumber){
+			function multipolarIni(){
+				if (turnNumber> 0){
+					if(events[turnNumber-1].polarity == 'multipolar'){
+						if (events[turnNumber-1].statesAfterUpdate[stateNumber].length == 2){
+							var alliance = 'alliance' + events[turnNumber-1].statesAfterUpdate[stateNumber][1];
+						}
+						else{
+							var alliance = 0; 	
+						}
+					}
+					else{
+						var alliance = 'alliance0';	
+					}
+				}	
+				else{
+					var alliance = 'alliance0';		
+				}
+				return alliance;
+			}
+
+			function bipolarIni(){
+				if (turnNumber> 0){
+					if (events[turnNumber-1].polarity == 'bipolar'){
+						var sphNum; 
+						var stateNum = stateNumber+1; 
+						for (var k=0; k<events[turnNumber].spheres[0].length; k++){
+							if(events[turnNumber].spheres[0][k] == stateNum){
+								sphNum = 1; 
+								break; 
+							}	
+						}
+						if(sphNum != 1){
+							sphNum = 2; 	
+						}
+					var alliance = 'sphere' + sphNum; 
+					}
+					else{
+						var alliance = 'alliance0'; 	
+					}
+				}
+				else{
+					var alliance = 'alliance0'; 	
+				}	 	
+				return alliance;
+
+			}
+			function unipolarIni(){ 
+				if (turnNumber>0){
+					if (events[turnNumber-1].polarity == 'unipolar'){
+						var stateNum = stateNumber+1; 
+						if (stateNum == events[turnNumber].hegemon){
+							var alliance = 'alliance100'; 	
+						}	
+						else{
+							var alliance = 'alliance001'; 	
+						}
+					}
+					else{
+						var alliance = 'alliance0';	
+					}
+				}
+				else{
+					var alliance = 'alliance0'; 	
+				}	
+				return alliance;
+			}
+				
 	        	var state = states[((stateNumber%4)*4 + Math.floor(stateNumber/4))];
 			if (events[turnNumber].statesAfterUpdate[stateNumber].length == 2){
 				var power = events[turnNumber].statesAfterScaling[stateNumber][0]; 
 				if (events[turnNumber].polarity == 'multipolar'){
-					if (turnNumber> 0){
-						if(events[turnNumber-1].polarity == 'multipolar'){
-							if (events[turnNumber-1].statesAfterUpdate[stateNumber].length == 2){
-								alliance = 'alliance' + events[turnNumber-1].statesAfterUpdate[stateNumber][1];
-							}
-							else{
-								alliance = 0; 	
-							}
-						}
-						else{
-							alliance = 'alliance0';	
-						}
-					}	
-					else{
-						alliance = 'alliance0';		
-					}
+					var alliance = multipolarIni(); 
 				}
 				else if (events[turnNumber].polarity == 'bipolar'){
-					if (turnNumber> 0){
-						if (events[turnNumber-1].polarity == 'bipolar'){
-							var sphNum; 
-							var stateNum = stateNumber+1; 
-							for (var k=0; k<events[turnNumber].spheres[0].length; k++){
-								if(events[turnNumber].spheres[0][k] == stateNum){
-									sphNum = 1; 
-									break; 
-								}	
-							}
-							if(sphNum != 1){
-								sphNum = 2; 	
-							}
-						alliance = 'sphere' + sphNum; 
-						}
-						else{
-							alliance = 'alliance0'; 	
-						}
-					}
-					else{
-						alliance = 'alliance0'; 	
-					}	 	
+					var alliance = bipolarIni();
 				}
 				else{
-					if (turnNumber>0){
-						if (events[turnNumber-1].polarity == 'unipolar'){
-							var stateNum = stateNumber+1; 
-							if (stateNum == events[turnNumber].hegemon){
-								alliance = 'alliance100'; 	
-							}	
-							else{
-								alliance = 'alliance001'; 	
-							}
-						}
-						else{
-							alliance = 'alliance0'	
-						}
-					}
-					else{
-						alliance = 'alliance0'; 	
-					}	
+					var alliance = unipolarIni();
 				}
+				
 				removeWithRegex(state, /^alliance|^sphere/);
-     				$(state).addClass(alliance); 
-       				addPower(state, power, stateNumber);
+				$(state).addClass(alliance); 
+				addPower(state, power, stateNumber);
 			}
-    		else{
-			removeWithRegex(state, /^alliance|^sphere/); 
-		    	$(state).addClass('hidden').removeClass('visible').addClass('alliance0'); 
-    		}
+			else{
+				removeWithRegex(state, /^alliance|^sphere/); 
+				$(state).addClass('hidden').removeClass('visible').addClass('alliance0'); 
+			}
 	}
     
         function unipolarAlliances(){
-	        var m = 0; 
-	        var n = 0; 
-	        var toDisintegrate = false; 
 	        function initialiseUnipolar(){
 		        if (m != events[j].hegemon-1 && events[j].statesAfterUpdate[m].length != 1){
 		        	state = states[(((m)%4)*4 + Math.floor((m)/4))]; 
@@ -675,30 +723,10 @@ $(document).ready(function(){
 		  		
 			removeContent('interventionDetails');	
 			$('#interventionStory').removeClass('hidden').addClass('visible');
-			if (interventionKnow == false){
-				$('#interventionStory').removeClass('hidden').addClass('visible');
-				$('#interventionExpl').removeClass('hidden').addClass('visible'); 
-				$('#elaborateIntervention').click(function(){
-					$('#interventionExpl').removeClass('visible').addClass('hidden'); 
-					if ($('#interventionKnow').prop('checked')){
-						interventionKnow = true; 
-					}	
-					if (interventionVisit == false){
-						interventionVisit = true;
-						ajaxGetsQuiz('intervention_questions', 'interventionQuiz', 'interventionCont', addWarPictures, 'interventionCheck');
-					}	
-				});
-
+			if (interventionVisit == false){
+				interventionVisit = true; 
+				displayExplanation('intervention', 'intervention_questions', 'interventionQuiz', 'interventionCont', addWarPictures, 'interventionCheck');
 			}
-
-			
-			
-			else{
-				if (interventionVisit == false){
-					interventionVisit = true; 
-					ajaxGetsQuiz('intervention_questions', 'interventionQuiz', 'interventionCont', addWarPictures, 'interventionCheck');
-				}
-			}	
 		}
 
 	        function disintegrateUnipolar(){
@@ -728,121 +756,109 @@ $(document).ready(function(){
 		}
 	
 	        	
-			removeContent('unipolarDecline'); 
-			if (i==0){
-				hideStories(); 
-				if (events[j].flags.firstHegemon == true){
-					if (unipolarVisit == false){
-						$('#unipolarInitialisation').removeClass('hidden').addClass('visible'); 
-						removeContent('unipolarDetails0'); 
-					        if (unipolarKnow == true){
-							if (unipolarVisit == false){
-								unipolarVisit = true;
-								ajaxGetsQuiz('unipolar_transform_questions', 'unipolarQuiz', 'unipolarCont', unipolarAlliances, 'unipolarCheck'); 
-							}
-						}
-						else{
-							$('#unipolarExpl').removeClass('hidden').addClass('visible'); 
-							$('#elaborateUnipolar').click(function(){
-								$('#unipolarExpl').removeClass('visible').addClass('hidden'); 
-							        if ($('#unipolarKnow').prop('checked')){
-									unipolarKnow = true; 
-								}	
-								if (unipolarVisit == false){
-									unipolarVisit = true;
-									ajaxGetsQuiz('unipolar_transform_questions', 'unipolarQuiz', 'unipolarCont', unipolarAlliances, 'unipolarCheck');
-								}	
-							});
-						
-						}
-					}
-					else{
-						$('#unipolarDetails0').removeClass('hidden').addClass('visible'); 
-						k=events[j].hegemon;
-						var state = states[(((k-1)%4)*4 + Math.floor((k-1)/4))]; 
-						$(state).removeClass('alliance0').addClass('alliance100');  
-						addContent('unipolarDetails0', 'The new hegemon is state ' + String.fromCharCode(64+parseInt(k)));
-						i++; 
-						setTimeout(initialiseUnipolar, 2000); 		
-					}	
-				}	
-				
-				else{
-					if (events[j].changedStates.length != 1){ 
-						if (visitedWar == false){
-							visitedWar = true;
-							animateUnipolarWar();
-						}
-					
-						else{
-							hideStories(); 
-							i++; 
-							$('#decliningUnipolar').removeClass('hidden').addClass('visible'); 
-							declineVisit = true;
-							ajaxGetsQuiz('unipolar_power_questions', 'unipolarPowerQuiz', 'unipolarPowerCont', unipolarAlliances, 'unipolarPowerCheck'); 
-							
-						}
-					
-					
-					}
-					else{
-						$('#unipolarDetails0').removeClass('visible').addClass('hidden');
-						if (unipolarWarVisit == false && events[j].flags.firstHegemon == true){
-							$('#unipolarWar').removeClass('hidden').addClass('visible');
-							unipolarWarVisit = true;
-							ajaxGetsQuiz('unipolar_war', 'unipolarWarQuiz', 'unipolarWarCont', displayUniPeace, 'unipolarWarCheck');
-					
-						}
-						else if (events[j].flags.firstHegemon == false){
-							displayUniPeace(); 
-						}
-					}
+	        var m = 0; 
+	        var n = 0; 
+	        var toDisintegrate = false; 
+		removeContent('unipolarDecline'); 
+		if (i==0){
+			hideStories(); 
+			if (events[j].flags.firstHegemon == true){
+				/*diplay first here*/
+				if (unipolarVisit == false){
+					$('#unipolarInitialisation').removeClass('hidden').addClass('visible'); 
+					removeContent('unipolarDetails0');
+					unipolarVisit = true;
+					displayExplanation('unipolar', 'unipolar_transform_questions', 'unipolarQuiz', 'unipolarCont', unipolarAlliances, 'unipolarCheck'); 
 				}
-   			}
-			else{
-				if (events[j].changedStates.length != 1){ 
-					hideStories(); 
-					removeContent('unipolarDecline'); 
-					$('#unipolarDecline').addClass('visible').addClass('hidden'); 
-					$('#unipolarDetails').addClass('hidden').addClass('visible'); 
-					addContent('unipolarDecline', 'The new power of the hegemon is ' + events[j].changedStates[1][0]); 
-					if (events[j].endPolarity != 'unipolar'){
-						addContent('unipolarDecline', 'The world is no longer unipolar'); 	
-						unipolarEnd = true; 
-					}
-					var k = events[j].hegemon; 
+				else{
+					$('#unipolarDetails0').removeClass('hidden').addClass('visible'); 
+					k=events[j].hegemon;
 					var state = states[(((k-1)%4)*4 + Math.floor((k-1)/4))]; 
-					removeWithRegex(state, /^alliance|^sphere/);
-					if (events[j].endPolarity != 'unipolar'){
-						$(state).addClass('alliance0');
+					$(state).removeClass('alliance0').addClass('alliance100');  
+					addContent('unipolarDetails0', 'The new hegemon is state ' + String.fromCharCode(64+parseInt(k)));
+					i++; 
+					setTimeout(initialiseUnipolar, 2000); 		
+				}	
+			}	
+			
+			else{
+				/*start of new but not first hege*/
+				if (events[j].changedStates.length != 1){ 
+					if (visitedWar == false){
+						visitedWar = true;
+						animateUnipolarWar();
 					}
+				
 					else{
-						$(state).addClass('alliance100');
-					}
-					addPower(state, events[j].changedStates[1][0], k-1);
-					i=0
-					if (events[j].endPolarity != 'unipolar'){
-						setTimeout(disintegrateUnipolar, 4000);  
-					} 
-					else{
-						$('#unipolarDetails').addClass('visible').removeClass('hidden');
-						addContent('unipolarDetails', 'The world remains unipolar');
+						hideStories(); 
+						i++; 
+						$('#decliningUnipolar').removeClass('hidden').addClass('visible'); 
+						declineVisit = true;
+						ajaxGetsQuiz('unipolar_power_questions', 'unipolarPowerQuiz', 'unipolarPowerCont', unipolarAlliances, 'unipolarPowerCheck'); 
 						
-						setTimeout(toNewTurn, 2000);	
 					}
+				
+				
 				}
 				else{
 					$('#unipolarDetails0').removeClass('visible').addClass('hidden');
-					$('#unipolarWar').removeClass('hidden').addClass('visible');
-					if (unipolarWarVisit == false){
+					if (unipolarWarVisit == false && events[j].flags.firstHegemon == true){
+						$('#unipolarWar').removeClass('hidden').addClass('visible');
 						unipolarWarVisit = true;
 						ajaxGetsQuiz('unipolar_war', 'unipolarWarQuiz', 'unipolarWarCont', displayUniPeace, 'unipolarWarCheck');
 				
 					}
-				} 
+					else if (events[j].flags.firstHegemon == false){
+						displayUniPeace(); 
+					}
+				}
 			}
-		}	
-       
+		}
+		else{
+			/* i was not 0, need to other things*/
+			if (events[j].changedStates.length != 1){ 
+				hideStories(); 
+				removeContent('unipolarDecline'); 
+				$('#unipolarDecline').addClass('visible').addClass('hidden'); 
+				$('#unipolarDetails').addClass('hidden').addClass('visible'); 
+				addContent('unipolarDecline', 'The new power of the hegemon is ' + events[j].changedStates[1][0]); 
+				if (events[j].endPolarity != 'unipolar'){
+					addContent('unipolarDecline', 'The world is no longer unipolar'); 	
+					unipolarEnd = true; 
+				}
+				var k = events[j].hegemon; 
+				var state = states[(((k-1)%4)*4 + Math.floor((k-1)/4))]; 
+				removeWithRegex(state, /^alliance|^sphere/);
+				if (events[j].endPolarity != 'unipolar'){
+					$(state).addClass('alliance0');
+				}
+				else{
+					$(state).addClass('alliance100');
+				}
+				addPower(state, events[j].changedStates[1][0], k-1);
+				i=0
+				if (events[j].endPolarity != 'unipolar'){
+					setTimeout(disintegrateUnipolar, 4000);  
+				} 
+				else{
+					$('#unipolarDetails').addClass('visible').removeClass('hidden');
+					addContent('unipolarDetails', 'The world remains unipolar');
+					
+					setTimeout(toNewTurn, 2000);	
+				}
+			}
+			else{
+				$('#unipolarDetails0').removeClass('visible').addClass('hidden');
+				$('#unipolarWar').removeClass('hidden').addClass('visible');
+				if (unipolarWarVisit == false){
+					unipolarWarVisit = true;
+					ajaxGetsQuiz('unipolar_war', 'unipolarWarQuiz', 'unipolarWarCont', displayUniPeace, 'unipolarWarCheck');
+			
+				}
+			} 
+		}
+	}	
+
 		
 	function clearBipolar(){
 	    	function clearFirst(){
@@ -889,27 +905,9 @@ $(document).ready(function(){
 				bipolarCounter = 0;
 				$('#bipolarSystemicChange').removeClass('hidden').addClass('visible'); 
 				removeContent('bipolarSystemDetails');
-				if (disinKnow == true){
-					if (disinVisit == false){
-						disinVist = true;
-					       	i++;	
-						ajaxGetsQuiz('disintegration_questions', 'disintegrationQuiz', 'disintegrationCont', bipolarSystemChange, 'disintegrationCheck'); 
-					}
-				}
-				else{
-					$('#disinExpl').removeClass('hidden').addClass('visible'); 
-					$('#elaborateDisin').click(function(){
-						$('#disinExpl').removeClass('visible').addClass('hidden'); 
-						if ($('#disinKnow').prop('checked')){
-							disinKnow = true;
-						}	
-						if (disinVisit == false){
-							disinVist = true; 
-							i++;
-							ajaxGetsQuiz('disintegration_questions', 'disintegrationQuiz', 'disintegrationCont', bipolarSystemChange, 'disintegrationCheck'); 
-						}
-					}); 
-				}
+				i++;
+				disinVisit = true;
+				displayExplanation('disin', 'disintegration_questions', 'disintegrationQuiz', 'disintegrationCont', bipolarSystemChange, 'disintegrationCheck'); 
 			}
 		}
 		else if (i!=0){
@@ -942,9 +940,7 @@ $(document).ready(function(){
 			}
 			else{
 				removeWithRegex(state, /^alliance|^sphere/);
-				/*$(state).addClass('state');*/ 
 				$(state).addClass('alliance0'); 
-				/*$(state).addClass('visible');*/
 				addPower(state, power, stateNumber-1);
 				addContent('bipolarSystemDetails', 'A new state ' +  String.fromCharCode(65+parseInt(stateNumber)-1)+' with power ' + power +' was created from disintegration of the bipolar power ');
 			}
@@ -1019,9 +1015,6 @@ $(document).ready(function(){
 				blue = true;
 			}
 			removeWithRegex(state, /^alliance|^sphere/);
-		       	/*
-			$(state).addClass('state');
-		       	$(state).addClass('visible'); */
 		       	addPower(state, power, stateNumber-1); 
 		       	if (blue == false){
 			    	$(state).addClass('sphere2'); 
@@ -1079,26 +1072,8 @@ $(document).ready(function(){
 				$('#bipolarAlliances').removeClass('hidden').addClass('visible');    
 				removeContent('bipolarDetails1');
 				removeContent('bipolarDetails2');
-				if (bipolarKnow == true){
-					if (bipolarVisit == false){
-						bipolarVisit = true; 
-						ajaxGetsQuiz('first_bipolar', 'bipolarQuiz', 'bipolarCont', bipolarAlliances, 'bipolarCheck'); 
-				
-					}
-				}
-				else{
-					$('#bipolarExp').removeClass('hidden').addClass('visible'); 
-					$('#elaborateBipolar').click(function(){
-						$('#bipolarExp').removeClass('visible').addClass('hidden');
-					        if ($('#bipolarKnow').prop('checked')){
-							bipolarKnow = true; 
-						}	
-						if (bipolarVisit == false){
-							bipolarVisit = true; 
-							ajaxGetsQuiz('first_bipolar', 'bipolarQuiz', 'bipolarCont', bipolarAlliances, 'bipolarCheck'); 
-						}
-					});
-				}
+				bipolarVisit = true; 
+				displayExplanation('bipolar', 'first_bipolar', 'bipolarQuiz', 'bipolarCont', bipolarAlliances, 'bipolarCheck'); 
 			}
 			else{
 				changed = true; 
@@ -1475,28 +1450,10 @@ $(document).ready(function(){
 			else{
 				if (escalationVisit == false){
 					hideStories();
-					if (escalationKnow == false){
-						multipolarEnd = true;
-						$('#systemicWar').removeClass('hidden').addClass('visible');
-						$('#escalationExpl').removeClass('hidden').addClass('visible'); 
-						$('#elaborateEscalation').click(function(){
-							$('#escalationExpl').removeClass('visible').addClass('hidden'); 
-							if ($('#escalationKnow').prop('checked')){
-								escalationKnow = true; 
-							}	
-							if (escalationVisit == false){
-								escalationVisit = true;
-								ajaxGetsQuiz('escalation_questions', 'escalationQuiz', 'escalationCont', escalateWars, 'escalationCheck');
-							}	
-						});
-
-					}
-					else{
-						multipolarEnd = true;
-						escalationVisit = true; 
-						$('#systemicWar').removeClass('hidden').addClass('visible');
-						ajaxGetsQuiz('escalation_questions', 'escalationQuiz', 'escalationCont', escalateWars, 'escalationCheck');
-					}
+					multipolarEnd = true;
+					escalationVisit = true;
+					$('#systemicWar').removeClass('hidden').addClass('visible');
+					displayExplanation('escalation', 'escalation_questions', 'escalationQuiz', 'escalationCont', escalateWars, 'escalationCheck');
 				}
 				else{
 					var attackers = [];
@@ -1531,8 +1488,7 @@ $(document).ready(function(){
 							}
 						}	
        		         			$(attack).addClass('attacker');
-						$(chil[m]).removeClass('hidden'); 
-						$(chil[m]).addClass('visible'); 
+						$(chil[m]).removeClass('hidden').addClass('visible'); 
 	   				}
 	   			  
 	   				for (var k =0; k<events[j].escalation[1].length; k++){
@@ -1551,8 +1507,7 @@ $(document).ready(function(){
 							}
 						}	
        		         			$(defend).addClass('defender');
-						$(chil[m]).removeClass('hidden'); 
-						$(chil[m]).addClass('visible'); 
+						$(chil[m]).removeClass('hidden').addClass('visible'); 
 	   				}
 					previsouly = 'multipolar'; 
 	   				setTimeout(fightingWar, 4000);
@@ -1583,7 +1538,7 @@ $(document).ready(function(){
 				$('#limitedWar').removeClass('hidden').addClass('visible');
 				var attackers = $('.'+war[0]);
 				/*why does jQuery fail here?*/
-				var defenders = $('.war[1]');
+				var defenders = $('.'+war[1]);
 				var attackNumber = war[0].charAt(8); 
 				var defendNumber = war[1].charAt(8);
 				$('#warDetails' + attackNumber).removeClass('hidden').addClass('visible');
@@ -1601,8 +1556,7 @@ $(document).ready(function(){
 						}
 					}	
 					$(attacker).addClass('attacker');
-				        $(chil[m]).removeClass('hidden'); 
-					$(chil[m]).addClass('visible'); 	
+				        $(chil[m]).removeClass('hidden').addClass('visible'); 	
 				}
 					   
 				for (var k = 0; k < defenders.length; k++){
@@ -1614,8 +1568,7 @@ $(document).ready(function(){
 						}
 					}	
 					$(defender).addClass('defender');
-				       	$(chil[m]).removeClass('hidden'); 
-					$(chil[m]).addClass('visible'); 	
+				       	$(chil[m]).removeClass('hidden').addClass('visible'); 	
 				}
 				i=0; 
 				setTimeout(escalateWars, 2000);		   
@@ -1631,51 +1584,13 @@ $(document).ready(function(){
 	    		hideStories(); 
 			$('#thinkingPause').removeClass('hidden').addClass('visible');
 			if (thinkWarVisit == false){
+				thinkWarVisit = true;
 				if (events[j].polarity == 'multipolar'){
-					if (thinkingKnow == true){
-						if (thinkingWarVisit == false){
-							thinkingWarVisit = true; 
-							ajaxGetsQuiz('thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
-						}
-					}
-					else{
-						$('#thinkingExpl').removeClass('hidden').addClass('visible'); 
-						$('#elaborateThinking').click(function(){
-							$('#thinkingExpl').removeClass('visible').addClass('hidden');
-							if ($('#thinkingKnow').prop('checked')){
-								thinkingKnow = true; 
-							}
-							if (thinkingWarVisit == false){
-								thinkingWarVisit = true;
-								ajaxGetsQuiz('thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
-							}
-						}); 
-					}
-
+					displayExplanation('thinking', 'thinking_war', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
 				}
 				else if (events[j].polarity == 'bipolar'){
-					if (bipolarThinkingKnow == true){
-						if (thinkingWarVisit == false){
-							ajaxGetsQuiz('thinking_bipolar', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
-							thinkingWarVisit = true;
-						}
-
-					}
-					else{
-						$('#bipolarThinkingExpl').removeClass('hidden').addClass('visible'); 
-						$('#elaborateThinkingBipolar').click(function(){
-							$('#bipolarThinkingExpl').removeClass('visible').addClass('hidden'); 
-							if ($('#bipolarThinkingKnow').prop('checked')){
-								bipolarThinkingKnow = true; 
-							}
-							if (thinkingWarVisit == false){
-								ajaxGetsQuiz('thinking_bipolar', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
-								thinkingWarVisit = true;
-							}
-						});
-					}	
+					displayExplanation('bipolarThinking', 'thinking_bipolar', 'thinkingQuiz', 'thinkingCont', thinkWar, 'thinkingCheck');
 				}
-				thinkWarVisit = true; 
 			}
 			else{
 	   			if (events[j].polarity == 'multipolar'){
@@ -1773,28 +1688,11 @@ $(document).ready(function(){
 	        	if (i==0){     
 				hideStories(); 
 			    	if (visitedAlliance == false){
-					$('#alliancePause').removeClass('hidden').addClass('visible'); 
-					if (allianceKnow == false){
-						$('#allianceExpl').addClass('visible').removeClass('hidden'); 
-						$('#elaborateAlliance').click(function(){
-							if (visitedAlliance == false){
-								$('#allianceExpl').removeClass('visible').addClass('hidden'); 
-								group_name = 'alliance_questions';
-								ajaxGetsQuiz(group_name, 'allianceQuiz', 'allianceCont', updateAlliances, 'allianceCheck');
-								visitedAlliance = true;
-								if ($('#allianceKnow').prop('checked')){
-									allianceKnow = true;
-								}
-							}
-						});	
-					}
-					else{
-						group_name = 'alliance_questions'
-						ajaxGetsQuiz(group_name, 'allianceQuiz', 'allianceCont', updateAlliances, 'allianceCheck');
-						visitedAlliance = true;
-					}
-			    	}
-			    	else{
+					$('#alliancePause').removeClass('hidden').addClass('visible');
+				        visitedAlliance = true;
+					displayExplanation('alliance', 'alliance_questions', 'allianceQuiz', 'allianceCont', updateAlliances, 'allianceCheck');
+				}
+			    	else{	
 			    		$('#assessAlliances').removeClass('hidden').addClass('visible');
 	       				for (k=1; k<=6; k++){
        		   				removeContent('desc' + k);
@@ -1841,7 +1739,7 @@ $(document).ready(function(){
 		   		if (powerVisit == false){
 			    		hideStories();
 					removeContent('powerDetails'); 
-					if ((polarity == 'multipolar' && powerKnow == false) || (polarity == 'bipolar' && bipolarPowerKnow == false) || (polarity == 'unipolar' && unipolarUpdateKnow == false)){
+					if ((polarity == 'multipolar' && explControl['powerKnow'] == false) || (polarity == 'bipolar' && explControl['bipolarPowerKnow'] == false) || (polarity == 'unipolar' && explControl['unipolarUpdateKnow'] == false)){
 						if (polarity == 'multipolar'){
 						 	var story = $('#updatePowers');
 							var expl = $('#powerExpl');
@@ -1858,23 +1756,24 @@ $(document).ready(function(){
 						$(expl).removeClass('hidden').addClass('visible'); 
 
 						$('.elaboratePower').click(function(){
+		
 							var polarity = events[j].polarity; 
 							if (polarity == 'multipolar'){
 								var expl = $('#powerExpl');
 								if ($('#powerKnow').prop('checked')){
-									powerKnow = true; 
+									explControl['powerKnow']= true; 
 								}	
 							}
 							else if (polarity == 'bipolar'){
 								var expl = $('#bipolarPowerExpl'); 
 								if ($('#bipolarPowerKnow').prop('checked')){
-									bipolarPowerKnow = true; 
+									explControl['bipolarPowerKnow'] = true; 
 								}	
 							}
 							else{
 								var expl = $('#unipolarPowerExpl'); 
 								if ($('#unipolarPowerKnow').prop('checked')){
-									unipolarUpdateKnow = true; 
+									explControl['unipolarUpdateKnow'] = true; 
 								}	
 							}
 							$(expl).removeClass('visible').addClass('hidden'); 
@@ -1956,7 +1855,7 @@ $(document).ready(function(){
 								if (events[j-1].polarity == 'unipolar' && events[j].polarity == 'unipolar'){
 									var stateNum = i+1; 
 									if (stateNum == events[j].hegemon){
-									$(state).addClass('alliance100'); 	
+										$(state).addClass('alliance100'); 	
 									}	
 									else{
 										$(state).addClass('alliance001'); ; 	
@@ -2207,19 +2106,11 @@ $(document).ready(function(){
 		var multipolarEnd = false; 
 		var bipolarEnd = false;
 		var unipolarEnd = false;
-		var allianceKnow = false; 
-		var thinkingKnow = false; 
-		var bipolarKnow = false; 
-		var bipolarThinkingKnow = false;	
-		var disinKnow = false;
-	        var declineKnow = false;
-		var interventionKnow = false; 
-		var unipolarKnow = false; 
-		var uniDisKnow = false;
-		var escalationKnow = false; 		
-		var powerKnow = false; 
-		var unipolarUpdateKnow = false; 
-		var bipolarPowerKnow = false; 
+		
+		var explControl = {'allianceKnow': false, 'thinkingKnow': false, 'bipolarKnow': false, 'bipolarThinkingKnow': false, 'disinKnow': false, 'declineKnow': false, 'interventionKnow': false, 'unipolarKnow': false, 'uniDisKnow': false, 'powerKnow': false, 'unipolarUpdateKnow': false, 'bipolarPowerKnow': false} 
+		
+	    	$(storyFrame).removeClass('hidden').addClass('visible'); 	
+      		$(frame).removeClass('hidden').addClass('visible'); 	
 		if (events[0].polarity == 'multipolar'){
 			$('#newTurnMulti').removeClass('hidden').addClass('visible');
 			removeContent('turnDetailsMulti');
