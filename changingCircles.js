@@ -1,18 +1,14 @@
 /* Copyright Reetta Vaahtoranta. All rights reserved. */
 /*passing the buck not always working, sometimes only one alliance
  * ===
- * some functions too long
+ * need to think about the layout more
  * identation 
  * comments
- * a function for displaying explanations
  *somewhere in multipolar a winner/ defender image was not removed properly
- * utilities file
  * problem with states disappearing from the world
- * in html file it says elaborate thinking bipolar for elaborate button: this is inconsistent. Edit html file, for now, changes the elaborate thinking control to true */
- 
+*/ 
 
 $(document).ready(function(){
-	test();
 	var num = 0;
 	var initialStates; 
 	var manual; 
@@ -28,6 +24,7 @@ $(document).ready(function(){
 	var bipolarCounter = 0; 	
 	
 	function generateParameterForm(){
+		/*generate the intial form to ask about how the simulation should be run*/
 		$('#stateNumbers').removeClass('visible').addClass('hidden'); 
 		var stateDetails = $('#statePowers'); 
 		$('#statePowers').removeClass('hidden').addClass('visible');  
@@ -147,58 +144,8 @@ $(document).ready(function(){
 		});
 	});
 
-	function getAllianceColour(num){
-		if (num == 1){
-			return 'Blue'; 
-		}
-		else if (num == 2){
-			return 'Green';
-		}
-		else if (num == 3){
-			return 'Orange'; 
-		}
-		else if (num ==4){
-			return 'Purple'; 
-		}
-		else if (num == 5){
-			return 'Yellow'; 
-		}
-		else{
-			return 'Pink'; 
-		}
-	}
-
-	function removeWithRegex(div, pattern){
-		/*removes all classes matching a given pattern from a given div*/
-		var classes = $(div).attr('class').split(' ');
-		for (var k=0; k<classes.length; k++){
-			if (classes[k].match(pattern)){
-				$(div).removeClass(classes[k]);
-			}
-		}	
-	}
-
-	function removeContent(div) {
-
-		$('#'+div).empty().append('<br>');
-	}	
-	function removeQuizContent(div) {
-
-		$('#'+div).empty();
-	}	
-
-	function addContent(div, content){
-		$('#'+div).append(content + '<br>');
-	}
-
-	function initialPowerSort(a, b){
-		return b[0] - a[0];
-	}
-
-	function initialOrderSort(a, b){
-		return a[3] - b[3]
-	}
 	function startTheSimulation(){
+		/*starts runnign the simulation with the given parameters*/
 
 		function ajaxGetsQuiz(group_name, pause, contDiv, continueFunction, checkbox){
 			var control = false;
@@ -539,7 +486,16 @@ $(document).ready(function(){
 	      
       	}
       	else{
+      		var states = $('.state'); 
+    			for (i=0; i<num; i++){
+       				state=states[((i%4)*4 + Math.floor(i/4))];        
+	   			$(state).removeClass('hidden').addClass('visible');  
+	  			addPower(state, powersOfStates[i], i);     
+       			}
+		
 		function addPower(state, power, label){
+		/*replaces the power of the given state with a new power and updates the states label*/
+			
 			if (terrIntel != undefined){
 				var terr = terrIntel[label][0]; 
 				var intel = terrIntel[label][1]; 
@@ -548,34 +504,19 @@ $(document).ready(function(){
 				var terr = initialStates[label][1];
 				var intel = initialStates[label][2]; 
 			}
-	       		var powerDiv = state.getElementsByClassName('powerDesc')[0]; 
-	       		powerDiv.innerHTML = 'Power: '+ power + '<br>';
+			var powerDiv = state.getElementsByClassName('powerDesc')[0]; 
+			powerDiv.innerHTML = 'Power: '+ power + '<br>';
 			powerDiv.innerHTML += 'Intellect: ' + intel+ '<br>';
 			powerDiv.innerHTML += 'Territory: ' + terr + '<br>';
 			
 			removeWithRegex(state, /^power/);
 			if (power < 60){
-       				$(state).addClass('power' +power);
-   		    }
-   		    	else{
-	   		    $(state).addClass('power60');
-   		    }   
-        	}	  
-      		var states = $('.state'); 
-    			for (i=0; i<num; i++){
-       				state=states[((i%4)*4 + Math.floor(i/4))];        
-	   			$(state).removeClass('hidden').addClass('visible');  
-	  			addPower(state, powersOfStates[i], i);     
-       		}
-		function hideStories(){
-	   		var stories = $('.story');   
-	       		for (var i=0; i < stories.length; i++){
-		   		story = stories[i];  
-		   		$(story).removeClass('visible').addClass('hidden'); 
-	       		}
-        	}
-          
-        
+				$(state).addClass('power' +power);
+		    }
+			else{
+			    $(state).addClass('power60');
+		    }   
+		}	  
         	function initialiseStateBeforeTurn(turnNumber, stateNumber){
 			function multipolarIni(){
 				if (turnNumber> 0){
@@ -1929,6 +1870,7 @@ $(document).ready(function(){
 				}
 			}
 		}
+		/*initialise variables to start the simulation*/
 		var output = getWorldEvents(1, initialStates, false, previously);
 		var events =[]; 
 		for (var k=0; k<output.length-2; k++){
@@ -1942,8 +1884,6 @@ $(document).ready(function(){
 		var alliances=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 		var sphere1text = ''; 
 		var sphere2text = '';
-		var changed = false; 
-		var visited = false; 
 		/*variables for keeping track of quizzes that need ot be fetched*/
 		var buckPassVisit = false; 
 		var disinVisit = false; 
@@ -1964,13 +1904,17 @@ $(document).ready(function(){
 		var escalationVisit = false;
 	        var limitVisit = false;
 	       	var unipolarWarVisit = false;	
+		/*other variables to keep track of simulation*/
 		var visitedWar = false;
+		var changed = false; 
+		var visited = false; 
 	        var controlClick = true; 	
 		var limitedEnd = false; 
 		var multipolarEnd = false; 
 		var bipolarEnd = false;
 		var unipolarEnd = false;
 		
+		/*for keeping track of which explanations have been seen*/
 		var explControl = {'allianceKnow': false, 'thinkingKnow': false, 'bipolarKnow': false, 'bipolarThinkingKnow': false, 'disinKnow': false, 'declineKnow': false, 'interventionKnow': false, 'unipolarKnow': false, 'uniDisKnow': false, 'powerKnow': false, 'unipolarPowerKnow': false, 'bipolarPowerKnow': false} 
 		
 	    	$(storyFrame).removeClass('hidden').addClass('visible'); 	
