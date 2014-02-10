@@ -34,33 +34,33 @@ function removeWithRegex(div, pattern){
 }
 
 function removeContent(div) {
-/*removes stories*/
+	/*removes stories*/
 	$('#'+div).empty().append('<br>');
 }	
 
 function removeQuizContent(div) {
-/*removes quizzes*/
+	/*removes quizzes*/
 	$('#'+div).empty();
 }	
 
 function addContent(div, content){
-/*adds content and inserts a line break*/
+	/*content and inserts a line break*/
 	$('#'+div).append(content + '<br>');
 }
 
 function initialPowerSort(a, b){
-/*a function to sort states according to their powers*/
+	/*a function to sort states according to their powers*/
 	return b[0] - a[0];
 }
 
 function initialOrderSort(a, b){
-/*a function to sort states according to their id number*/
+	/*a function to sort states according to their id number*/
 	return a[3] - b[3]
 }
 
 
 function hideStories(){
-/*hides all the currently visible stories*/
+	/*hides all the currently visible stories*/
 	var stories = $('.story.visible');   
 	for (var i=0; i < stories.length; i++){
 		$(stories[i]).removeClass('visible').addClass('hidden'); 
