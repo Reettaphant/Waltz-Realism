@@ -1885,6 +1885,9 @@ $(document).ready(function(){
 		var sphere1text = ''; 
 		var sphere2text = '';
 		/*variables for keeping track of quizzes that need ot be fetched*/
+		var changed = false; 
+		var visited = false; 
+		/*for pause stories */
 		var buckPassVisit = false; 
 		var disinVisit = false; 
 		var noPowerVisit = false; 	
