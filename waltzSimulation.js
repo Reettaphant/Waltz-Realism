@@ -528,66 +528,66 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 	
 	War.prototype = {
 		startMultipolarWar: function(){
-			function calculateMultipolarWar(){
-				function calculateEscalation(){
-					for (var k =0; k<coalitionCounter.length; k++){
-						if	(coalitionCounter[k].atWar == false){
-								notInWar.push(coalitionCounter[k]);	
-								notWar += 1; 
-						}
-					}
-				
-					if ((coalitionCounter.lenght <=3 && notWar == 0) || (coalitionCounter.length > 3 && notWar <2)){
-						wars[2]=true;
-						worldWar = true; 
-						addContent('escalated into systemic becasue everyone was fighting'); 
-						return true; 	
-					}
-					else{
-						var escProb = Math.random();
-						if ((escProb<0.25 )|| multipolarCounter >= 3){ /*changed from 0,25*/
-							addContent('escalated into systemic because other states joined'); 
-							wars[2]=true; 
-							worldWar = true; 
-							while (notInWar.length != 0){
-								coalitionToJoin = notInWar[0]; 
-								notInWar.splice(0, 1);
-								var aPower = 0; 
-								var dPower = 0; 
-								for (var k=0; k< wars[0].length; k++){
-									aPower += wars[0][k].power; 	
-								}	
-								aPower *= 0.9; 
-								for (var k=0; k< wars[1].length; k++){
-									dPower += wars[1][k].power; 	
-								}		
-								if (aPower < dPower){
-									wars[0].push(coalitionToJoin); 
-									for (var k=0; k<coalitionCounter.length; k++){
-										if (coalitionCounter[k] == coalitionToJoin){
-											var alNum = k+1; 
-											esc1.push('alliance'+alNum);  
-											break; 	
-										}	
-									}
-									coalitionToJoin.atWar == true; 	
-								}
-								else{
-									wars[1].push(coalitionToJoin);
-									for (var k=0; k<coalitionCounter.length; k++){
-										if (coalitionCounter[k] == coalitionToJoin){
-											var alNum = k+1; 
-											esc2.push('alliance'+alNum);
-											break; 	
-										}	
-									}	 	
-									coalitionToJoin.atWar == true;
-								}
-							}
-							return true;
-						}	
+			function calculateEscalation(){
+				var notWar = 0;
+				for (var k =0; k<coalitionCounter.length; k++){
+					if	(coalitionCounter[k].atWar == false){
+							notInWar.push(coalitionCounter[k]);	
+							notWar += 1; 
 					}
 				}
+			
+				if ((coalitionCounter.lenght <=3 && notWar == 0) || (coalitionCounter.length > 3 && notWar <2)){
+					wars[2]=true;
+					worldWar = true; 
+					addContent('escalated into systemic becasue everyone was fighting'); 
+					return true; 	
+				}
+				else{
+					if ((Math.random()<0.25 )|| multipolarCounter >= 3){ /*changed from 0,25*/
+						addContent('escalated into systemic because other states joined'); 
+						wars[2]=true; 
+						worldWar = true; 
+						while (notInWar.length != 0){
+							coalitionToJoin = notInWar[0]; 
+							notInWar.splice(0, 1);
+							var aPower = 0; 
+							var dPower = 0; 
+							for (var k=0; k< wars[0].length; k++){
+								aPower += wars[0][k].power; 	
+							}	
+							aPower *= 0.9; 
+							for (var k=0; k< wars[1].length; k++){
+								dPower += wars[1][k].power; 	
+							}		
+							if (aPower < dPower){
+								wars[0].push(coalitionToJoin); 
+								for (var k=0; k<coalitionCounter.length; k++){
+									if (coalitionCounter[k] == coalitionToJoin){
+										var alNum = k+1; 
+										esc1.push('alliance'+alNum);  
+										break; 	
+									}	
+								}
+								coalitionToJoin.atWar == true; 	
+							}
+							else{
+								wars[1].push(coalitionToJoin);
+								for (var k=0; k<coalitionCounter.length; k++){
+									if (coalitionCounter[k] == coalitionToJoin){
+										var alNum = k+1; 
+										esc2.push('alliance'+alNum);
+										break; 	
+									}	
+								}	 	
+								coalitionToJoin.atWar == true;
+							}
+						}
+						return true;
+					}	
+				}
+			}
+			function calculateMultipolarWar(){
 				var isWar = false; 
 				addContent('calculating multipolar war'); 
 				coalitionCounter = coalitions.slice(); 
@@ -639,7 +639,6 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 							break; 
 						}
 					}
-					var notWar = 0;
 					if(wars != 0){
 						var escal = calculateEscalation();
 					}
@@ -681,8 +680,7 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 			this.wars = wars;
 			this.world.worldHistory.push(result);	 
 		},
-		startBipolarWar: function(){
-			alert('in start bipolar war new');
+		bipolarWar: function(){
 			function calculateBipolarWar(){
 				alert('calculating bipolar war');
 				function calculatePowerChanges(){
@@ -752,17 +750,6 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 					return true;
 				}
 			}
-		
-			alert('now looking at change');
-			var age = this.world.polarity.length;
-			/*and this separate calculate bipolar war fun*/
-			if (age >= 4){
-				if(this.world.polarity[age-4]== 'bipolar' && this.world.polarity[age-3]== 'bipolar' &&  this.world.polarity[age-2]== 'bipolar' &&  this.world.polarity[age-1]== 'bipolar'){
-					this.bipolarDisintegration();
-				}
-		}
-		else{
-			alert('age not enough, now assesing war');
 			var state1Won; 
 			var bipState;
 		       	var changedStates = this.changedStates;	
@@ -785,10 +772,40 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 			else{
 				this.world.worldHistory.push('peaceful'); 	
 			} 
-		}
-			
+		
+
+		}, 
+		startBipolarWar: function(){
+			this.world.states.sort(stateSort); 
+			var age = this.world.polarity.length;
+			/*and this separate calculate bipolar war fun*/
+			if (age >= 4){
+				if(this.world.polarity[age-4]== 'bipolar' && this.world.polarity[age-3]== 'bipolar' &&  this.world.polarity[age-2]== 'bipolar' &&  this.world.polarity[age-1]== 'bipolar'){
+					this.bipolarDisintegration();
+				}
+			}
+			else{
+				this.bipolarWar();
+			}
 		},
-		startUnipolarWar: function(){
+		assessUnipolarDisin: function(){
+			this.world.states.sort(stateSort); 
+			var age = this.world.polarity.length;
+			if (age >=3){
+				if(this.world.polarity[age-3] == 'unipolar' && this.world.polarity[age-2] == 'unipolar' && this.world.polarity[age-1] == 'unipolar'){
+					this.world.states[0].addPower(Math.round(-1 * this.world.states[0].power/(3.5))); 
+					this.changedStates.push([this.world.states[0].power, parseInt(this.world.states[0].label)]);
+					this.world.states[0].decliningHegemon= true;	
+					this.world.decliningHegemon = true; 
+				}
+			}	
+			if (this.world.states[0].power > 0.5 * this.world.getTotalPower()){
+				this.world.worldHistory.push('peaceful'); 	
+			}
+			else{
+				this.world.worldHistory.push('systemic change');
+				
+			}
 
 		}, 
 		
@@ -834,42 +851,20 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 
 		}, 
 
-		calculateWar: function(){
+	calculateWar: function(){
 		/*calculates if a war is going to occur in the world*/
 		/*here is a great idea about what to do abotu this mess. have methods for go to multi, uni and bi and then have the relevant functions in those.
 		 * this will be at least a bit saner. But where is calculate unipolar and bipolar wars called? Exp call to unipolar war now disappeared?*/
 		if (this.world.polarity[this.world.polarity.length -1] == 'multipolar'){
 			this.startMultipolarWar();
 		}
-		else{
-			this.world.states.sort(stateSort); 
-			var age = this.world.polarity.length;
-			var changedStates = this.changedStates; 
-			alert('latest polarity ' + this.world.polarity[age-1]);
-			if (this.world.polarity[age -1] == 'unipolar'){
-
-				if (age >=3){
-					if(this.world.polarity[age-3] == 'unipolar' && this.world.polarity[age-2] == 'unipolar' && this.world.polarity[age-1] == 'unipolar'){
-						this.world.states[0].addPower(Math.round(-1 * this.world.states[0].power/(3.5))); 
-						this.changedStates.push([this.world.states[0].power, parseInt(this.world.states[0].label)]);
-						this.world.states[0].decliningHegemon= true;	
-						this.world.decliningHegemon = true; 
-					}
-				}	
-				if (this.world.states[0].power > 0.5 * this.world.getTotalPower()){
-					this.world.worldHistory.push('peaceful'); 	
-				}
-				else{
-					this.world.worldHistory.push('systemic change');
-					
-				}
-			}
-			else{ 
-				alert('now entering bipolar war');
-				this.startBipolarWar();
+		else if (this.world.polarity[this.world.polarity.length -1] == 'unipolar'){
+				this.assessUnipolarDisin();
+		}
+		else{ 
+			this.startBipolarWar();
 			
-			}	
-		}		
+		}	
 	}, 
 
     	calculateWinner: function(){
@@ -879,6 +874,7 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 		 	;    
 	    	}
 		else{	
+			/*this into two methods; one if there is a declining hegemon in the world and the other for if there is not. Check: */
 			addContent('calculating winner'); 
 			var foundDec = false;
 			var wars = this.wars;
@@ -907,6 +903,7 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 				}		
 			}
 			if (foundDec == false){
+				/*here: if fasle, call another method*/
 				for (var k=0; k< wars[0].length; k++){
 					attackPower += 	wars[0][k].power; 
 				}
@@ -933,23 +930,19 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 	
 	updateWorld: function(){
 		function dealWithLoser(losingState, turbo){
-			addContent('dealing with loser'); 
 			var numOfStates = states.length; 
 			if(losingState.power == 1){
 				if (Math.random() < 0.10){
 					losingState.power = 0; 	
-					addContent('disappears');
 				}	
 			}
 			else if (losingState.power == 2){
 				if(Math.random() < 0.05){
 					losingState.power = 0; 
-					addContent('disappears'); 
 				}
 				else if (turbo == true){
 					if (Math.random() < 0.10){
 						losingState.power = 0;
-						addContent('disappears');  	
 					}	
 				}
 				else{
@@ -959,12 +952,10 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 			else if (losingState.power == 3){
 				if(Math.random() < 0.05){
 					losingState.power = 0; 	
-					addContent('disappears'); 
 				}
 				else if (turbo == true){
 					if (Math.random() < 0.075){
 						losingState.power = 0; 	
-						addContent('!!removing state with power 3 after losing'); 
 					}
 				}
 				else{
@@ -1082,6 +1073,7 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 			if((Math.floor(totalPower/numOfStates)) > 0){
 				totalPower = strongest.power + secondStrongest.power; 
 				var smallerPower = 0; 
+				/*this can be its own separate function modifies changed states and returns smaller power*/
 				for (var k=0; k<states.length; k++){
 					var state = states[k]; 
 					if (state != strongest && state != secondStrongest){
@@ -1092,6 +1084,7 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 						changedStates.push([state.power, parseInt(state.label)]); 
 					}	
 				}
+				/*this is another routine that adds needed powers powers and pushes tp cahnged states, strongest + second strongest.pwoer*/
 				totalPower += smallerPower; 
 				currentPower = strongest.power + secondStrongest.power; 
 				addContent('current power is ' + currentPower); 
@@ -1113,6 +1106,7 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 				var sphere2 = [secondStrongest]; 
 				var sphere2Power = secondStrongest.power; 
 				var sphere1Power =  strongest.power; 
+				/*find out what coalitiosn states used to belong to*/
 				for (var k =0; k<coalitions.length; k++){
 					for (var j=0; j<coalitions[k].length; j++){
 						if (coalitions[k][j]== strongest){
@@ -1125,6 +1119,7 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 				}
 				states.sort(stateSort); 
 				if (strongestCoal == secondStrongestCoal){
+					/*one function push states if two bipolar pwoers old allies*/
 					for (var k=2; k<states.length-2; k++){
 						var state = states[k]; 
 							if ((sphere2.length < (states.length-3)/2)){
@@ -1141,6 +1136,7 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 				
 				}
 				else{
+					/*and another: push states if were not old allies*/
 					for (var k=0; k<secondStrongestCoal.length; k++){
 						var state = secondStrongestCoal[k]; 
 						if (state != secondStrongest){
@@ -1155,6 +1151,7 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 							sphere1Power += state.power; 	
 						}	
 					}
+					/*last function: push rest of states in*/
 					for (var k=0; k<states.length; k++){
 						var state = states[k]; 
 						var inSphere = false; 
