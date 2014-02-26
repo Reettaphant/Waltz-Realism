@@ -617,7 +617,7 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 				return true; 	
 			}
 			else{
-				if ((Math.random()<1.00 )|| this.world.multipolarCounter >= 3){ /*changed from 0,25*/
+				if ((Math.random()<0.00 )|| this.world.multipolarCounter >= 3){ /*changed from 0,25*/
 					this.wars[2]=true; 
 					this.world.worldWar = true; 
 					while (notInWar.length != 0){
@@ -647,7 +647,6 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 		},
 		calculateWinner: function(){
 		/*calculates the winner of a war*/
-
 			if(this.wars == 0){
 				;    
 			}
@@ -1107,7 +1106,6 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 			}
 		},
 		updateWorld: function(){
-				
 			if (this.outcomes == 0){
 				; 	
 			}
@@ -1219,7 +1217,7 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 		},
 
 		calculateBipolarWar: function(){
-			if (bipolarCounter == -10){/*changed from 0*/
+			if (bipolarCounter == 0){/*changed from 0*/
 				this.world.worldHistory.push('peaceful'); 	
 			}
 			else if (((bipolarCounter == 2 && Math.random() <0.5) || bipolarCounter == 1 ) && this.world.spheres[0].length > 1 && this.world.spheres[1].length > 1){ 
@@ -1529,10 +1527,8 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
 	     	testWar.world.worldWar = false; 
 	     	turn.flags.worldWar = true;	
      	}
-     	
-     	if (turn.polariy == 'multipolar'){
+     	if (turn.polarity == 'multipolar'){
 		testWar.calculateWinner();
-		
      		if (testWar.outcomes[1] == true){
 	     		turn.flags.didAttackerWin = true; 	
      		}
@@ -1552,7 +1548,7 @@ function getWorldEvents(numberOfTurns, initialStates, continuationOfOld, oldWorl
      	if (turn.polarity == 'multipolar'){
 		testWar.updateWorld(); 
 	}
-     	turn.changedStates = testWar.changedStates.slice(); 
+     	turn.changedStates = testWar.changedStates.slice();
      	addContent('changed states : '); 
      	for  (var k=0; k<turn.changedStates.length; k++){
 	     	addContent(turn.changedStates[k][1]); 	

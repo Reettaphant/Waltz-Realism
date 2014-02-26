@@ -1,13 +1,4 @@
 /* Copyright Reetta Vaahtoranta. All rights reserved. */
-/*passing the buck not always working, sometimes only one alliance
- * ===
- * need to think about the layout more
- * identation 
- * comments
- *somewhere in multipolar a winner/ defender image was not removed properly
- * 
- *});
-*/ 
 
 $(document).ready(function(){
 	var num = 0;
@@ -318,6 +309,7 @@ $(document).ready(function(){
 			/*replaces the power of the given state with a new power and updates the states label*/
 				
 				if (terrIntel != undefined){
+					/*when coming from limited change to here, says cannot read property 0 undefined. why is this?*/
 					var terr = terrIntel[label][0]; 
 					var intel = terrIntel[label][1]; 
 				}
@@ -716,7 +708,7 @@ $(document).ready(function(){
 					}
 					else{
 						removeWithRegex(state, /^alliance|^sphere/);
-						$(state).addClass('alliance0'); 
+						$(state).addClass('alliance0 visible')
 						addPower(state, power, stateNumber-1);
 						addContent('bipolarSystemDetails', 'A new state ' +  String.fromCharCode(65+parseInt(stateNumber)-1)+' with power ' + power +' was created from disintegration of the bipolar power ');
 					}
@@ -803,7 +795,9 @@ $(document).ready(function(){
 					       $(state).addClass('sphere1');   
 					}
 					$(state).find('.winnerImage').removeClass('visible').addClass('hidden');
-					$(state).find('.loserImage').removeClass('visible').addClass('hidden');
+					$(state).removeClass('winner');
+					$(state).find('.loserImage').removeClass('visible').addClass('hidden')
+					$(state).removeClass('loser');
 					if (i < events[j].changedStates.length-1){
 							i++; 
 							setTimeout(bipolarOutcomes, 3000);    
@@ -1119,15 +1113,18 @@ $(document).ready(function(){
 			
 			function outcomes(){
 			/*animates the outcomes of wars in a multipolar world*/
-
 				function addStories(state, stateNumber, power){
-					var chil = $(state).find('.loserImage').removeClass('visible').addClass('hidden');
-					var chil = $(state).find('.winnerImage').removeClass('visible').addClass('hidden');
+					$(state).find('.loserImage').removeClass('visible').addClass('hidden')
+					$(state).removeClass('loser');
+					$(state).find('.winnerImage').removeClass('visible').addClass('hidden')
+					$(state).removeClass('winner');
 					extra = '';
 					disappear = false;
 					if (events[j].statesAfterUpdate[stateNumber-1] == 0){
+						removeWithRegex(state, /^alliance|^sphere/);
 						extra = ' This is a new state was born from the war'; 
-						$(state).addClass('alliance0');   	
+						$(state).addClass('alliance0 visible');   
+						addPower(state, power, stateNumber-1);	
 					}		
 					if (power != events[j].statesAfterUpdate[stateNumber-1][0]){
 						if (power < events[j].statesAfterUpdate[stateNumber-1][0]){
@@ -1168,7 +1165,6 @@ $(document).ready(function(){
 				
 				function winnersLosers(){
 				/*displays winners and losers in a multipolar world after a war*/
-
 					hideStories(); 
 					var story = $('#afterWar');
 					$(story).removeClass('hidden').addClass('visible');
@@ -1197,13 +1193,15 @@ $(document).ready(function(){
 					for (var n = 0; n< winners.length; n++){
 						state= winners[n];
 						$(state).addClass('winner');   
-						$(state).find('.winnerImage').removeClass('hidden').addClass('visible');
+						$(state).find('.winnerImage').removeClass('hidden').addClass('visible')
+						$(state).removeClass('attacker defender');
 					}
 						
 					for (var n=0; n<losers.length; n++){
 						state=losers[n];
 						$(state).addClass('loser'); 	
-						$(state).find('.loserImage').removeClass('hidden').addClass('visible');
+						$(state).find('.loserImage').removeClass('hidden').addClass('visible')
+						$(state).removeClass('attacker defender');
 					}
 					i++; 
 					setTimeout(outcomes, 1500); 		   	
@@ -1211,7 +1209,6 @@ $(document).ready(function(){
 
 				function updateStates(){
 				/*updates state powers after war*/
-
 					power = events[j].changedStates[i-1][0];
 					stateNumber = events[j].changedStates[i-1][1];
 					var state =  states[(((stateNumber-1)%4)*4 + Math.floor((stateNumber-1)/4))];
@@ -1230,8 +1227,8 @@ $(document).ready(function(){
 						else{
 							$(state).addClass('alliance0');
 						}  	
-					}	
-					if (i < (events[j].changedStates).length ){
+					}
+					if (i < events[j].changedStates.length ){
 						i++;
 						setTimeout(outcomes, 1000); 
 					}
