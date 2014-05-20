@@ -1,640 +1,644 @@
 <!DOCTYPE html>
 <html>
-	<head>
-	<meta charset="UTF-8">
-	<title>Waltz Simulation</title>
-	<link rel="stylesheet" href="circles.css">
+    <head>
+    <meta charset="UTF-8">
+    <title>Waltz Simulation</title>
+    <link rel="stylesheet" href="circles.css">
     
 </head>
   
 <body>
- 	<script src = "jquery.js"></script>
-  	<script type ="text/javascript" src="changingCircles.js"></script>
-  	<script type ="text/javascript" src="waltzSimulation.js"></script>
-  	<script type ="text/javascript" src="helpers.js"></script>
-  
-  	<h1>  AARGH!  </h1>
- 
-  	<form name='numberOfStates' id = "stateNumbers" class = 'visible firstFormBigger'>
-	  	<h2> Options for Running the Simulation</h2>
-	  	<div id = firstQu>
-		  	<h3>How many states would like to have in the world initially?</h3>
-		  	<select name = "numberOfStates" id='numberOfStates'>
-				<option value="1">...</option>
-				<option value="6">6</option>
-				<option value="7">7</option>
-				<option value="8">8</option>
-				<option value="9">9</option>
-				<option value="10">10</option>
-  			</select>
-		</div>
-		<input type= 'button' id = 'advancedButton1' class = 'visible' value = 'Click here to display  advanced options'>
-		
-		<input type= 'button' id = 'advancedButton2' class = 'hidden' value = 'Click here to hide  advanced options'>
-	      	<div id = 'advancedOptions' class = 'hidden'>	
-			<h3> How would you like to set the parameters of these states? </h3>
-			<input type="radio" name="initialiseStates" value="multipolar" class="radioButton"> <span class='radioDesc'> Initialise the states for me in a  multipolar world </span> <br>
-			<input type="radio" name="initialiseStates" value="biplar" class="radioButton"> <span class='radioDesc'> Initialise the states for me in  a bipolar world </span> <br>
-			<input type="radio" name="initialiseStates" value="unipolar" class="radioButton"> <span class='radioDesc'> Initialise the states  for me in a unipolar world</span> <br>
-				<input type="radio" name="initialiseStates" value="automatic" class="radioButton"> <span class = 'radioDesc'>I want to set the parameters for the states <br></span>
-		</div>
-	 
-		<input type ="button" name= "button" id = 'buttonForStates' class = 'changingButton' value='Submit'>
-	</form>
-  
-  
-  
-	<form name="intialiseStatePowers" id = 'statePowers' class = 'hidden'>
-		<h3> What do these parameters mean? </h3>
-		<p> Power: specifies the power of the state at the beginning of the simulation. The power distribution in the world determines the way in which states 
-		interact. </p>
-		<p> Territorial and intellectual advantage: Determines the likehood that states will gain power in times of peace. States with great territorial 
-		or intellectual advantage are more likely to gain power when the world is peaceful. </p>
-	   	<h3>Enter parameters for these states below </h3>
-	   	<fieldset class = 'fieldsets hidden' >
-		   	<legend class = 'legends hidden'> State one </legend>
-			<p class = 'powerLabel hidden' id='pow1'>Power: </p> 
-			<input type = "text" name = "powerState1" class='statePowers hidden' id='powerState1'>
-			<p class = 'territoryLabel hidden' id = 'ter1'> Territory: </p> 
-			<input type = "text" name = "territoryState1" class='stateTerritory hidden' id='territoryState1'>
-			<p class = 'intellectLabel hidden' id = 'int1'> Intellect: </p> 
-			<input type = "text" name = "intellectState1" class='stateIntellect hidden' id='intellectState1'>
-	  	</fieldset>
-	  	<fieldset class = 'fieldsets hidden'>
-		  	<legend class = 'legends hidden'> State two </legend>
-		  	<p class = 'powerLabel hidden'>Power: </p>
-			<input type = "text" name = "powerState2" class='statePowers hidden' id='powerState2'>
-		  	<p class = 'territoryLabel hidden'> Territory: </p> 
-			<input type = "text" name = "territoryState2" class='stateTerritory hidden' id='territoryState2'>
-		  	<p class = 'intellectLabel hidden'> Intellect: </p> 
-			<input type = "text" name = "intellectState2" class='stateIntellect hidden' id='intellectState2'>
-	  	</fieldset>
-		<fieldset class = 'fieldsets hidden'>
-		   	<legend class = 'legends hidden'> State three </legend>
-		  	<p class = 'powerLabel hidden'>Power: </p> 
-			<input type = "text" name = "powerState3" class='statePowers hidden' id='powerState3'>
-		  	<p class = 'territoryLabel hidden'> Territory: </p> 
-			<input type = "text" name = "territoryState3" class='stateTerritory hidden' id='territoryState3'>
-		  	<p class = 'intellectLabel hidden'> Intellect: </p> 
-			<input type = "text" name = "intellectState3" class='stateIntellect hidden' id='intellectState3'>
-	  	</fieldset>
-		<fieldset class = 'fieldsets hidden'>
-			   <legend class = 'legends hidden'> State four </legend>
-			   <p class = 'powerLabel hidden'>Power: </p> 
-			   <input type = "text" name = "powerState4" class='statePowers hidden' id='powerState4'>
-			   <p class = 'territoryLabel hidden'> Territory: </p> 
-			   <input type = "text" name = "territoryState4" class='stateTerritory hidden' id='territoryState4'>
-			   <p class = 'intellectLabel hidden'> Intellect: </p> 	
-			   <input type = "text" name = "intellectState4" class='stateIntellect hidden' id='intellectState4'>
-		  </fieldset>
-		  <fieldset class = 'fieldsets hidden'>
-			  <legend class = 'legends hidden'> State five </legend>
-			  <p class = 'powerLabel hidden'>Power: </p> 
-			  <input type = "text" name = "powerState5" class='statePowers hidden' id='powerState5'>
-			  <p class = 'territoryLabel hidden'> Territory: </p> 
-			  <input type = "text" name = "territoryState5" class='stateTerritory hidden' id='territoryState5'>
-			  <p class = 'intellectLabel hidden'> Intellect: </p> 
-			  <input type = "text" name = "intellectState5" class='stateIntellect hidden' id='intellectState5'>
-		 </fieldset>
-		 <fieldset class = 'fieldsets hidden'>
-			  <legend class = 'legends hidden'> State six </legend>
-			  <p class = 'powerLabel hidden'>Power: </p> 
-			  <input type = "text" name = "powerState6" class='statePowers hidden' id='powerState6'>
-			  <p class = 'territoryLabel hidden'>Territory: </p> 
-			  <input type = "text" name = "territoryState6" class='stateTerritory hidden' id='territoryState6'>
-			  <p class = 'intellectLabel hidden'> Intellect: </p> 
-			  <input type = "text" name = "intellectState6" class='stateIntellect hidden' id='intellectState6'>
-		  </fieldset>
-		  <fieldset class = 'fieldsets hidden'>
-			  <legend class = 'legends hidden'> State seven </legend>
-			  <p class = 'powerLabel hidden'> Power: </p> 
-			  <input type = "text" name = "powerState7" class='statePowers hidden' id='powerState7'>
-			  <p class = 'territoryLabel hidden'> Territory: </p> 
-			  <input type = "text" name = "territoryState7" class='stateTerritory hidden' id='territoryState7'>
-			  <p class = 'intellectLabel hidden'> Intellect: </p> 
-			  <input type = "text" name = "intellectState7" class='stateIntellect hidden' id='intellectState7'>
-		 </fieldset>
-		 <fieldset class = 'fieldsets hidden'>
-			  <legend class = 'legends hidden'> State eigth </legend>
-			  <p class = 'powerLabel hidden'>Power: </p> 
-			  <input type = "text" name = "powerState8" class='statePowers hidden' id='powerState8'>
-			  <p class = 'territoryLabel hidden'> Territory: </p> 
-			  <input type = "text" name = "territoryState8" class='stateTerritory hidden' id='territoryState8'>
-			  <p class = 'intellectLabel hidden'> Intellect: </p> 
-			  <input type = "text" name = "intellectState8" class='stateIntellect hidden' id='intellectState8'>
-		  </fieldset>
-		  <fieldset class = 'fieldsets hidden'>
-			  <legend class = 'legends hidden'> State nine </legend>
-			  <p class = 'powerLabel hidden'>Power: </p> 	
-			  <input type = "text" name = "powerState9" class='statePowers hidden' id='powerState9'>
-			  <p class = 'territoryLabel hidden'> Territory: </p> 
-			  <input type = "text" name = "territoryState9" class='stateTerritory hidden' id='territoryState9'>
-			  <p class = 'intellectLabel hidden'> Intellect: </p> 
-			  <input type = "text" name = "intellectState9" class='stateIntellect hidden' id='intellectState9'>
-		  </fieldset>
-		  <fieldset class = 'fieldsets hidden'>
-			  <legend class = 'legends hidden'> State ten </legend>
-			  <p class = 'powerLabel hidden'>Power: </p> 
-			  <input type = "text" name = "powerState10" class='statePowers hidden' id='powerState10'>
-			  <p class = 'territoryLabel hidden'> Territory: </p> 
-			  <input type = "text" name = "territoryState10" class='stateTerritory hidden' id='territoryState10'>
-			  <p class = 'intellectLabel hidden'> Intellect: </p> 
-			  <input type = "text" name = "intellectState10" class='stateIntellect hidden' id='intellectState10'>
-		  </fieldset>
-		  <input type ="button" name= "button" id = 'powerButton' value='Submit' class = 'hidden' class = 'changingButton'>
-	  </form>
-  
-  	<div id = 'firstFormError' class = 'hidden error'>
-   		<h3>Error </h3>
-  		<p> Please submit the number of states in the simulation. </p>
-   		<input type ="button" id = 'firstErrorButton' class = 'errorButton changingButton'  value='Back'>
-  	</div>
-  
-  
- 
-  	<div id = 'wrongNumberEndError' class = 'hidden error'>
-   		<h3>Error </h3>
-  		<p> You must choose a number between one and ten. </p>
-   		<input type ="button" id = 'firstErrorButton' class = 'errorButton changingButton'  value='Back'>
-  	</div>
-  
-    	<div id = 'multipleEndError' class = 'hidden error'>
-   		<h3>Error </h3>
-  		<p> You must choose only one of the numbers seleceted. </p>
-   		<input type ="button" id = 'firstErrorButton' class = 'errorButton changingButton'  value='Back'>
-  	</div>
-  
-  
-  	<div id = 'secondFormError' class = 'hidden error'>
-  		<h3>Error </h3>
- 		<p> You did not enter valid options. Please submit the power, territory and intellect for each state  in the simulation.</p>
-   		<input type ="button" id = 'secondErrorButton' class = 'errorButton changingButton'  value='Back'>
-  	</div>
-  
-	<div id = 'onceButtons' class = 'hidden'>
-  		<div id = 'backOnceArrow'> </div>
- 		<input type ="button" id = 'backwardsOnceButton' class = 'backForthOnce passive' value = 'See the previous turn'>
- 		<input type ="button" id = 'againOnce' class = 'backForthOnce passive' value = 'See this turn again'>
- 		<input type ="button" id = 'exitOnce' class = 'backForthOnce passive' value = 'Exit'>
-  		<input type ="button" id = 'forwardsOnceButton' class = 'backForthOnce passive' value = 'See the next turn'>
-  		<div id = 'forwardOnceArrow'> </div>
-  	</div>
-  
-  	<div id = 'stateFrame' class = 'hidden'>
-   
- 
-		 <div id = 'stateGroupOne' class='stateGroup'>
-			 <div id = 'state1' class = 'state hidden alliance0'> <p id = state1Label class = 'stateLabel visible'> A <span class = 'powerDesc hidden'> </span> </p> <img class ='stateImage attackImage hidden' src = 'pics/attacker.png'><img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
-			 <div id = 'state5' class = 'state hidden alliance0'> <p id = state5Label class = 'stateLabel visible'> E <span class = 'powerDesc hidden'> </span> </p> <img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div> 
-			 <div id = 'state9' class = 'state hidden alliance0'> <p id = state9Label class = 'stateLabel visible'> I <span class = 'powerDesc hidden'> </span></p> <img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
-			 <div id = 'state13' class = 'state hidden alliance0'> <p id = state13Label class = 'stateLabel visible'> M <span class = 'powerDesc hidden'> </span></p> <img class ='stateImage hidden attackImage' src = 'pics/attacker.png'><img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'> </div> 
-		 </div>
-	  <div id = 'stateGroupTwo' class='stateGroup'>
-		 <div id = 'state2' class = 'state hidden alliance0'> <p id = state2Label class = 'stateLabel visible'> B <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
-		 <div id = 'state6' class = 'state hidden alliance0'> <p id = state6Label class = 'stateLabel visible'> F <span class = 'powerDesc hidden'> </span> </p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
-		 <div id = 'state10' class = 'state hidden alliance0'> <p id = state10Label class = 'stateLabel visible'> J<span class = 'powerDesc hidden'> </span> </p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
-		 <div id = 'state14' class = 'state hidden alliance0'> <p id = state14Label class = 'stateLabel visible'> N<span class = 'powerDesc hidden'> </span> </p> <img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'> </div>
-	 </div>
-	  <div id = 'stateGroupThree' class='stateGroup'>
-		 <div id = 'state3' class = 'state hidden alliance0'> <p id = state3Label class = 'stateLabel visible'> C <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='defenderImage stateImage hidden' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
-		 <div id = 'state7' class = 'state hidden alliance0'> <p id = state7Label class = 'stateLabel visible'> G <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='defenderImage stateImage hidden' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>  
-		 <div id = 'state11' class = 'state hidden alliance0'> <p id = state11Label class = 'stateLabel visible'> K <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='defenderImage stateImage hidden' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
-		 <div id = 'state15' class = 'state hidden alliance0'> <p id = state15Label class = 'stateLabel visible'> O <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='defenderImage stateImage hidden' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
-	 </div>
-	 <div id = 'stateGroupFour' class='stateGroup'>
-		 <div id = 'state4' class = 'state hidden alliance0'> <p id = state4Label class = 'stateLabel visible'> D <span class = 'powerDesc hidden'> </span></p> <img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
-		 <div id = 'state8' class = 'state hidden alliance0'> <p id = state8Label class = 'stateLabel visible'> H <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>  
-		 <div id = 'state12' class = 'state hidden alliance0'> <p id = state12Label class = 'stateLabel visible'> L <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'> </div>   
-		 <div id = 'state16' class = 'state hidden alliance0'> <p id = state16Label class = 'stateLabel visible'>K<span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>  
-		 
-	   </div>
- 
+    <script src = "jquery.js"></script>
+    <script type ="text/javascript" src="simulationHelpers.js"></script>
+    <script type ="text/javascript" src="helpers.js"></script>
+    <script type ="text/javascript" src="changingCircles.js"></script>
+    <script type ="text/javascript" src="waltzSimulation.js"></script>
 
-  	<div class = 'story hidden' id = 'limitedChange'>
- 		<p> The system is changing polarity after a limited war. </p>
-		<div id = 'limitQuiz'> </div>
-		<div id = 'limitCont' class = 'hidden check'>
-			<input type = 'checkbox' id = 'limitCheck'> <span> Do not show me this quiz again </span><br>
-		 	<input type ="button"  class = 'continueButton'  value='Continue'>
-  		</div> 
- 	</div>	
-	
-       	
-		
- 	<div class = 'story hidden' id = 'newTurnMulti'>
- 		<p> New turn is beginning in the world, this world is multipolar </p>
- 		<div class = 'substory' id = 'turnDetailsMulti'> </div>
- 	</div>
- 
- 	<div class = 'story hidden' id = 'newTurnBi'>
- 		<p> New turn is beginning in the world, this world is bipolar </p>
- 		<div class = 'substory' id = 'turnDetailsBi'> </div>
- 	</div>
- 
-	 <div class = 'story hidden' id = 'newTurnUni'>
-		 <p> New turn is beginning in the world, this world is unipolar </p>
-		 <div class = 'substory' id = 'turnDetailsUni'> </div>
-	 </div>
-	 
-	 <div class = 'story hidden' id = 'updateExplanation'>
- 		<input type ="button" id = 'powerContinue' class = 'visible explButton'  value='Continue'>
-	</div>
-	
+    <h1>  Waltz Realism  </h1>
 
- 	<div class = 'story hidden' id = 'perfectPause'>
-	 	<p>Alliances were well balanced and there were no incentives for war</p>
-		<div id = 'perfectQuiz'> </div>
-	 	<div id = 'perfectCont' class = 'hidden check'>
-			<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-		 		<input type = 'checkbox' class = 'box' id = 'perfectCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-	 	</div>
-	</div>
- 	<div class = 'story hidden' id = 'scalingPause'>
-	 	<p> The powers of the states are being scaled down.</p>
-	 	<div id = 'scalingQuiz'> </div>
-	 	<div id = 'scalingCont' class = 'hidden check'>
-			<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-		 		<input type = 'checkbox' class = 'box' id = 'scalingCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-	 	</div>
-	</div>
-
- 	<div class = 'story hidden' id = 'buckPass'>
-	 	<p> Some states are passing the buck.</p>
-	 	<div id = 'buckPassQuiz'> </div>
-	 	<div id = 'buckPassCont' class = 'hidden check'>
-			<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-		 		<input type = 'checkbox' class = 'box' id = 'buckPassCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-	 	</div>
-	</div>
- 	<div class = 'story hidden' id = 'alliancePause'>
-	 	<p>The states are now forming new alliances</p>
-		<div id= 'allianceExpl' class = 'visible theoryExp'>
-			<p> According to Waltz, states form alliances to balance the power of more powerful states.The security of states in the system is increased
-			if states form these alliances to balance power.</p>
-			<p>This is because if one alliance is more powerful than other alliances in the system, it 
-			can attempt to attack weaker alliances.</p>	
-			<p> The states are now going to form alliances. States that are in the same alliance will appear in same colour. </p>
-			<br>
-			<input type = 'button' class = 'explButton' id = 'elaborateAlliance' value = 'Continue'>
-			<br>
-			<input type = 'checkbox' id = 'allianceKnow'> <span class = explCheck> I do not need to see this explanation again </span>
-		</div>
-	 	<div id = 'allianceQuiz'> </div>
-	 	<div id = 'allianceCont' class = 'hidden check'>
-			<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-		 		<input type = 'checkbox' class = 'box' id = 'allianceCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-	 	</div>
-	</div>
-
- 	<div class = 'story hidden' id = 'lthinkingPause'>
-	 	<p> States are thinking of going to  war</p>
-		<div id= 'thinkingExpl' class = 'hidden theoryExp'>
-			<p>  In a multipolar world, more powerful alliances can attack weaker alliances. </p>
-			<p>Wars are thus more likely to occur if balancing power was not succesful. </p> <p>There are many reasons why balanacing power could fail, states can miscalculate the threat that another state poses, or they can not balance the power of a threatening state in the hopes that anohter state will do so.</p> 
-			<p>Because Waltz's theory only observes tendencies in the world, sometimes states might decide not to balance the power of the more
-			powerful states, but might choose to bandwagon with the more powerful staes. </p>	
-			<br>
-			<input type = 'button' class = 'explButton' id = 'elaborateThinking' value = 'Continue'>
-			<br>
-			<input type = 'checkbox' id = 'thinkingKnow'>  <span class = 'explCheck'> I do not need to see this explanation again </span>
-		</div>
-		<div id= 'bipolarThinkingExpl' class = 'hidden theoryExp'>
-			<p> Waltz argues that it is easier for states to balance power in a bipolar than in a multipolar world, and this makes bipolar worlds relatively peaceful.</p>
-			<p> Balancing power in a bipolar world is easier because the two bipolar power have no choice but to confront each other, and cannot rely on antther state to balance the power of the other. This leads to the formation of two alliances that are even in power, and have no incentives to go to war with each other. </p>
-			<input type = 'button' class = 'explButton' id = 'elaborateBipolarThinking' value = 'Continue'>
-			<br>
-			<input type = checkbox id = 'bipolarThinkingKnow' > <span class = 'explCheck'> I do not need to see this explanation again </span>
-		</div>
-	 	<div id = 'thinkingQuiz'> </div>
-	 	<div id = 'thinkingCont' class = 'hidden check'>
-			<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-				<input type = 'checkbox' class = 'box' id = 'thinkingCheck'> <span class = 'bored'> Do not show me this quiz again </span> <br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-		</div>
-	</div>
+    <form name='numberOfStates' id = "stateNumbers" class = 'visible firstFormBigger'>
+        <h2> Options for Running the Simulation</h2>
+        <div id = firstQu>
+            <h3>How many states would like to have in the world initially?</h3>
+            <select name = "numberOfStates" id='numberOfStates'>
+                <option value="1">...</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+        <input type= 'button' id = 'advancedButton1' class = 'visible' value = 'Click here to display  advanced options'>
+        
+        <input type= 'button' id = 'advancedButton2' class = 'hidden' value = 'Click here to hide  advanced options'>
+        <div id = 'advancedOptions' class = 'hidden'>	
+            <h3> How would you like to set the parameters of these states? </h3>
+            <input type="radio" name="initialiseStates" value="multipolar" class="radioButton"> <span class='radioDesc'> Initialise the states for me in a  multipolar world </span> <br>
+            <input type="radio" name="initialiseStates" value="biplar" class="radioButton"> <span class='radioDesc'> Initialise the states for me in  a bipolar world </span> <br>
+            <input type="radio" name="initialiseStates" value="unipolar" class="radioButton"> <span class='radioDesc'> Initialise the states  for me in a unipolar world</span> <br>
+            <input type="radio" name="initialiseStates" value="automatic" class="radioButton"> <span class = 'radioDesc'>I want to set the parameters for the states <br></span>
+        </div>
  
- 	<div class = 'story hidden' id = 'bipolarAlliances'>
- 		<p> The world will be divided into alliances </p>
-		<div id= 'bipolarExpl' class = 'visible theoryExp'>
-			<p> States seek to  balance the power of other powerful states in a bipolar world.  </p>
-			<p> But in a bipolar world, this does not result in complicated systems of alliances because weaker states cannot balance the power of 
-			the stronger states. </p> 
-			<p> In a bipolar world there exists two blocks of alliances, both made up of a stronger bipolar state, and weaker states that are 
-			in the sphere of influence of the stronger state </p>
-			<input type = 'button' class = 'explButton' id = 'elaborateBipolar' value = 'Continue'>
-			<br>
-			<input type = checkbox id = 'bipolarKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
-		</div>
-		<div id = 'bipolarQuiz'> </div>
-		<div id = 'bipolarCont' class = 'hidden check'> 
-		 	<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-			 	<input type = 'checkbox' class = 'box' id = 'bipolarCheck'> <span class = bored> Do not show me this quiz again </span> <br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-		</div>
-
- 		<div id= 'bipolarDetails1' class = 'hidden substory bipolar1'> </div>
- 		<div id= 'bipolarDetails2' class = 'hidden substory bipolar2'> </div>
- 	</div>
-  
- 	<div class = 'story hidden' id = 'bipolarSystemicChange'>
-		<p> The bipolar system is disintegrating </p>
-		<div id= 'disinExpl' class = 'hidden theoryExp'>
-			<p> The bipolar system is now going to disintegrate. </p>
-			<p> This means that one or two of the bipolar powers is suddenly going to lose a large proportion of its power. </p> <p> New states can also be born in the world as a result of this disintegration. </p> 
-			<br>
-			<input type = 'button' class = 'explButton' id = 'elaborateDisin' value = 'Continue'>
-			<br>
-			<input type = 'checkbox' id = 'disinKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
-		</div>
-		<div id = 'disintegrationQuiz'> </div>
-		<div id = 'disintegrationCont' class = 'hidden check'> 
-		 	<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-			 	<input type = 'checkbox' class = 'box' id = 'disintegrationCheck'> <span class = 'bored'> Do not show me this quiz again </span> <br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-	 	</div>
- 		<div id= 'bipolarSystemDetails' class = 'substory'> </div>
- 	</div>
- 
- 	<div class = 'story hidden' id = 'unipolarInitialisation'>
-	 	<p> The world is now unipolar </p>
-		<div id = 'unipolarQuiz'> </div>
-		<div id= 'unipolarExpl' class = 'hidden theoryExp'>
-			<p> Unipolar worlds have one powerful hegemonic power that holds a large proportion of the power in the world. </p>
-			<p> The weaker states cannot balance the power of the hegemon. </p>
-			<br>
-			<input type = 'button' class = 'explButton' id = 'elaborateUnipolar' value = 'Continue'>
-			<br>
-			<input type = 'checkbox' id = 'unipolarKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
-		</div>
-		<div id = 'unipolarCont' class = 'hidden check'> 
-		 	<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-			 	<input type = 'checkbox' class = 'box' id = 'unipolarCheck'> <span class = 'bored'> Do not show me this quiz again </span> <br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-	        	</div>
-	 	</div>
-	</div>
-
-	<div class = 'story hidden' id = 'interventionOver'>
-		<p> The intervention has now finished and the hegemon has withdrawn its troops.
-	</div>
- 	<div class = 'story hidden' id = 'interventionStory'>
-		<p> The hegemon is intervening in another state  </p>
-		<div id = 'interventionQuiz'> </div>
-		<div id= 'interventionExpl' class = 'hidden theoryExp'>
-			<p> Although the weaker states are not powerful enough to challenge the hegemons' power in the unipolar world, the world is not completely peaceful </p>
-			<p> The hegemon chooses sometimes to intervene militarily in the affairs of other states </p>
-			<br>
-			<input type = 'button' class = 'explButton' id = 'elaborateIntervention' value = 'Continue'>
-			<br>
-			<input type = 'checkbox' id = 'interventionKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
-		</div>
-		<div id = 'interventionCont' class = 'hidden check'> 
-		 	<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-			 	<input type = 'checkbox' class = 'box' id = 'interventionCheck'> <span class = 'bored'> Do not show me this quiz again </span> <br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-	        	</div>
-	 	</div>
-		<div id= interventionDetails> </div>
-	</div>
-
- 	<div id= 'unipolarDetails0' class = 'story hidden'> 
- 		<p> The hegemonic world order is being established </p>
- 	</div>
- 
- 	<div class = 'story hidden' id = 'unipolarAlliances'>
- 		<p> </p>
- 
- 	</div>
- 
- 
-	<div id = 'unipolarWar' class = 'story hidden'>
-		<p> The hegemonic world order has been established. </p>
-	 	<div id = 'unipolarWarQuiz'> </div>
-	 	<div id = 'unipolarWarCont' class = 'hidden check'>
-			<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-		 		<input type = 'checkbox' class = 'box' id = 'unipolarWarCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-	 	</div>
- 		<div id= 'unipolarDetails' class = 'substory hidden'>  </div>
-	</div>
- 	<div class = 'story hidden' id = 'peacefulUnipolar'>
- 		<p> The unipolar world stays peaceful </p>
- 	</div>
- 
- 	<div class = 'story hidden' id = 'decliningUnipolar'>
- 		<p> The hegemon's powers are declining! </p>
-		<div id = 'unipolarPowerQuiz'> </div>
-		<div id = 'unipolarPowerCont' class = 'hidden check'> 
-		 	<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-			 	<input type = 'checkbox' class = 'box' id = 'unipolarPowerCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-	 	</div>
-	</div>
+        <input type ="button" name= "button" id = 'buttonForStates' class = 'changingButton' value='Submit'>
+    </form>
 
 
-	<div id= 'unipolarDecline' class = 'story hidden'> 
-	
-	</div>
-	<div id = 'unipolarEnd' class = 'story end hidden'> Before clicking to see the next turn, look at the current power distribution in the world, and try to determine the new polarity of the world </div>
- 	
-	<div id = 'limitedEnd' class = 'story end hidden'> Before clicking to see the next turn, look at the power distributions in the world, and try to determine the new polarity of the world </div>
-	<div id = 'multipolarEnd' class = 'story end hidden'> The world is no longer multipolar.  Before clicking to see the next turn, look at the power distributions in the world, and try to determine the new polarity of the world </div>
-	<div id = 'bipolarEnd' class = 'story end hidden'> Before clicking to see the next turn, look at the power distributions in the world, and try to determine the new polarity of the world </div>
-	<div class = 'story hidden' id = 'bipolarWar'>
-		<p> A war is being fought in the bipolar world. </p>
-  		<div id= 'bipolarWarDetails' class = 'substory'> </div>
- 		<div id= 'bipolarWarDetails2'> </div>
-	</div>
 
- 	<div id= 'bipolarPeace' class = 'story hidden'>
-		<p> The bipolar world remains peaceful </p> 
-	</div>
- 
- 	<div class = 'story hidden' id = 'noUpdates'>
- 		<p> State powers were not updated this turn </p>
-		<div id = 'noPowerQuiz'> </div>
-		<div id = 'noPowerCont' class = 'hidden check'> 
-		 	<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-				<input type = 'checkbox' class = 'box' id = 'noPowerCheck'> <span class = 'bored'>Do not show me this quiz again </span><br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-	 	</div>
- 
-	</div>
+    <form name="intialiseStatePowers" id = 'statePowers' class = 'hidden'>
+        <h3> What do these parameters mean? </h3>
+        <p> Power: specifies the power of the state at the beginning of the simulation. The power distribution in the world determines the way in which states 
+        interact. </p>
+        <p> Territorial and intellectual advantage: Determines the likehood that states will gain power in times of peace. States with great territorial 
+        or intellectual advantage are more likely to gain power when the world is peaceful. </p>
+        <h3>Enter parameters for these states below </h3>
+        <fieldset class = 'fieldsets hidden' >
+            <legend class = 'legends hidden'> State one </legend>
+            <p class = 'powerLabel hidden' id='pow1'>Power: </p> 
+            <input type = "text" name = "powerState1" class='statePowers hidden' id='powerState1'>
+            <p class = 'territoryLabel hidden' id = 'ter1'> Territory: </p> 
+            <input type = "text" name = "territoryState1" class='stateTerritory hidden' id='territoryState1'>
+            <p class = 'intellectLabel hidden' id = 'int1'> Intellect: </p> 
+            <input type = "text" name = "intellectState1" class='stateIntellect hidden' id='intellectState1'>
+        </fieldset>
+        <fieldset class = 'fieldsets hidden'>
+            <legend class = 'legends hidden'> State two </legend>
+            <p class = 'powerLabel hidden'>Power: </p>
+            <input type = "text" name = "powerState2" class='statePowers hidden' id='powerState2'>
+            <p class = 'territoryLabel hidden'> Territory: </p> 
+            <input type = "text" name = "territoryState2" class='stateTerritory hidden' id='territoryState2'>
+            <p class = 'intellectLabel hidden'> Intellect: </p> 
+            <input type = "text" name = "intellectState2" class='stateIntellect hidden' id='intellectState2'>
+        </fieldset>
+        <fieldset class = 'fieldsets hidden'>
+            <legend class = 'legends hidden'> State three </legend>
+            <p class = 'powerLabel hidden'>Power: </p> 
+            <input type = "text" name = "powerState3" class='statePowers hidden' id='powerState3'>
+            <p class = 'territoryLabel hidden'> Territory: </p> 
+            <input type = "text" name = "territoryState3" class='stateTerritory hidden' id='territoryState3'>
+            <p class = 'intellectLabel hidden'> Intellect: </p> 
+            <input type = "text" name = "intellectState3" class='stateIntellect hidden' id='intellectState3'>
+        </fieldset>
+        <fieldset class = 'fieldsets hidden'>
+               <legend class = 'legends hidden'> State four </legend>
+               <p class = 'powerLabel hidden'>Power: </p> 
+               <input type = "text" name = "powerState4" class='statePowers hidden' id='powerState4'>
+               <p class = 'territoryLabel hidden'> Territory: </p> 
+               <input type = "text" name = "territoryState4" class='stateTerritory hidden' id='territoryState4'>
+               <p class = 'intellectLabel hidden'> Intellect: </p> 	
+               <input type = "text" name = "intellectState4" class='stateIntellect hidden' id='intellectState4'>
+          </fieldset>
+          <fieldset class = 'fieldsets hidden'>
+              <legend class = 'legends hidden'> State five </legend>
+              <p class = 'powerLabel hidden'>Power: </p> 
+              <input type = "text" name = "powerState5" class='statePowers hidden' id='powerState5'>
+              <p class = 'territoryLabel hidden'> Territory: </p> 
+              <input type = "text" name = "territoryState5" class='stateTerritory hidden' id='territoryState5'>
+              <p class = 'intellectLabel hidden'> Intellect: </p> 
+              <input type = "text" name = "intellectState5" class='stateIntellect hidden' id='intellectState5'>
+         </fieldset>
+         <fieldset class = 'fieldsets hidden'>
+              <legend class = 'legends hidden'> State six </legend>
+              <p class = 'powerLabel hidden'>Power: </p> 
+              <input type = "text" name = "powerState6" class='statePowers hidden' id='powerState6'>
+              <p class = 'territoryLabel hidden'>Territory: </p> 
+              <input type = "text" name = "territoryState6" class='stateTerritory hidden' id='territoryState6'>
+              <p class = 'intellectLabel hidden'> Intellect: </p> 
+              <input type = "text" name = "intellectState6" class='stateIntellect hidden' id='intellectState6'>
+          </fieldset>
+          <fieldset class = 'fieldsets hidden'>
+              <legend class = 'legends hidden'> State seven </legend>
+              <p class = 'powerLabel hidden'> Power: </p> 
+              <input type = "text" name = "powerState7" class='statePowers hidden' id='powerState7'>
+              <p class = 'territoryLabel hidden'> Territory: </p> 
+              <input type = "text" name = "territoryState7" class='stateTerritory hidden' id='territoryState7'>
+              <p class = 'intellectLabel hidden'> Intellect: </p> 
+              <input type = "text" name = "intellectState7" class='stateIntellect hidden' id='intellectState7'>
+         </fieldset>
+         <fieldset class = 'fieldsets hidden'>
+              <legend class = 'legends hidden'> State eigth </legend>
+              <p class = 'powerLabel hidden'>Power: </p> 
+              <input type = "text" name = "powerState8" class='statePowers hidden' id='powerState8'>
+              <p class = 'territoryLabel hidden'> Territory: </p> 
+              <input type = "text" name = "territoryState8" class='stateTerritory hidden' id='territoryState8'>
+              <p class = 'intellectLabel hidden'> Intellect: </p> 
+              <input type = "text" name = "intellectState8" class='stateIntellect hidden' id='intellectState8'>
+          </fieldset>
+          <fieldset class = 'fieldsets hidden'>
+              <legend class = 'legends hidden'> State nine </legend>
+              <p class = 'powerLabel hidden'>Power: </p> 	
+              <input type = "text" name = "powerState9" class='statePowers hidden' id='powerState9'>
+              <p class = 'territoryLabel hidden'> Territory: </p> 
+              <input type = "text" name = "territoryState9" class='stateTerritory hidden' id='territoryState9'>
+              <p class = 'intellectLabel hidden'> Intellect: </p> 
+              <input type = "text" name = "intellectState9" class='stateIntellect hidden' id='intellectState9'>
+          </fieldset>
+          <fieldset class = 'fieldsets hidden'>
+              <legend class = 'legends hidden'> State ten </legend>
+              <p class = 'powerLabel hidden'>Power: </p> 
+              <input type = "text" name = "powerState10" class='statePowers hidden' id='powerState10'>
+              <p class = 'territoryLabel hidden'> Territory: </p> 
+              <input type = "text" name = "territoryState10" class='stateTerritory hidden' id='territoryState10'>
+              <p class = 'intellectLabel hidden'> Intellect: </p> 
+              <input type = "text" name = "intellectState10" class='stateIntellect hidden' id='intellectState10'>
+          </fieldset>
+          <input type ="button" name= "button" id = 'powerButton' value='Submit' class = 'hidden' class = 'changingButton'>
+      </form>
 
-  	<div id= 'allianceDetails' class = ' story hidden'> <p> Alliances were not updated this turn </p> </div>
- 	<div class = 'story hidden' id = 'assessAlliances'>
- 		<p> States are now assessing their alliances </p>
- 		<div id = 'desc1' class = 'hidden description1'> </div>
- 		<div id = 'desc2'class = 'hidden description2'> </div>
- 		<div id = 'desc3'class = 'hidden description3'> </div>
- 		<div id = 'desc4'class = 'hidden description4'> </div>
- 		<div id = 'desc5'class = 'hidden description5'> </div>
- 		<div id = 'desc6'class = 'hidden description6'> </div>
- 		<div id = 'desc7'class = 'hidden description7'> </div>
- 
- 	</div>
- 
+    <div id = 'firstFormError' class = 'hidden error'>
+        <h3>Error </h3>
+        <p> Please submit the number of states in the simulation. </p>
+        <input type ="button" id = 'firstErrorButton' class = 'errorButton changingButton'  value='Back'>
+    </div>
 
- 	<div class = 'story hidden' id = 'updatePowers'>
-		<p> The powers of states are now updating </p>
-		<div id= 'powerExpl' class = 'hidden theoryExp'>
-			<p> Joining an alliances is not the only way in which a state can improve its standing in the world, this can happen in other ways as well</p>
-			<p> Increases in economic resources, population growth, technological innovation or the existence of natural resources can all be translated into military power. This means that a state's power can also grow during peaceful times. </p>
-			<p> To simplify this , in this simulation these powers are only updated after a peaceful turn. </p>
-			<p> The factors that contribute to the growth of a state's power have also been simplified. In this simulation the probability that a state's powers will grow is calculated using to factors: the states territorial and intellectual advantage. You can find out what these values are for a state by hovering over that state with your mouse.
-			<br>
-			<input type = 'button' class = 'explButton elaboratePower'  value = 'Continue'>
-			<br>
-			<input type = 'checkbox' id = 'powerKnow'> <span class = 'powerCheck'> I do not need to see this explanation again </span>
-		</div>
-		<div id = 'powerQuiz'> </div>
-		<div id = 'powerCont' class = 'hidden check'> 
-		 	<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-			 	<input type = 'checkbox' class = 'box' id = 'powerCheck'> <span class = bored> Do not show me this quiz again </span> <br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-		</div>
-	</div>
 
- 	<div class = 'story hidden' id = 'updateBipolarPowers'>
-		<p> The powers of states are now updating </p>
-		<div id= 'bipolarPowerExpl' class = 'hidden theoryExp'>
-			<p> The two bipolar powers will both try to gain as much power as possible. They do this because they do not want the other to grow too powerful.</p>
-			<p> The bipolar powers do not have to engage in conflicts to gain this power, but internal factors such as economic growth and innovation can contribute to the growth in a state's power during peaceuful times. </p>
-			<br>
-			<input type = 'button' class = 'explButton elaboratePower' value = 'Continue'>
-			<br>
-			<input type = 'checkbox' id = 'bipolarPowerKnow'> <span class = 'powerCheck'> I do not need to see this explanation again </span>
-		</div>
-		<div id = 'bipolarPowerQuiz'> </div>
-		<div id = 'bipolarPowerCont' class = 'hidden check'> 
-		 	<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-			 	<input type = 'checkbox' class = 'box' id = 'bipolarPowerCheck'> <span class = bored> Do not show me this quiz again </span> <br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-		</div>
-	</div>
- 	<div class = 'story hidden' id = 'updateUnipolarPowers'>
-		<p> The powers of states are now updating </p>
-		<div id= 'unipolarPowerExpl' class = 'hidden theoryExp'>
-			<p> The weaker states in a unipolar world can slowly begin to gain power.</p>
-			<p> This can happen through, for example, population growth, economic growth and technological innovation.</p>
-			<p> In this simulation, the probability of a state gaining power is calculated using two numbers, the state's intellectual and the state's territorial advantage. You can see these scores for each state by hovering on top of that states. </p>
-			<br>
-			<input type = 'button' class = 'explButton elaboratePower'  value = 'Continue'>
-			<br>
-			<input type = 'checkbox' id = 'unipolarPowerKnow'> <span class = 'powerCheck'> I do not need to see this explanation again </span>
-		</div>
-		<div id = 'unipolarUpdateQuiz'> </div>
-		<div id = 'unipolarUpdateCont' class = 'hidden check'> 
-		 	<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-			 	<input type = 'checkbox' class = 'box' id = 'unipolarUpdateCheck'> <span class = bored> Do not show me this quiz again </span> <br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-		</div>
-	</div>
 
- 	<div class = 'story hidden' id = 'updatingPowers'>
-		<p> The powers of states are now updating </p>
- 		<div id= 'powerDetails' class = 'substory'> </div>
-	</div>
-	
-	<div class = 'story hidden' id = 'noMoreBipolar'>
-		<p> The world is no longer bipolar. </p>
-	</div>
- 	<div class = 'story hidden' id = 'peaceful'>
- 		<p> Balancing power was succesful and there was no war this time </p>
- 		<div id= 'peaceDetails' class = 'substory'> </div>
- 	</div>
- 
-	 <div class = 'story hidden' id = 'limitedWar'>
- 		<p> A limited war is occuring in the world </p>
- 		<div id= 'warDetails1' class = 'hidden description1'> </div>
- 		<div id= 'warDetails2' class = 'hidden description2'> </div>
- 		<div id= 'warDetails3' class = 'hidden description3'> </div>
- 		<div id= 'warDetails4' class = 'hidden description4'> </div>
- 		<div id= 'warDetails5' class = 'hidden description5'> </div>
- 		<div id= 'warDetails6' class = 'hidden description6'> </div>  
- 	</div>
- 
-	<div class = 'story hidden' id = 'systemicWar'>
- 		<p> War is escalating into a systemic war </p>
-		<div id= 'escalationExpl' class = 'hidden theoryExp'>
-			<p> Sometimes wars in a multipolar world can escalate into systemic wars. Systemic wars are wars that involve all or almost all of the states in the system. </p>
-			<p> Wars can escalate because there are large alliances in the world, and if two alliances go to war with each other, this means that all, or almost all, states will be fighting each other. </p>
-			<p> Wars can also escalate because other alliances in the world decide that it is in their interests to join the war. </p>
-			<br>
-			<input type = 'button' class = 'explButton' id = 'elaborateEscalation' value = 'Continue'>
-			<br>
-			<input type = 'checkbox' id = 'escalationKnow'> <span class = 'escalationCheck'> I do not need to see this explanation again </span>
-		</div>
-	 	<div id = 'escalationQuiz'> </div>
-	 	<div id = 'escalationCont' class = 'hidden check'>
-		 	<div class = 'explanation'> </div>
-		 	<div class = 'checks'>
-		 		<input type = 'checkbox' class = 'box' id = 'escalationCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
-				<input type ="button"  class = 'continueButton'  value='Continue'>
-			</div>
-	 	</div>
- 		<div id= 'systWarDetails1' class = 'hidden description1'> </div>
- 		<div id= 'systWarDetails2' class = 'hidden description2'> </div>
- 		<div id= 'systWarDetails3' class = 'hidden description3'> </div>
- 		<div id= 'systWarDetails4' class = 'hidden description4'> </div>
- 		<div id= 'systWarDetails5' class = 'hidden description5'> </div>
- 		<div id= 'systWarDetails6' class = 'hidden description6'> </div>
- 	</div>
- 
- 
- 
- 	<div class = 'story hidden' iid = 'fightingWar'>
- 		<p> War is being fought </p>
- 	</div>
- 
- 
- 	<div class = 'story hidden' id = 'afterWar'>
- 		<p> World and its states after the war </p>
- 		<div id= 'afterWarDetails' class = 'substory'> </div>
- 	</div>
- 
+    <div id = 'wrongNumberEndError' class = 'hidden error'>
+        <h3>Error </h3>
+        <p> You must choose a number between one and ten. </p>
+        <input type ="button" id = 'firstErrorButton' class = 'errorButton changingButton'  value='Back'>
+    </div>
 
- 	<div class = 'story hidden' id = 'theEnd'>
-		<p> Thank you for playing!</p>
-		<p> If you have not already done so, please give feedback on the simulation by filling in a short survey that you can access by following 
-		<a href = "www.surveymonkey.com/s/J256BZK"> this link </a> </p>
- 	</div>
+    <div id = 'multipleEndError' class = 'hidden error'>
+        <h3>Error </h3>
+        <p> You must choose only one of the numbers seleceted. </p>
+        <input type ="button" id = 'firstErrorButton' class = 'errorButton changingButton'  value='Back'>
+    </div>
 
-  </div>
-  
- <div id =simulationOutput class = 'hidden'>
+
+    <div id = 'secondFormError' class = 'hidden error'>
+        <h3>Error </h3>
+        <p> You did not enter valid options. Please submit the power, territory and intellect for each state  in the simulation.</p>
+        <input type ="button" id = 'secondErrorButton' class = 'errorButton changingButton'  value='Back'>
+    </div>
+
+    <div id = 'onceButtons' class = 'hidden'>
+        <div id = 'backOnceArrow'> </div>
+        <input type ="button" id = 'backwardsOnceButton' class = 'backForthOnce passive' value = 'See the previous turn'>
+        <input type ="button" id = 'againOnce' class = 'backForthOnce passive' value = 'See this turn again'>
+        <input type ="button" id = 'exitOnce' class = 'backForthOnce passive' value = 'Exit'>
+        <input type ="button" id = 'forwardsOnceButton' class = 'backForthOnce passive' value = 'See the next turn'>
+        <div id = 'forwardOnceArrow'> </div>
+    </div>
+
+    <div id = 'stateFrame' class = 'hidden'>
+
+
+         <div id = 'stateGroupOne' class='stateGroup'>
+             <div id = 'state1' class = 'state hidden alliance0'> <p id = state1Label class = 'stateLabel visible'> A <span class = 'powerDesc hidden'> </span> </p> <img class ='stateImage attackImage hidden' src = 'pics/attacker.png'><img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
+             <div id = 'state5' class = 'state hidden alliance0'> <p id = state5Label class = 'stateLabel visible'> E <span class = 'powerDesc hidden'> </span> </p> <img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div> 
+             <div id = 'state9' class = 'state hidden alliance0'> <p id = state9Label class = 'stateLabel visible'> I <span class = 'powerDesc hidden'> </span></p> <img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
+             <div id = 'state13' class = 'state hidden alliance0'> <p id = state13Label class = 'stateLabel visible'> M <span class = 'powerDesc hidden'> </span></p> <img class ='stateImage hidden attackImage' src = 'pics/attacker.png'><img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'> </div> 
+         </div>
+        <div id = 'stateGroupTwo' class='stateGroup'>
+            <div id = 'state2' class = 'state hidden alliance0'> <p id = state2Label class = 'stateLabel visible'> B <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
+            <div id = 'state6' class = 'state hidden alliance0'> <p id = state6Label class = 'stateLabel visible'> F <span class = 'powerDesc hidden'> </span> </p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
+            <div id = 'state10' class = 'state hidden alliance0'> <p id = state10Label class = 'stateLabel visible'> J<span class = 'powerDesc hidden'> </span> </p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
+            <div id = 'state14' class = 'state hidden alliance0'> <p id = state14Label class = 'stateLabel visible'> N<span class = 'powerDesc hidden'> </span> </p> <img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'> </div>
  </div>
- 
+        <div id = 'stateGroupThree' class='stateGroup'>
+            <div id = 'state3' class = 'state hidden alliance0'> <p id = state3Label class = 'stateLabel visible'> C <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='defenderImage stateImage hidden' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
+            <div id = 'state7' class = 'state hidden alliance0'> <p id = state7Label class = 'stateLabel visible'> G <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='defenderImage stateImage hidden' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>  
+            <div id = 'state11' class = 'state hidden alliance0'> <p id = state11Label class = 'stateLabel visible'> K <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='defenderImage stateImage hidden' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
+            <div id = 'state15' class = 'state hidden alliance0'> <p id = state15Label class = 'stateLabel visible'> O <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='defenderImage stateImage hidden' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
+        </div>
+        <div id = 'stateGroupFour' class='stateGroup'>
+            <div id = 'state4' class = 'state hidden alliance0'> <p id = state4Label class = 'stateLabel visible'> D <span class = 'powerDesc hidden'> </span></p> <img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>   
+            <div id = 'state8' class = 'state hidden alliance0'> <p id = state8Label class = 'stateLabel visible'> H <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>  
+            <div id = 'state12' class = 'state hidden alliance0'> <p id = state12Label class = 'stateLabel visible'> L <span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'> </div>   
+            <div id = 'state16' class = 'state hidden alliance0'> <p id = state16Label class = 'stateLabel visible'>K<span class = 'powerDesc hidden'> </span></p><img class ='stateImage hidden attackImage' src = 'pics/attacker.png'> <img class ='stateImage hidden defenderImage' src = 'pics/defender.png'><img class ='stateImage hidden winnerImage' src = 'pics/winner.png'><img class ='stateImage hidden  loserImage' src = 'pics/loser.png'></div>  
+             
+    </div>
+
+    <div class = 'story hidden' id = 'limitedChange'>
+        <p> The system is changing polarity after a limited war. </p>
+        <div id = 'limitQuiz'> </div>
+        <div id = 'limitCont' class = 'hidden check'>
+            <input type = 'checkbox' id = 'limitCheck'> <span> Do not show me this quiz again </span><br>
+            <input type ="button"  class = 'continueButton'  value='Continue'>
+        </div> 
+    </div>	
+    
+    
+            
+    <div class = 'story hidden' id = 'newTurnMulti'>
+        <p> New turn is beginning in the world, this world is multipolar </p>
+        <div class = 'substory' id = 'turnDetailsMulti'> </div>
+    </div>
+
+    <div class = 'story hidden' id = 'newTurnBi'>
+        <p> New turn is beginning in the world, this world is bipolar </p>
+        <div class = 'substory' id = 'turnDetailsBi'> </div>
+    </div>
+
+     <div class = 'story hidden' id = 'newTurnUni'>
+         <p> New turn is beginning in the world, this world is unipolar </p>
+         <div class = 'substory' id = 'turnDetailsUni'> </div>
+     </div>
+     
+     <div class = 'story hidden' id = 'updateExplanation'>
+        <input type ="button" id = 'powerContinue' class = 'visible explButton'  value='Continue'>
+    </div>
+    
+
+    <div class = 'story hidden' id = 'perfectPause'>
+        <p>Alliances were well balanced and there were no incentives for war</p>
+        <div id = 'perfectQuiz'> </div>
+        <div id = 'perfectCont' class = 'hidden check'>
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'perfectCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+    </div>
+
+    <div class = 'story hidden' id = 'scalingPause'>
+        <p> The powers of the states are being scaled down.</p>
+        <div id = 'scalingQuiz'> </div>
+        <div id = 'scalingCont' class = 'hidden check'>
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'scalingCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+    </div>
+
+    <div class = 'story hidden' id = 'buckPass'>
+        <p> Some states are passing the buck.</p>
+        <div id = 'buckPassQuiz'> </div>
+        <div id = 'buckPassCont' class = 'hidden check'>
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'buckPassCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+    </div>
+
+    <div class = 'story hidden' id = 'alliancePause'>
+        <p>The states are now forming new alliances</p>
+            <div id= 'allianceExpl' class = 'visible theoryExp'>
+                <p> According to Waltz, states form alliances to balance the power of more powerful states.The security of states in the system is increased
+                    if states form these alliances to balance power.</p>
+                <p>This is because if one alliance is more powerful than other alliances in the system, it 
+                    can attempt to attack weaker alliances.</p>	
+                <p> The states are now going to form alliances. States that are in the same alliance will appear in same colour. </p>
+                <br>
+                <input type = 'button' class = 'explButton' id = 'elaborateAlliance' value = 'Continue'>
+                <br>
+                <input type = 'checkbox' id = 'allianceKnow'> <span class = explCheck> I do not need to see this explanation again </span>
+            </div>
+
+            <div id = 'allianceQuiz'> </div>
+            <div id = 'allianceCont' class = 'hidden check'>
+                <div class = 'explanation'> </div>
+                <div class = 'checks'>
+                    <input type = 'checkbox' class = 'box' id = 'allianceCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
+                    <input type ="button"  class = 'continueButton'  value='Continue'>
+                </div>
+            </div>
+    </div>
+
+    <div class = 'story hidden' id = 'lthinkingPause'>
+        <p> States are thinking of going to  war</p>
+        <div id= 'thinkingExpl' class = 'hidden theoryExp'>
+            <p>  In a multipolar world, more powerful alliances can attack weaker alliances. </p>
+            <p>Wars are thus more likely to occur if balancing power was not succesful. </p> <p>There are many reasons why balanacing power could fail, states can miscalculate the threat that another state poses, or they can not balance the power of a threatening state in the hopes that anohter state will do so.</p> 
+            <p>Because Waltz's theory only observes tendencies in the world, sometimes states might decide not to balance the power of the more
+            powerful states, but might choose to bandwagon with the more powerful staes. </p>	
+            <br>
+            <input type = 'button' class = 'explButton' id = 'elaborateThinking' value = 'Continue'>
+            <br>
+            <input type = 'checkbox' id = 'thinkingKnow'>  <span class = 'explCheck'> I do not need to see this explanation again </span>
+        </div>
+        <div id= 'bipolarThinkingExpl' class = 'hidden theoryExp'>
+            <p> Waltz argues that it is easier for states to balance power in a bipolar than in a multipolar world, and this makes bipolar worlds relatively peaceful.</p>
+            <p> Balancing power in a bipolar world is easier because the two bipolar power have no choice but to confront each other, and cannot rely on antther state to balance the power of the other. This leads to the formation of two alliances that are even in power, and have no incentives to go to war with each other. </p>
+            <input type = 'button' class = 'explButton' id = 'elaborateBipolarThinking' value = 'Continue'>
+            <br>
+            <input type = checkbox id = 'bipolarThinkingKnow' > <span class = 'explCheck'> I do not need to see this explanation again </span>
+        </div>
+        <div id = 'thinkingQuiz'> </div>
+        <div id = 'thinkingCont' class = 'hidden check'>
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'thinkingCheck'> <span class = 'bored'> Do not show me this quiz again </span> <br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+    </div>
+
+    <div class = 'story hidden' id = 'bipolarAlliances'>
+        <p> The world will be divided into alliances </p>
+        <div id= 'bipolarExpl' class = 'visible theoryExp'>
+            <p> States seek to  balance the power of other powerful states in a bipolar world.  </p>
+            <p> But in a bipolar world, this does not result in complicated systems of alliances because weaker states cannot balance the power of 
+            the stronger states. </p> 
+            <p> In a bipolar world there exists two blocks of alliances, both made up of a stronger bipolar state, and weaker states that are 
+            in the sphere of influence of the stronger state </p>
+            <input type = 'button' class = 'explButton' id = 'elaborateBipolar' value = 'Continue'>
+            <br>
+            <input type = checkbox id = 'bipolarKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
+        </div>
+        <div id = 'bipolarQuiz'> </div>
+        <div id = 'bipolarCont' class = 'hidden check'> 
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'bipolarCheck'> <span class = bored> Do not show me this quiz again </span> <br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+
+        <div id= 'bipolarDetails1' class = 'hidden substory bipolar1'> </div>
+        <div id= 'bipolarDetails2' class = 'hidden substory bipolar2'> </div>
+    </div>
+
+    <div class = 'story hidden' id = 'bipolarSystemicChange'>
+        <p> The bipolar system is disintegrating </p>
+        <div id= 'disinExpl' class = 'hidden theoryExp'>
+            <p> The bipolar system is now going to disintegrate. </p>
+            <p> This means that one or two of the bipolar powers is suddenly going to lose a large proportion of its power. </p> <p> New states can also be born in the world as a result of this disintegration. </p> 
+            <br>
+            <input type = 'button' class = 'explButton' id = 'elaborateDisin' value = 'Continue'>
+            <br>
+            <input type = 'checkbox' id = 'disinKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
+        </div>
+        <div id = 'disintegrationQuiz'> </div>
+        <div id = 'disintegrationCont' class = 'hidden check'> 
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'disintegrationCheck'> <span class = 'bored'> Do not show me this quiz again </span> <br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+        <div id= 'bipolarSystemDetails' class = 'substory'> </div>
+    </div>
+
+    <div class = 'story hidden' id = 'unipolarInitialisation'>
+        <p> The world is now unipolar </p>
+        <div id = 'unipolarQuiz'> </div>
+        <div id= 'unipolarExpl' class = 'hidden theoryExp'>
+            <p> Unipolar worlds have one powerful hegemonic power that holds a large proportion of the power in the world. </p>
+            <p> The weaker states cannot balance the power of the hegemon. </p>
+            <br>
+            <input type = 'button' class = 'explButton' id = 'elaborateUnipolar' value = 'Continue'>
+            <br>
+            <input type = 'checkbox' id = 'unipolarKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
+        </div>
+        <div id = 'unipolarCont' class = 'hidden check'> 
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'unipolarCheck'> <span class = 'bored'> Do not show me this quiz again </span> <br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+    </div>
+
+    <div class = 'story hidden' id = 'interventionOver'>
+        <p> The intervention has now finished and the hegemon has withdrawn its troops.
+    </div>
+    <div class = 'story hidden' id = 'interventionStory'>
+        <p> The hegemon is intervening in another state  </p>
+        <div id = 'interventionQuiz'> </div>
+        <div id= 'interventionExpl' class = 'hidden theoryExp'>
+            <p> Although the weaker states are not powerful enough to challenge the hegemons' power in the unipolar world, the world is not completely peaceful </p>
+            <p> The hegemon chooses sometimes to intervene militarily in the affairs of other states </p>
+            <br>
+            <input type = 'button' class = 'explButton' id = 'elaborateIntervention' value = 'Continue'>
+            <br>
+            <input type = 'checkbox' id = 'interventionKnow'> <span class = 'explCheck'> I do not need to see this explanation again </span>
+        </div>
+        <div id = 'interventionCont' class = 'hidden check'> 
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'interventionCheck'> <span class = 'bored'> Do not show me this quiz again </span> <br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+        <div id= interventionDetails> </div>
+    </div>
+
+    <div id= 'unipolarDetails0' class = 'story hidden'> 
+        <p> The hegemonic world order is being established </p>
+    </div>
+
+    <div class = 'story hidden' id = 'unipolarAlliances'>
+        <p> </p>
+
+    </div>
+
+
+    <div id = 'unipolarWar' class = 'story hidden'>
+        <p> The hegemonic world order has been established. </p>
+        <div id = 'unipolarWarQuiz'> </div>
+        <div id = 'unipolarWarCont' class = 'hidden check'>
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'unipolarWarCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+        <div id= 'unipolarDetails' class = 'substory hidden'>  </div>
+    </div>
+    <div class = 'story hidden' id = 'peacefulUnipolar'>
+            <p> The unipolar world stays peaceful </p>
+    </div>
+
+    <div class = 'story hidden' id = 'decliningUnipolar'>
+        <p> The hegemon's powers are declining! </p>
+        <div id = 'unipolarPowerQuiz'> </div>
+        <div id = 'unipolarPowerCont' class = 'hidden check'> 
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'unipolarPowerCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+    </div>
+
+
+    <div id= 'unipolarDecline' class = 'story hidden'> 
+    
+    </div>
+
+    <div id = 'unipolarEnd' class = 'story end hidden'> Before clicking to see the next turn, look at the current power distribution in the world, and try to determine the new polarity of the world </div>
+    
+    <div id = 'limitedEnd' class = 'story end hidden'> Before clicking to see the next turn, look at the power distributions in the world, and try to determine the new polarity of the world </div>
+    <div id = 'multipolarEnd' class = 'story end hidden'> The world is no longer multipolar.  Before clicking to see the next turn, look at the power distributions in the world, and try to determine the new polarity of the world </div>
+    <div id = 'bipolarEnd' class = 'story end hidden'> Before clicking to see the next turn, look at the power distributions in the world, and try to determine the new polarity of the world </div>
+    <div class = 'story hidden' id = 'bipolarWar'>
+        <p> A war is being fought in the bipolar world. </p>
+        <div id= 'bipolarWarDetails' class = 'substory'> </div>
+        <div id= 'bipolarWarDetails2'> </div>
+    </div>
+
+    <div id= 'bipolarPeace' class = 'story hidden'>
+        <p> The bipolar world remains peaceful </p> 
+    </div>
+
+    <div class = 'story hidden' id = 'noUpdates'>
+        <p> State powers were not updated this turn </p>
+        <div id = 'noPowerQuiz'> </div>
+        <div id = 'noPowerCont' class = 'hidden check'> 
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'noPowerCheck'> <span class = 'bored'>Do not show me this quiz again </span><br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+
+    </div>
+
+    <div id= 'allianceDetails' class = ' story hidden'> <p> Alliances were not updated this turn </p> </div>
+    <div class = 'story hidden' id = 'assessAlliances'>
+        <p> States are now assessing their alliances </p>
+        <div id = 'desc1' class = 'hidden description1'> </div>
+        <div id = 'desc2'class = 'hidden description2'> </div>
+        <div id = 'desc3'class = 'hidden description3'> </div>
+        <div id = 'desc4'class = 'hidden description4'> </div>
+        <div id = 'desc5'class = 'hidden description5'> </div>
+        <div id = 'desc6'class = 'hidden description6'> </div>
+        <div id = 'desc7'class = 'hidden description7'> </div>
+
+    </div>
+
+
+    <div class = 'story hidden' id = 'updatePowers'>
+        <p> The powers of states are now updating </p>
+        <div id= 'powerExpl' class = 'hidden theoryExp'>
+            <p> Joining an alliances is not the only way in which a state can improve its standing in the world, this can happen in other ways as well</p>
+            <p> Increases in economic resources, population growth, technological innovation or the existence of natural resources can all be translated into military power. This means that a state's power can also grow during peaceful times. </p>
+            <p> To simplify this , in this simulation these powers are only updated after a peaceful turn. </p>
+            <p> The factors that contribute to the growth of a state's power have also been simplified. In this simulation the probability that a state's powers will grow is calculated using to factors: the states territorial and intellectual advantage. You can find out what these values are for a state by hovering over that state with your mouse.
+            <br>
+            <input type = 'button' class = 'explButton elaboratePower'  value = 'Continue'>
+            <br>
+            <input type = 'checkbox' id = 'powerKnow'> <span class = 'powerCheck'> I do not need to see this explanation again </span>
+        </div>
+        <div id = 'powerQuiz'> </div>
+        <div id = 'powerCont' class = 'hidden check'> 
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'powerCheck'> <span class = bored> Do not show me this quiz again </span> <br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+    </div>
+
+    <div class = 'story hidden' id = 'updateBipolarPowers'>
+        <p> The powers of states are now updating </p>
+        <div id= 'bipolarPowerExpl' class = 'hidden theoryExp'>
+            <p> The two bipolar powers will both try to gain as much power as possible. They do this because they do not want the other to grow too powerful.</p>
+            <p> The bipolar powers do not have to engage in conflicts to gain this power, but internal factors such as economic growth and innovation can contribute to the growth in a state's power during peaceuful times. </p>
+            <br>
+            <input type = 'button' class = 'explButton elaboratePower' value = 'Continue'>
+            <br>
+            <input type = 'checkbox' id = 'bipolarPowerKnow'> <span class = 'powerCheck'> I do not need to see this explanation again </span>
+        </div>
+        <div id = 'bipolarPowerQuiz'> </div>
+        <div id = 'bipolarPowerCont' class = 'hidden check'> 
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'bipolarPowerCheck'> <span class = bored> Do not show me this quiz again </span> <br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+</div>
+<div class = 'story hidden' id = 'updateUnipolarPowers'>
+        <p> The powers of states are now updating </p>
+        <div id= 'unipolarPowerExpl' class = 'hidden theoryExp'>
+                <p> The weaker states in a unipolar world can slowly begin to gain power.</p>
+                <p> This can happen through, for example, population growth, economic growth and technological innovation.</p>
+                <p> In this simulation, the probability of a state gaining power is calculated using two numbers, the state's intellectual and the state's territorial advantage. You can see these scores for each state by hovering on top of that states. </p>
+                <br>
+                <input type = 'button' class = 'explButton elaboratePower'  value = 'Continue'>
+                <br>
+                <input type = 'checkbox' id = 'unipolarPowerKnow'> <span class = 'powerCheck'> I do not need to see this explanation again </span>
+        </div>
+        <div id = 'unipolarUpdateQuiz'> </div>
+        <div id = 'unipolarUpdateCont' class = 'hidden check'> 
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'unipolarUpdateCheck'> <span class = bored> Do not show me this quiz again </span> <br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+    </div>
+
+    <div class = 'story hidden' id = 'updatingPowers'>
+        <p> The powers of states are now updating </p>
+        <div id= 'powerDetails' class = 'substory'> </div>
+    </div>
+    
+    <div class = 'story hidden' id = 'noMoreBipolar'>
+        <p> The world is no longer bipolar. </p>
+    </div>
+    <div class = 'story hidden' id = 'peaceful'>
+        <p> Balancing power was succesful and there was no war this time </p>
+        <div id= 'peaceDetails' class = 'substory'> </div>
+    </div>
+
+     <div class = 'story hidden' id = 'limitedWar'>
+        <p> A limited war is occuring in the world </p>
+        <div id= 'warDetails1' class = 'hidden description1'> </div>
+        <div id= 'warDetails2' class = 'hidden description2'> </div>
+        <div id= 'warDetails3' class = 'hidden description3'> </div>
+        <div id= 'warDetails4' class = 'hidden description4'> </div>
+        <div id= 'warDetails5' class = 'hidden description5'> </div>
+        <div id= 'warDetails6' class = 'hidden description6'> </div>  
+    </div>
+
+    <div class = 'story hidden' id = 'systemicWar'>
+        <p> War is escalating into a systemic war </p>
+        <div id= 'escalationExpl' class = 'hidden theoryExp'>
+            <p> Sometimes wars in a multipolar world can escalate into systemic wars. Systemic wars are wars that involve all or almost all of the states in the system. </p>
+            <p> Wars can escalate because there are large alliances in the world, and if two alliances go to war with each other, this means that all, or almost all, states will be fighting each other. </p>
+            <p> Wars can also escalate because other alliances in the world decide that it is in their interests to join the war. </p>
+            <br>
+            <input type = 'button' class = 'explButton' id = 'elaborateEscalation' value = 'Continue'>
+            <br>
+            <input type = 'checkbox' id = 'escalationKnow'> <span class = 'escalationCheck'> I do not need to see this explanation again </span>
+        </div>
+        <div id = 'escalationQuiz'> </div>
+        <div id = 'escalationCont' class = 'hidden check'>
+            <div class = 'explanation'> </div>
+            <div class = 'checks'>
+                <input type = 'checkbox' class = 'box' id = 'escalationCheck'> <span class = 'bored'> Do not show me this quiz again </span><br>
+                <input type ="button"  class = 'continueButton'  value='Continue'>
+            </div>
+        </div>
+        <div id= 'systWarDetails1' class = 'hidden description1'> </div>
+        <div id= 'systWarDetails2' class = 'hidden description2'> </div>
+        <div id= 'systWarDetails3' class = 'hidden description3'> </div>
+        <div id= 'systWarDetails4' class = 'hidden description4'> </div>
+        <div id= 'systWarDetails5' class = 'hidden description5'> </div>
+        <div id= 'systWarDetails6' class = 'hidden description6'> </div>
+    </div>
+
+
+
+    <div class = 'story hidden' iid = 'fightingWar'>
+        <p> War is being fought </p>
+    </div>
+
+
+    <div class = 'story hidden' id = 'afterWar'>
+        <p> World and its states after the war </p>
+        <div id= 'afterWarDetails' class = 'substory'> </div>
+    </div>
+
+
+    <div class = 'story hidden' id = 'theEnd'>
+        <p> Thank you for playing!</p>
+
+
+    </div>
+
+</div>
+
+<div id =simulationOutput class = 'hidden'>
+</div>
+
   </body>
